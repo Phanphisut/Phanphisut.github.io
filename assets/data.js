@@ -99,6 +99,10 @@ const PORTFOLIO_PAGES = ["projects/14", "projects/15", "projects/portfolio", "ac
 
 // เรียงจากใหม่ไปเก่า  img = ชื่อไฟล์ใน images/certificates/
 const CERTS = [
+  { img: "cert-9", d: "2026-10-17",
+    title: "TOEIC Listening & Reading · 450",
+    note: ["คะแนนรวม 450 · Listening 295 · Reading 155", "Total 450 · Listening 295 · Reading 155"],
+    issuer: ["ETS · Center for Professional Assessment (Thailand)", "ETS · Center for Professional Assessment (Thailand)"] },
   { img: "cert-1", d: "2026-09-24",
     title: ["จัดระเบียบงานและสร้างระบบอัตโนมัติด้วย AI", "Organizing Work and Building Automation with AI"],
     issuer: ["สำนักงานคณะกรรมการดิจิทัลเพื่อเศรษฐกิจและสังคมแห่งชาติ · TH AI Passport × OpenAI", "Office of the National Digital Economy and Society Commission · TH AI Passport × OpenAI"] },

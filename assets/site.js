@@ -364,6 +364,7 @@
         <div class="cert-body">
           <span class="kicker">${esc(T("certs.unlocked"))} · ${esc(fmtD(c.d))}</span>
           <h3>${esc(L(c.title))}</h3>
+          ${c.note ? `<p class="cert-note">${esc(L(c.note))}</p>` : ""}
           <p>${esc(L(c.issuer))}</p>
         </div>
       </article>`).join("");
