@@ -118,8 +118,7 @@
     const hero = document.getElementById("hero");
     hero.className = "overworld" + (isHome ? "" : " small");
     hero.innerHTML = `
-      <div class="cloud c1" aria-hidden="true"></div><div class="cloud c2" aria-hidden="true"></div><div class="cloud c3" aria-hidden="true"></div>
-      <div class="orb" aria-hidden="true"><div class="sun"></div><div class="moon"></div></div>
+      <canvas class="sky pix" id="sky" aria-hidden="true"></canvas>
       <div class="wrap title-block">
         ${isHome ? "" : `<p class="crumb"><a href="index.html">PHANPHISUT</a> / <span data-i18n="${page.key}"></span></p>`}
         <h1 class="title"${isHome ? "" : ` data-i18n="${page.key}"`}>${isHome ? "PHANPHISUT" : ""}</h1>
@@ -128,8 +127,6 @@
         ${isHome ? `<div class="xp"><div class="xp-level" id="xp-level"></div><div class="xp-bar"><div class="xp-fill" id="xp-fill"></div></div><div class="xp-note" data-i18n="xp.note"></div></div>` : ""}
       </div>
       <div class="land" aria-hidden="true">
-        <img class="pix tree" data-sprite="tree" alt="">
-        ${isHome ? `<img class="pix tree tree2" data-sprite="tree" alt="">` : ""}
         <img class="pix drone" data-sprite="drone" alt="">
         <img class="pix hero-char" data-sprite="hero" alt="">
         <canvas class="terrain pix" id="terrain"></canvas>
@@ -154,24 +151,96 @@
       </dialog>`);
   }
 
+  /* night ground: teal crystal crust over dark rock, with glowing crystal ore */
+  const ROCK = ["#0c1a24", "#0f202c", "#0a151e", "#112532", "#0c1a24"];
+  const DEEP = ["#070e14", "#0a1219", "#060b10", "#0b141c"];
+  const CRUST = ["#1a5658", "#154446", "#1f6466", "#2d6a8a"];
+  function crustBlock(seed) {
+    const c = noiseTile(ROCK, seed), g = c.getContext("2d"), r = rng(seed + 7);
+    for (let x = 0; x < 16; x++) { const depth = 2 + Math.floor(r() * 3); for (let y = 0; y < depth; y++) { g.fillStyle = CRUST[Math.floor(r() * CRUST.length)]; g.fillRect(x, y, 1, 1); } }
+    g.fillStyle = "rgba(127,214,255,.5)"; for (let x = 0; x < 16; x += 3 + Math.floor(r() * 3)) g.fillRect(x, 0, 1, 1);
+    return c;
+  }
+  function crystalOre(seed) {
+    const c = noiseTile(DEEP, seed), g = c.getContext("2d"), r = rng(seed + 3);
+    for (let i = 0; i < 4; i++) { const x = 1 + Math.floor(r() * 12), y = 2 + Math.floor(r() * 11); g.fillStyle = "#2d6a8a"; g.fillRect(x, y, 2, 3); g.fillStyle = "#49b7e8"; g.fillRect(x, y, 1, 2); g.fillStyle = "#d8f3ff"; g.fillRect(x, y, 1, 1); }
+    return c;
+  }
   function drawTerrain() {
     const cv = document.getElementById("terrain"); if (!cv) return;
     const B = 16, cols = Math.ceil(cv.clientWidth / 32) + 1;
     cv.width = cols * B; cv.height = 3 * B;
     const g = cv.getContext("2d");
     for (let x = 0; x < cols; x++) {
-      g.drawImage(grassBlock(x * 13 + 1), x * B, 0);
-      g.drawImage(noiseTile(DIRT, x * 7 + 300), x * B, B);
-      g.drawImage(x % 9 === 4 ? oreBlock("#f2c230", x) : noiseTile(STONE, x * 5 + 600), x * B, 2 * B);
+      g.drawImage(crustBlock(x * 13 + 1), x * B, 0);
+      g.drawImage(noiseTile(ROCK, x * 7 + 300), x * B, B);
+      g.drawImage(x % 7 === 3 ? crystalOre(x) : noiseTile(DEEP, x * 5 + 600), x * B, 2 * B);
     }
     cv.style.width = cols * 32 + "px";
+    drawSky();
   }
+
+  /* starry void + glowing horizon + crystal outcrops + distant skyline, drawn at 1/4 resolution */
+  let skyStars = [], skyW = 0, skyH = 0;
+  function drawSky(t = performance.now() / 1000) {
+    const cv = document.getElementById("sky"); if (!cv) return;
+    const hero = document.getElementById("hero");
+    const W = Math.ceil(hero.clientWidth / 4), H = Math.ceil(hero.clientHeight / 4);
+    if (W !== skyW || H !== skyH) {
+      skyW = W; skyH = H; cv.width = W; cv.height = H;
+      const r = rng(77); skyStars = [];
+      const n = Math.round(W * H / 320);
+      for (let i = 0; i < n; i++) skyStars.push({ x: Math.floor(r() * W), y: Math.floor(r() * (H - 46)), big: r() < .14, ph: r() * 4, sp: .5 + r() * .9 });
+    }
+    const g = cv.getContext("2d"), P = (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(x, y, w, h); };
+    P(0, 0, W, H, "#000");
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    skyStars.forEach(s => {
+      const k = Math.floor(t * s.sp + s.ph);
+      const lvl = reduce ? (s.big ? 2 : 0) : s.big ? (k % 3 === 0 ? 1 : 2) : (k % 4 === 0 ? 1 : 0);
+      if (lvl === 0) { P(s.x, s.y, 1, 1, "#2a7fb8"); return; }
+      P(s.x, s.y - 1, 1, 3, "#3fb6ff"); P(s.x - 1, s.y, 3, 1, "#3fb6ff");
+      if (lvl === 2) { P(s.x, s.y - 2, 1, 5, "#3fb6ff"); P(s.x - 2, s.y, 5, 1, "#3fb6ff"); P(s.x, s.y, 1, 1, "#d8f3ff"); }
+    });
+    const ground = H - 24;                                   // terrain strip is 96px = 24 low-res px
+    const bands = ["#1a1023", "#0f2124", "#0f2a2c", "#123437", "#123a3d", "#154446", "#174e50", "#1a5658"];
+    const top = ground - bands.length * 2;
+    // skyline sits on the horizon, right of centre
+    const sx = Math.floor(W * .62);
+    [[0, 9, 4], [5, 14, 5], [11, 7, 3], [15, 11, 4], [20, 5, 3]].forEach(([dx, h, w], k) => {
+      const x = sx + dx, y = top - h;
+      P(x, y, w, h, "#1f3c52"); P(x, y, 1, h, "#2b5470");
+      for (let yy = y + 2; yy < top - 1; yy += 3) for (let i = 1; i < w - 1; i += 2) if ((i * 7 + yy * 3 + k) % 5) P(x + i, yy, 1, 1, "#7fd6ff");
+    });
+    P(sx + 7, top - 18, 1, 4, "#2b5470");
+    if (reduce || Math.floor(t * 1.5) % 2) P(sx + 7, top - 19, 1, 1, "#ff4a4a");
+    bands.forEach((c, i) => P(0, top + i * 2, W, 2, c));
+    // crystal outcrops at both edges
+    [1, -1].forEach(side => {
+      const X = x => side === 1 ? x : W - 1 - x;
+      [[0, 22, 5], [5, 16, 4], [9, 11, 3], [12, 7, 3], [2, 28, 3]].forEach(([x, h, w]) => {
+        for (let i = 0; i < w; i++) {
+          const yy = ground - h + Math.abs(i - Math.floor(w / 2));
+          P(X(x + i), yy, 1, ground - yy, "#13293a");
+          P(X(x + i), yy, 1, 2, i < w / 2 ? "#49b7e8" : "#2d6a8a");
+        }
+      });
+    });
+  }
+  function animateSky() {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let visible = true;
+    const hero = document.getElementById("hero");
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(hero);
+    setInterval(() => { if (visible && !document.hidden) drawSky(); }, 250);
+  }
+
   function paintUnderground() {
-    const t = canvasOf(32, 32), g = t.getContext("2d");
-    [[0, 0], [16, 0], [0, 16], [16, 16]].forEach(([x, y], i) => g.drawImage(noiseTile(STONE, 900 + i), x, y));
-    g.fillStyle = "rgba(0,0,0,.55)"; g.fillRect(0, 0, 32, 32);
+    const t = canvasOf(48, 48), g = t.getContext("2d"), r = rng(901);
+    g.fillStyle = "#05080c"; g.fillRect(0, 0, 48, 48);
+    for (let i = 0; i < 7; i++) { g.fillStyle = r() < .3 ? "#1d4f6e" : "#11283a"; g.fillRect(Math.floor(r() * 48), Math.floor(r() * 48), 1, 1); }
     const m = document.getElementById("main");
-    [m, document.body].forEach(el => { el.style.backgroundImage = `url(${t.toDataURL()})`; el.style.backgroundSize = "64px 64px"; el.style.imageRendering = "pixelated"; });
+    [m, document.body].forEach(el => { el.style.backgroundImage = `url(${t.toDataURL()})`; el.style.backgroundSize = "144px 144px"; el.style.imageRendering = "pixelated"; });
   }
 
   /* ---------- lightbox ---------- */
@@ -369,6 +438,7 @@
   paintSprites(document);
   drawTerrain();
   paintUnderground();
+  animateSky();
   wireLightbox();
   let rT; addEventListener("resize", () => { clearTimeout(rT); rT = setTimeout(drawTerrain, 150); });
 
