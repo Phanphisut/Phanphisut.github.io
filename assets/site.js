@@ -296,6 +296,32 @@
     document.querySelectorAll("[data-count]").forEach(el => el.textContent = `${counts[el.dataset.count]} ${T("unit.items")}`);
     const lines = L(I18N.splash);
     document.getElementById("splash").textContent = lines[Math.floor(Math.random() * lines.length)];
+    renderStats();
+  }
+
+  /* character stats: 10 gauge steps per skill, sorted by count (largest first) */
+  const STEPS = [3, 5, 10, 15, 20, 25, 35, 50, 100, 500];
+  function renderStats() {
+    const el = document.getElementById("stats"); if (!el) return;
+    const rows = [
+      { id: "projects", key: "nav.projects", sprite: "chest", n: PROJECTS.length, href: "projects.html" },
+      { id: "activities", key: "nav.activities", sprite: "map", n: ACTIVITIES.length, href: "activities.html" },
+      { id: "certificates", key: "nav.certs", sprite: "medal", n: CERTS.length, href: "certificates.html" },
+    ].sort((a, b) => b.n - a.n);
+    el.innerHTML = rows.map(r => {
+      const lvl = STEPS.filter(s => r.n >= s).length;
+      const next = STEPS[lvl];
+      const segs = STEPS.map((s, i) => `<i class="${i < lvl ? "on" : ""}" title="${i + 1}: ${s}"></i>`).join("");
+      const hint = next ? T("stats.next").replace("{n}", next - r.n).replace("{t}", next) : T("stats.max");
+      return `<a class="stat-row ${r.id}" href="${r.href}">
+        <span class="slot"><img class="pix" src="${sprite(r.sprite)}" width="32" height="32" alt=""></span>
+        <span class="stat-main">
+          <span class="stat-top"><strong>${esc(T(r.key))}</strong><span class="stat-n">${r.n}</span><span class="stat-lv">${T("stats.step")} ${lvl}/10</span></span>
+          <span class="gauge" role="meter" aria-valuemin="0" aria-valuemax="10" aria-valuenow="${lvl}" aria-label="${esc(T(r.key))} ${lvl}/10">${segs}</span>
+          <span class="stat-hint">${esc(hint)}</span>
+        </span>
+      </a>`;
+    }).join("");
   }
 
   const RENDER = { home: renderHome, projects: renderProjects, activities: renderActivities, certificates: renderCerts };
@@ -308,7 +334,10 @@
     document.querySelectorAll("[data-lang]").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));
     document.title = isHome ? "Phanphisut Portfolio" : `${T(page.key)} · Phanphisut`;
     (RENDER[page.id] || (() => {}))();
+    if (window.onSiteLang) window.onSiteLang(lang);
   }
+  window.siteT = T;
+  window.siteLang = () => lang;
 
   /* ---------- boot ---------- */
   buildChrome();
