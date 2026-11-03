@@ -141,6 +141,8 @@ const FALLBACK_REPOS = [
 // ข้อความในหน้าเว็บ [ไทย, English]
 const I18N = {
   "skip": ["ข้ามไปยังเนื้อหา", "Skip to content"],
+  "sound.on": ["เสียง: เปิด", "Sound: on"],
+  "sound.off": ["เสียง: ปิด", "Sound: off"],
   "nav.home": ["หน้าแรก", "Home"],
   "nav.projects": ["ผลงาน", "Projects"],
   "nav.activities": ["กิจกรรม", "Activities"],

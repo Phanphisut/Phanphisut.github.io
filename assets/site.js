@@ -71,6 +71,15 @@
     heroStep: fromRows(["..hhhh..", ".hhhhhh.", ".hssssh.", ".sesses.", ".ssssss.", "..smms..", "oooooooo", "oooddooo", "soooooos", "s.oooo.s",
                     ".pppppp.", ".pp..pp.", "pp....pp", "pp....pp", "bb....bb", "bb....bb"], HERO_PAL),
     face: fromRows(["..hhhh..", ".hhhhhh.", ".hssssh.", ".sesses.", ".ssssss.", "..smms..", "oooooooo", "oooddooo"], HERO_PAL),
+    // side view, facing right (flipped with CSS when walking left)
+    sideA: fromRows(["..hhhh..", ".hhhhhh.", ".hhssss.", ".hhsses.", ".hssssss", "..sssm..", "..oooo..", ".ooooo..", ".oddoo..", ".oooso..",
+                     "..ppp...", "..ppp...", "..pppp..", ".pp..pp.", ".pp..pp.", "bbb..bbb"], HERO_PAL),
+    sideB: fromRows(["..hhhh..", ".hhhhhh.", ".hhssss.", ".hhsses.", ".hssssss", "..sssm..", "..oooo..", ".ooooo..", ".oddoo..", ".oooso..",
+                     "..ppp...", "..ppp...", "..ppp...", "..ppp...", "..ppp...", "..bbbb.."], HERO_PAL),
+    soundOn: fromRows(["............", ".....k......", "....kk...w..", "...kkk....w.", "kkkkkk..w.w.", "kkkkkk...w.w",
+                       "kkkkkk...w.w", "kkkkkk..w.w.", "...kkk....w.", "....kk...w..", ".....k......", "............"], { k: "#e6f1f8", w: "#3fb6ff" }),
+    soundOff: fromRows(["............", ".....k......", "....kk......", "...kkk......", "kkkkkk.r...r", "kkkkkk..r.r.",
+                        "kkkkkk...r..", "kkkkkk..r.r.", "...kkk.r...r", "....kk......", ".....k......", "............"], { k: "#93a9ba", r: "#ff4a4a" }),
     drone: fromRows(["ppp.......ppp", ".f.........f.", ".fffbbbbbfff.", "....bblbb....", "....f...f...."], { p: "#cfd6dc", f: "#2b2b2b", b: "#e9e9e9", l: "#ff3b3b" }),
     tree: fromRows(["..gggggg..", ".gGgggGgg.", "gggGgggGgg", "gGgggggggG", "ggggGgGggg", ".gggggggg.", "..ggttgg..", "....tt....", "....tt....", "....tt....", "....tt....", "....tt...."],
                    { g: "#3f8a2a", G: "#2f6e1f", t: "#6b4a2b" }),
@@ -124,6 +133,7 @@
           <img class="pix lang-ico" data-sprite="globe" alt="">
           <button class="btn" type="button" data-lang="th" aria-pressed="false">ไทย</button>
           <button class="btn" type="button" data-lang="en" aria-pressed="false">ENG</button>
+          <button class="btn snd" type="button" id="snd" aria-pressed="false"><img class="pix" id="snd-ico" alt=""><span id="snd-txt"></span></button>
         </div>
         <nav class="pages-nav" aria-label="Pages">
           ${PAGES.map(p => `<a class="btn" href="${p.file}" data-i18n="${p.key}"${p.id === page.id ? ' aria-current="page"' : ""}></a>`).join("")}
@@ -245,8 +255,9 @@
   function walkHero() {
     const el = document.querySelector(".hero-char"); if (!el) return;
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const a = sprite("hero"), b = sprite("heroStep");
+    const a = sprite("sideA"), b = sprite("sideB");
     let step = false, lastX = el.getBoundingClientRect().left;
+    el.src = a;
     setInterval(() => {
       if (document.hidden) return;
       step = !step; el.src = step ? b : a;
@@ -254,6 +265,73 @@
       if (Math.abs(x - lastX) > 0.5) el.classList.toggle("flip", x < lastX);
       lastX = x;
     }, 250);
+  }
+
+  /* shooting stars: a short pixel streak every few seconds */
+  function meteors() {
+    const hero = document.getElementById("hero"); if (!hero) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const fire = () => {
+      if (!document.hidden) {
+        const m = document.createElement("i");
+        m.className = "meteor";
+        m.style.left = (25 + Math.random() * 70) + "%";
+        m.style.top = (4 + Math.random() * 30) + "%";
+        m.style.animationDuration = (0.7 + Math.random() * 0.5) + "s";
+        hero.appendChild(m);
+        m.addEventListener("animationend", () => m.remove());
+      }
+      setTimeout(fire, 3500 + Math.random() * 6000);
+    };
+    setTimeout(fire, 1500);
+  }
+
+  /* 8-bit sound effects (WebAudio square waves), off by default */
+  let soundOn = false, actx = null;
+  try { soundOn = localStorage.getItem("sound") === "on"; } catch (e) {}
+  function tone(freq, start, dur, type = "square", vol = 0.06) {
+    const o = actx.createOscillator(), gn = actx.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, actx.currentTime + start);
+    gn.gain.setValueAtTime(vol, actx.currentTime + start);
+    gn.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + start + dur);
+    o.connect(gn).connect(actx.destination);
+    o.start(actx.currentTime + start); o.stop(actx.currentTime + start + dur + 0.02);
+  }
+  const SFX = {
+    click: () => tone(880, 0, 0.05),
+    page: () => { tone(523, 0, 0.06); tone(784, 0.06, 0.08); },
+    open: () => { tone(659, 0, 0.05); tone(988, 0.05, 0.07); },
+    close: () => { tone(659, 0, 0.05); tone(440, 0.05, 0.07); },
+    on: () => { [523, 659, 784, 1047].forEach((f, i) => tone(f, i * 0.06, 0.07)); },
+  };
+  function sfx(name) {
+    if (!soundOn) return;
+    try { if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === "suspended") actx.resume(); SFX[name](); } catch (e) {}
+  }
+  function paintSound() {
+    const b = document.getElementById("snd"); if (!b) return;
+    b.setAttribute("aria-pressed", soundOn);
+    document.getElementById("snd-ico").src = sprite(soundOn ? "soundOn" : "soundOff");
+    document.getElementById("snd-txt").textContent = T(soundOn ? "sound.on" : "sound.off");
+    b.setAttribute("aria-label", T(soundOn ? "sound.on" : "sound.off"));
+  }
+  function wireSound() {
+    document.getElementById("snd").addEventListener("click", e => {
+      e.stopPropagation();
+      soundOn = !soundOn;
+      try { localStorage.setItem("sound", soundOn ? "on" : "off"); } catch (err) {}
+      paintSound(); sfx("on");
+    });
+    // blip on buttons; chirp and short delay before going to another page
+    document.addEventListener("click", e => {
+      const a = e.target.closest("a[href]");
+      if (a && soundOn && !a.target && /\.html(#.*)?$/.test(a.getAttribute("href")) && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+        e.preventDefault(); sfx("page"); setTimeout(() => { location.href = a.href; }, 140); return;
+      }
+      if (e.target.closest(".shot[data-g]")) return sfx("open");
+      if (e.target.closest("#lb-close")) return sfx("close");
+      if (e.target.closest(".btn, .stat-row, a.inv, .repo")) sfx("click");
+    });
   }
   function animateSky() {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -458,6 +536,7 @@
     document.title = isHome ? "Phanphisut Portfolio" : `${T(page.key)} · Phanphisut`;
     (RENDER[page.id] || (() => {}))();
     if (window.onSiteLang) window.onSiteLang(lang);
+    paintSound();
   }
   window.siteT = T;
   window.siteLang = () => lang;
@@ -469,7 +548,9 @@
   paintUnderground();
   animateSky();
   walkHero();
+  meteors();
   wireLightbox();
+  wireSound();
   let rT; addEventListener("resize", () => { clearTimeout(rT); rT = setTimeout(drawTerrain, 150); });
 
   document.addEventListener("click", e => {
@@ -497,7 +578,8 @@
   label.style.opacity = 0;
   addEventListener("keydown", e => {
     if (document.getElementById("lb").open || e.ctrlKey || e.metaKey || e.altKey || e.target.closest("input,textarea")) return;
-    const n = +e.key; if (n >= 1 && n <= slots.length) location.href = slots[n - 1].getAttribute("href");
+    const n = +e.key;
+    if (n >= 1 && n <= slots.length) { sfx("page"); setTimeout(() => { location.href = slots[n - 1].getAttribute("href"); }, soundOn ? 140 : 0); }
   });
 
   applyLang();

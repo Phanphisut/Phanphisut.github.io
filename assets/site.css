@@ -331,3 +331,22 @@ dialog.lb::backdrop { background: rgba(0,0,0,.82); }
 .rank-bar i { display: block; height: 100%; background: repeating-linear-gradient(90deg, var(--rank) 0 14px, rgba(0,0,0,.25) 14px 16px); }
 .rank-hint { font-size: 12px; color: var(--on-deep-soft); }
 .cert .cert-note { font: 700 13px/1.4 var(--f-body); color: var(--cyan); }
+
+/* sound toggle */
+.lang .snd { gap: 6px; padding: 5px 10px; font-family: var(--f-body); text-transform: none; letter-spacing: 0; }
+.lang .snd img { width: 20px; height: 20px; }
+.lang .snd[aria-pressed="true"] { background: #1d3047; border-color: #3f6386 #0b1420 #0b1420 #3f6386; color: var(--cyan); }
+@media (max-width: 420px) { .lang .snd span { display: none; } .lang-ico { display: none; } }
+
+/* shooting stars */
+.meteor {
+  position: absolute; z-index: 1; width: 96px; height: 4px; pointer-events: none;
+  background: linear-gradient(90deg, #e6f8ff, #3fb6ff 30%, rgba(63,182,255,0));
+  transform-origin: left center; transform: rotate(-28deg);
+  animation: meteor 1s linear forwards;
+}
+@keyframes meteor {
+  0% { opacity: 0; translate: 0 0; }
+  10% { opacity: 1; }
+  100% { opacity: 0; translate: -320px 170px; }
+}
