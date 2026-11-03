@@ -340,6 +340,8 @@ dialog.lb::backdrop { background: rgba(0,0,0,.82); }
 .stat-hint { font-size: 12px; color: var(--on-deep-soft); }
 .stats-rule { margin: 0; font-size: 12px; color: var(--ink-soft); }
 .char-col { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
-.char-screen { padding: 4px; }
+.char-screen { background: #0a0b0f; padding: 8px; border-radius: 4px; box-shadow: 0 0 0 4px #1d2029; }
+.char-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-top: 4px; font: 400 13px/1.4 "Kanit", var(--f-body); color: var(--ink-soft); }
+.char-row #char-now { color: var(--ink); font-weight: 600; }
 .char-screen canvas { display: block; width: 100%; aspect-ratio: 4 / 3; image-rendering: pixelated; background: #a7aea6; }
 @media (max-width: 760px) { .charsheet { grid-template-columns: 1fr; } .char-col { order: -1; } }

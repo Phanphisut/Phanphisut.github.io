@@ -137,20 +137,27 @@
   }
 
   const poses = [poseIdle, poseCode, posePhone, poseJacket];
-  // random action every 6 seconds (never the same one twice in a row)
-  let pose = Math.floor(Math.random() * poses.length), t0 = performance.now(), autoT = 0;
-  function setPose(p) { pose = p; t0 = performance.now(); autoT = 0; }
+  // random pose every 10 seconds (never the same one twice in a row), with a countdown under the screen
+  const SWITCH = 10;
+  const nowEl = document.getElementById("char-now"), cdEl = document.getElementById("char-cd");
+  let pose = Math.floor(Math.random() * poses.length), t0 = performance.now(), autoT = 0, lastSec = -1;
+  function label() { if (nowEl) nowEl.textContent = T("char.p" + pose); lastSec = -1; }
+  function setPose(p) { pose = p; t0 = performance.now(); autoT = 0; label(); }
   function randomPose() { let p; do { p = Math.floor(Math.random() * poses.length); } while (p === pose); setPose(p); }
+  setPose(pose);
+  window.onSiteLang = label;
 
-  const PX = '"Silkscreen", monospace', TH = '"Chakra Petch", sans-serif';
-  function txt(s, x, y, size, color, font) { ctx.font = `700 ${size}px ${font}`; ctx.fillStyle = color; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(s, x, y); }
+  const PX = '"Press Start 2P", "Silkscreen", monospace', TH = '"Kanit", "Chakra Petch", sans-serif';
+  function txt(s, x, y, size, color, font) { ctx.font = `${size}px ${font}`; ctx.fillStyle = color; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(s, x, y); }
 
   let last = performance.now(), visible = true;
   new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(cv);
   function frame(now) {
     const dt = (now - last) / 1000; last = now;
+    autoT += Math.min(dt, 0.5); if (autoT >= SWITCH) randomPose();
+    const left = Math.ceil(SWITCH - autoT);
+    if (left !== lastSec && cdEl) { lastSec = left; cdEl.textContent = T("char.next").replace("{n}", left); }
     if (visible) {
-      autoT += dt; if (autoT > 6) randomPose();
       const t = (now - t0) / 1000;
       g.clearRect(0, 0, LW, LH); scene();
       R(37, 66, 22, 2, "rgba(0,0,0,0.18)");
@@ -159,14 +166,14 @@
       ox = 0; oy = 0;
       ctx.drawImage(low, 0, 0, LW * S, LH * S);
       if (pose === 1 && (t % 6) >= 3) {
-        txt("ERROR!", 18 * S, 13 * S, 34, "#ffffff", PX);
-        txt("line 42: ;", 18 * S, 19 * S, 18, "#ffc9cf", PX);
-        txt("expected", 18 * S, 23 * S, 18, "#ffc9cf", PX);
+        txt("ERROR!", 18 * S, 13 * S, 26, "#ffffff", PX);
+        txt("line 42: ;", 18 * S, 19 * S, 12, "#ffc9cf", PX);
+        txt("expected", 18 * S, 23 * S, 12, "#ffc9cf", PX);
       }
-      if (pose === 2) { const lines = LIST("char.talk"); txt(lines[Math.floor(t / 2) % lines.length], 76.5 * S, 10 * S, 28, "#1a1a1a", TH); }
-      if (pose === 3) txt(T("char.off"), 19 * S, 11 * S, 30, "#1a1a1a", TH);
+      if (pose === 2) { const lines = LIST("char.talk"); txt(lines[Math.floor(t / 2) % lines.length], 76.5 * S, 10 * S, 26, "#1a1a1a", TH); }
+      if (pose === 3) txt(T("char.off"), 19 * S, 11 * S, 26, "#1a1a1a", TH);
     }
     requestAnimationFrame(frame);
   }
-  (document.fonts ? document.fonts.ready : Promise.resolve()).finally(() => requestAnimationFrame(frame));
+  (document.fonts ? document.fonts.load('26px "Kanit"').catch(() => {}) : Promise.resolve()).finally(() => requestAnimationFrame(frame));
 })();

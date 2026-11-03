@@ -158,6 +158,7 @@ const I18N = {
   "char.p3": ["ถอดสูทพาดบ่า", "Jacket off"],
   "char.talk": [["ครับพี่ ได้ครับ", "พรุ่งนี้ส่งงานครับ", "รับทราบครับ!"], ["Yes, will do!", "Sending it tomorrow", "Got it!"]],
   "char.off": ["เลิกงานแล้ว!", "Off work!"],
+  "char.next": ["สุ่มท่าใหม่ใน {n} วิ", "New pose in {n}s"],
   "signs.title": ["ป้ายบอกทาง", "Where to next?"],
   "signs.projects": ["โดรน AI, IoT และ repo บน GitHub", "Drones, AI, IoT and GitHub repos"],
   "signs.activities": ["งาน อบรม และการสอน", "Work, training and teaching"],
