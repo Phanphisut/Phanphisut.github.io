@@ -457,14 +457,15 @@ dialog.item::backdrop { background: rgba(0, 0, 0, .75); }
 @media (max-width: 600px) {
   /* shorter sky header: ground strip drops from 3 block rows to 2 */
   :root { --ground: 64px; }
-  .title-block { padding-block: 26px 2px; }
-  .overworld.small .title-block { padding-block: 22px 2px; }
-  .subtitle { margin-top: 16px; font-size: 14px; }
+  .title-block { padding-block: 18px 0; }
+  .overworld.small .title-block { padding-block: 16px 0; }
+  .subtitle { margin-top: 12px; font-size: 14px; }
   .overworld.small .subtitle { margin-top: 10px; }
-  .xp { margin-top: 10px; }
+  .xp { margin-top: 8px; }
   .xp-note { display: none; }
-  .land { margin-top: 6px; height: 140px; }
-  .overworld.small .land { margin-top: 4px; height: 128px; }
+  .land { margin-top: 0; height: 178px; z-index: 3; }   /* room for the speech bubble below the LV bar */
+  .overworld.small .land { margin-top: 0; height: 182px; }
+  .quip, .overworld.small .quip { bottom: calc(var(--ground) + 70px); max-width: 220px; font-size: 13px; }
   .fest-badge { top: 6px; font-size: 11px; padding: 4px 8px; }
 
   /* terminal looks the same as on desktop (Windows renders Cascadia Mono); phones get the close match JetBrains Mono */
