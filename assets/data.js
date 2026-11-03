@@ -194,3 +194,72 @@ const I18N = {
   "footer": ["© 2026 PHANPHISUT · สร้างทีละบล็อก", "© 2026 PHANPHISUT · BUILT BLOCK BY BLOCK"],
   "splash": [["บินโดรนด้วย Python!", "ขุดโค้ดทุกวัน!", "ประหยัดพลังงาน!", "YOLO ตรวจจับได้!"], ["Flying drones with Python!", "Mining code daily!", "Now with YOLO!", "Powered by ESP32!"]],
 };
+
+// ===================== ช่องเก็บของทักษะ (Tech Stack) =====================
+// stars = ระดับ 1–5 (ปรับได้ตามจริง)  color = สีไอเทม  label = ตัวอักษรบนไอคอน  projects = ชื่อผลงานใน PROJECTS ที่ใช้ทักษะนี้
+const SKILLS = [
+  { id: "python", name: "Python", label: "Py", color: "#4b8bdf", stars: 4, projects: ["UAV Hand Gesture", "UAV Keyboard App", "UAV Bi-copter"],
+    note: ["ใช้เขียนโปรแกรมควบคุมโดรน งาน AI และ Computer Vision", "Drone control, AI and computer vision code"] },
+  { id: "yolo", name: "YOLO / Computer Vision", label: "CV", color: "#f37726", stars: 4, projects: ["UAV Hand Gesture", "UAV Keyboard App", "UAV Bi-copter"],
+    note: ["ตรวจจับคน วัตถุ และท่าทางมือ เทรนโมเดลด้วย Roboflow + Ultralytics", "Detecting people, objects and hand gestures; training with Roboflow + Ultralytics"] },
+  { id: "hula", name: "Hula Drone SDK", label: "SDK", color: "#55e0c8", stars: 4, projects: ["UAV Hand Gesture", "UAV Keyboard App"],
+    note: ["เขียนภารกิจบินอัตโนมัติ และสอนการใช้งานให้ผู้เรียน", "Autonomous mission scripting, also taught to learners"] },
+  { id: "flight", name: "Flight Controller / PID", label: "PID", color: "#c792ea", stars: 3, projects: ["UAV Quadcopter", "UAV Bi-copter"],
+    note: ["ประกอบโดรน แฟลชเฟิร์มแวร์ คาลิเบรตเซนเซอร์ และจูน PID", "Drone assembly, firmware flashing, sensor calibration and PID tuning"] },
+  { id: "esp32", name: "ESP32 / Arduino", label: "32", color: "#e34c26", stars: 3, projects: ["Smart Energy Monitor Dashboard", "UAV Quadcopter"],
+    note: ["สมองกลฝังตัว เซนเซอร์ และ IoT", "Embedded systems, sensors and IoT"] },
+  { id: "ros2", name: "ROS 2", label: "R2", color: "#22a5e6", stars: 2, projects: ["UAV Bi-copter"],
+    note: ["ระบบสื่อสารระหว่างโหนดบน Raspberry Pi", "Node communication on Raspberry Pi"] },
+  { id: "rpi", name: "Raspberry Pi", label: "Pi", color: "#d6336c", stars: 3, projects: ["UAV Bi-copter"],
+    note: ["คอมพิวเตอร์บนโดรน ประมวลผลภาพและเซนเซอร์", "On-board computer for vision and sensors"] },
+  { id: "plc", name: "PLC / HMI", label: "PLC", color: "#9aa1b0", stars: 3, projects: ["Industrial Automation & IoT Training Kit"],
+    note: ["Ladder Diagram ด้วย GX Works3 และหน้าจอ HMI ด้วย GT Designer", "Ladder diagrams in GX Works3, HMI screens in GT Designer"] },
+  { id: "iot", name: "IoT", label: "IoT", color: "#7ed83c", stars: 3, projects: ["Smart Energy Monitor Dashboard", "Industrial Automation & IoT Training Kit"],
+    note: ["MQTT, LoRaWAN, Wi-Fi, ThingSpeak และแดชบอร์ด", "MQTT, LoRaWAN, Wi-Fi, ThingSpeak and dashboards"] },
+  { id: "web", name: "JavaScript / Web", label: "JS", color: "#f2d230", stars: 3, projects: ["Smart Energy Monitor Dashboard"],
+    note: ["HTML, CSS, JavaScript และ Chart.js", "HTML, CSS, JavaScript and Chart.js"] },
+  { id: "cpp", name: "C / C++", label: "C++", color: "#f34b7d", stars: 3, projects: ["UAV Quadcopter"],
+    note: ["Embedded C และ HLS สำหรับ FPGA", "Embedded C and HLS for FPGA"] },
+  { id: "fiber", name: "Fiber Optics", label: "FO", color: "#ffb84d", stars: 2, projects: [],
+    note: ["ต่อสายด้วย fusion splicer และวัดด้วย OTDR (จากการอบรม)", "Fusion splicing and OTDR testing (from training)"] },
+];
+
+// ข้อความสุ่มตอนกดตัวละครเสื้อส้ม
+const QUIPS = [
+  ["วันนี้บินโดรนไปกี่รอบแล้ว?", "How many drone flights today?"],
+  ["YOLO ตรวจเจอคุณแล้ว! 👀", "YOLO detected you! 👀"],
+  ["อย่าลืมจูน PID นะ", "Don't forget to tune the PID"],
+  ["แบตโดรนเหลือ 12%...", "Drone battery at 12%..."],
+  ["กำลังเก็บ LV ไป Senior!", "Grinding LV toward Senior!"],
+  ["ลองกดที่โดรนดูสิ", "Try clicking the drone"],
+  ["ESP32 ตัวนี้ร้อนมาก", "This ESP32 is running hot"],
+  ["git push เรียบร้อย ✓", "git push done ✓"],
+  ["ติดต่อผมได้ทาง LINE นะ", "Reach me on LINE anytime"],
+  ["มีความลับซ่อนอยู่ในเว็บนี้...", "There's a secret hidden here..."],
+];
+
+Object.assign(I18N, {
+  "sound.fx": ["เสียง: เอฟเฟกต์", "Sound: effects"],
+  "sound.music": ["เสียง: + เพลง", "Sound: + music"],
+  "item.details": ["ดูรายละเอียด", "Details"],
+  "item.tags": ["เครื่องมือที่ใช้", "Built with"],
+  "item.images": ["รูปภาพ", "Images"],
+  "item.skills": ["ทักษะที่ใช้", "Skills used"],
+  "item.used": ["ใช้ในผลงาน", "Used in"],
+  "item.none": ["ยังไม่มีผลงานที่บันทึกไว้ (มาจากการอบรม)", "No logged project yet (from training)"],
+  "item.level": ["ระดับ", "Level"],
+  "skills.title": ["ช่องเก็บของทักษะ", "Skill inventory"],
+  "skills.hint": ["แตะไอเทมเพื่อดูว่าใช้ในผลงานไหน", "Tap an item to see where it's used"],
+  "dialog.skip": ["แตะเพื่อข้าม", "Tap to skip"],
+  "gift.title": ["ได้รับไอเทม!", "Item get!"],
+  "gift.contact": ["ช่องทางติดต่อ", "Contact"],
+  "gift.project": ["ผลงาน", "Project"],
+  "secret.title": ["ปลดล็อกความลับ!", "Secret unlocked!"],
+  "secret.sub": ["คุณเจอรหัสลับแล้ว ↑↑↓↓←→←→BA", "You found the secret code ↑↑↓↓←→←→BA"],
+  "nf.title": ["404 หลงทาง!", "404 Lost!"],
+  "nf.sub": ["ไม่พบหน้านี้ แต่เก็บคริสตัลระหว่างรอได้นะ", "Page not found, but you can catch crystals meanwhile"],
+  "game.score": ["คะแนน", "Score"], "game.best": ["สูงสุด", "Best"], "game.lives": ["ชีวิต", "Lives"],
+  "game.start": ["เริ่มเกม", "Start"], "game.again": ["เล่นอีกครั้ง", "Play again"], "game.home": ["กลับหน้าแรก", "Back home"],
+  "game.help": ["เก็บคริสตัลสีฟ้า หลบหินสีแดง · ใช้ ← → หรือแตะซ้าย/ขวา", "Catch blue crystals, dodge red rocks · use ← → or tap left/right"],
+  "game.over": ["จบเกม!", "Game over!"],
+});

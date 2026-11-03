@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<base href="/">
+<title>404 · Phanphisut</title>
+<meta name="description" content="ไม่พบหน้านี้ ลองเล่นมินิเกมเก็บคริสตัลก่อนกลับหน้าแรก">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<meta name="theme-color" content="#05080c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Chakra+Petch:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+.game { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.hud { display: flex; flex-wrap: wrap; gap: 8px 18px; font: 700 13px/1 var(--f-pixel); color: var(--on-deep); }
+.hud b { color: var(--gold); font-variant-numeric: tabular-nums; }
+.hud .lives { color: #ff6b6b; letter-spacing: 2px; }
+.stage { position: relative; max-width: 720px; width: 100%; margin: 0 auto; }
+#game { display: block; width: 100%; aspect-ratio: 16 / 10; image-rendering: pixelated; background: #000; touch-action: none; cursor: pointer; }
+.overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; padding: 16px; background: rgba(0, 0, 0, .55); }
+.overlay h2 { margin: 0; font: 700 clamp(20px, 4vw, 30px)/1.1 var(--f-pixel); color: var(--gold); text-shadow: 2px 2px 0 #000; }
+.overlay p { margin: 0; max-width: 46ch; color: var(--on-deep); font-size: 14px; }
+.overlay .row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+</style>
+</head>
+<body data-page="404">
+<header id="hero"></header>
+
+<main id="main" tabindex="-1">
+  <section aria-labelledby="game-h">
+    <div class="wrap">
+      <div class="sec-label panel">
+        <img class="pix" data-sprite="crystal" alt="">
+        <div><small>Mini game</small><h2 id="game-h">Crystal Catch</h2></div>
+      </div>
+      <div class="game panel">
+        <div class="hud" aria-live="polite">
+          <span><span data-i18n="game.score"></span> <b id="g-score">0</b></span>
+          <span><span data-i18n="game.best"></span> <b id="g-best">0</b></span>
+          <span><span data-i18n="game.lives"></span> <span class="lives" id="g-lives">♥♥♥</span></span>
+        </div>
+        <div class="stage slot">
+          <canvas id="game" width="160" height="100" aria-label="Crystal Catch"></canvas>
+          <div class="overlay" id="g-over">
+            <h2 id="g-title" data-i18n="nf.title"></h2>
+            <p data-i18n="game.help"></p>
+            <div class="row">
+              <button class="btn" type="button" id="g-start" data-i18n="game.start"></button>
+              <a class="btn" href="index.html" data-i18n="game.home"></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+<script src="assets/fun.js"></script>
+<script src="assets/game.js"></script>
+</body>
+</html>

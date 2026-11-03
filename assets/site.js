@@ -121,7 +121,7 @@
     { id: "certificates", file: "certificates.html", key: "nav.certs", sprite: "medal", sub: "certs.sub" },
   ];
   const pageId = document.body.dataset.page;
-  const page = PAGES.find(p => p.id === pageId) || PAGES[0];
+  const page = pageId === "404" ? { id: "404", file: "404.html", key: "nf.title", sprite: "crystal", sub: "nf.sub" } : (PAGES.find(p => p.id === pageId) || PAGES[0]);
   const isHome = page.id === "home";
 
   /* ---------- shared chrome ---------- */
@@ -204,6 +204,28 @@
     drawSky();
   }
 
+  /* sky follows the real time in Thailand: dawn (orange-pink), day, dusk, night (stars). ?sky=dawn|day|dusk|night overrides */
+  const SKY = {
+    dawn:  { top: "#2b1f4f", bot: "#ff9e7a", stars: .3, lights: true, sun: [.18, .86], sunC: "#ffd27a",
+             bands: ["#3a2240", "#5a2f4a", "#7a3f52", "#9a5258", "#b8665c", "#cf7b5e", "#1a5658", "#1a5658"] },
+    day:   { top: "#2f6fc4", bot: "#8cc6f2", stars: 0, lights: false, sun: [.84, .28], sunC: "#ffe680", clouds: true, cloud: "#eaf4ff", cloudSh: "#b9d6f0",
+             bands: ["#5f9fd6", "#4f90c4", "#3f80b0", "#2f7090", "#22667a", "#1c5e6a", "#1a5658", "#1a5658"] },
+    dusk:  { top: "#1a1238", bot: "#d9607a", stars: .5, lights: true, sun: [.2, .95], sunC: "#ff8a5a",
+             bands: ["#3a1a40", "#5a2448", "#7a2f50", "#8a3a58", "#5a3a5a", "#2f4250", "#1a5658", "#1a5658"] },
+    night: { top: "#000000", bot: "#000000", stars: 1, lights: true },
+  };
+  function skyPhase() {
+    const q = new URLSearchParams(location.search).get("sky");
+    if (q && SKY[q]) return q;
+    let h = 21;
+    try { h = +new Intl.DateTimeFormat("en-GB", { hour: "numeric", hourCycle: "h23", timeZone: "Asia/Bangkok" }).format(new Date()); } catch (e) {}
+    return h >= 5 && h < 7 ? "dawn" : h >= 7 && h < 17 ? "day" : h >= 17 && h < 19 ? "dusk" : "night";
+  }
+  function mix(a, b, k) {
+    const p = c => [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16));
+    const A = p(a), B = p(b);
+    return "#" + A.map((v, i) => Math.round(v + (B[i] - v) * k).toString(16).padStart(2, "0")).join("");
+  }
   /* starry void + glowing horizon + crystal outcrops + distant skyline, drawn at 1/4 resolution */
   let skyStars = [], skyW = 0, skyH = 0;
   function drawSky(t = performance.now() / 1000) {
@@ -217,9 +239,18 @@
       for (let i = 0; i < n; i++) skyStars.push({ x: Math.floor(r() * W), y: Math.floor(r() * (H - 46)), big: r() < .14, ph: r() * 4, sp: .5 + r() * .9 });
     }
     const g = cv.getContext("2d"), P = (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(x, y, w, h); };
-    P(0, 0, W, H, "#000");
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    skyStars.forEach(s => {
+    const ph = SKY[skyPhase()];
+    // sky gradient in 6px-tall pixel bands
+    const rows = Math.ceil((H - 24) / 6);
+    for (let i = 0; i < rows; i++) P(0, i * 6, W, 6, mix(ph.top, ph.bot, i / Math.max(1, rows - 1)));
+    if (ph.sun) { const sx0 = Math.floor(W * ph.sun[0]), sy0 = Math.floor((H - 40) * ph.sun[1]); P(sx0 - 4, sy0 - 4, 9, 9, ph.sunC); P(sx0 - 3, sy0 - 5, 7, 11, ph.sunC); P(sx0 - 5, sy0 - 3, 11, 7, ph.sunC); P(sx0 - 2, sy0 - 3, 3, 2, "rgba(255,255,255,.55)"); }
+    if (ph.clouds) [[.12, .18], [.42, .1], [.78, .22]].forEach(([cx, cy], i) => {
+      const x = Math.floor(((cx * W + t * (1.5 + i * .5)) % (W + 40)) - 20), y = Math.floor((H - 40) * cy);
+      P(x, y, 18, 3, ph.cloud); P(x + 4, y - 2, 9, 2, ph.cloud); P(x + 2, y + 3, 14, 1, ph.cloudSh);
+    });
+    if (ph.stars > 0) skyStars.forEach((s, idx) => {
+      if (ph.stars < 1 && (idx % 10) / 10 >= ph.stars) return;
       const k = Math.floor(t * s.sp + s.ph);
       const lvl = reduce ? (s.big ? 2 : 0) : s.big ? (k % 3 === 0 ? 1 : 2) : (k % 4 === 0 ? 1 : 0);
       if (lvl === 0) { P(s.x, s.y, 1, 1, "#2a7fb8"); return; }
@@ -234,11 +265,14 @@
     [[0, 9, 4], [5, 14, 5], [11, 7, 3], [15, 11, 4], [20, 5, 3]].forEach(([dx, h, w], k) => {
       const x = sx + dx, y = top - h;
       P(x, y, w, h, "#1f3c52"); P(x, y, 1, h, "#2b5470");
-      for (let yy = y + 2; yy < top - 1; yy += 3) for (let i = 1; i < w - 1; i += 2) if ((i * 7 + yy * 3 + k) % 5) P(x + i, yy, 1, 1, "#7fd6ff");
+      for (let yy = y + 2; yy < top - 1; yy += 3) for (let i = 1; i < w - 1; i += 2) {
+        if (!ph.lights) P(x + i, yy, 1, 1, "#16303f");
+        else if ((i * 7 + yy * 3 + k) % 5) P(x + i, yy, 1, 1, "#7fd6ff");
+      }
     });
     P(sx + 7, top - 18, 1, 4, "#2b5470");
     if (reduce || Math.floor(t * 1.5) % 2) P(sx + 7, top - 19, 1, 1, "#ff4a4a");
-    bands.forEach((c, i) => P(0, top + i * 2, W, 2, c));
+    (ph.bands || bands).forEach((c, i) => P(0, top + i * 2, W, 2, c));
     // crystal outcrops at both edges
     [1, -1].forEach(side => {
       const X = x => side === 1 ? x : W - 1 - x;
@@ -286,16 +320,22 @@
     setTimeout(fire, 1500);
   }
 
-  /* 8-bit sound effects (WebAudio square waves), off by default */
-  let soundOn = false, actx = null;
-  try { soundOn = localStorage.getItem("sound") === "on"; } catch (e) {}
-  function tone(freq, start, dur, type = "square", vol = 0.06) {
-    const o = actx.createOscillator(), gn = actx.createGain();
-    o.type = type; o.frequency.setValueAtTime(freq, actx.currentTime + start);
-    gn.gain.setValueAtTime(vol, actx.currentTime + start);
-    gn.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + start + dur);
+  /* 8-bit sound (WebAudio). One button cycles: off -> effects -> effects + music. Off by default. */
+  let soundMode = "off", actx = null;
+  try { const v = localStorage.getItem("sound"); soundMode = v === "on" ? "fx" : (v === "fx" || v === "music") ? v : "off"; } catch (e) {}
+  let soundOn = soundMode !== "off";
+  function ctx() {
+    if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === "suspended") actx.resume();
+    return actx;
+  }
+  function tone(freq, start, dur, type = "square", vol = 0.06, at) {
+    const o = actx.createOscillator(), gn = actx.createGain(), t0 = (at ?? actx.currentTime) + start;
+    o.type = type; o.frequency.setValueAtTime(freq, t0);
+    gn.gain.setValueAtTime(vol, t0);
+    gn.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
     o.connect(gn).connect(actx.destination);
-    o.start(actx.currentTime + start); o.stop(actx.currentTime + start + dur + 0.02);
+    o.start(t0); o.stop(t0 + dur + 0.02);
   }
   const SFX = {
     click: () => tone(880, 0, 0.05),
@@ -303,24 +343,61 @@
     open: () => { tone(659, 0, 0.05); tone(988, 0.05, 0.07); },
     close: () => { tone(659, 0, 0.05); tone(440, 0.05, 0.07); },
     on: () => { [523, 659, 784, 1047].forEach((f, i) => tone(f, i * 0.06, 0.07)); },
+    type: () => tone(1320 + Math.random() * 160, 0, 0.025, "square", 0.025),
+    jump: () => { const o = actx.createOscillator(), g = actx.createGain(), n = actx.currentTime; o.type = "square"; o.frequency.setValueAtTime(330, n); o.frequency.exponentialRampToValueAtTime(880, n + 0.12); g.gain.setValueAtTime(0.05, n); g.gain.exponentialRampToValueAtTime(0.0001, n + 0.16); o.connect(g).connect(actx.destination); o.start(n); o.stop(n + 0.18); },
+    drop: () => { tone(392, 0, 0.06, "triangle", 0.08); tone(262, 0.07, 0.1, "triangle", 0.08); },
+    gift: () => { [784, 988, 1175, 1568].forEach((f, i) => tone(f, i * 0.05, 0.08)); },
+    coin: () => { tone(988, 0, 0.05); tone(1319, 0.05, 0.12); },
+    hurt: () => { tone(180, 0, 0.12, "sawtooth", 0.06); tone(120, 0.1, 0.15, "sawtooth", 0.06); },
+    secret: () => { [523, 659, 784, 1047, 784, 1047, 1319, 1568].forEach((f, i) => tone(f, i * 0.07, 0.09)); },
   };
   function sfx(name) {
     if (!soundOn) return;
-    try { if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === "suspended") actx.resume(); SFX[name](); } catch (e) {}
+    try { ctx(); SFX[name](); } catch (e) {}
   }
+
+  /* original chiptune loop: lead (square) + bass (triangle) + tick, 112 bpm, 8 bars */
+  const NOTE = n => 440 * Math.pow(2, (n - 69) / 12);
+  const LEAD = [72, 0, 75, 77, 79, 0, 77, 75, 74, 0, 70, 72, 74, 77, 75, 0, 72, 0, 75, 77, 79, 82, 79, 77, 75, 77, 75, 74, 72, 0, 0, 0,
+                67, 0, 70, 72, 74, 0, 72, 70, 72, 74, 75, 74, 72, 70, 67, 0, 68, 0, 72, 75, 77, 75, 72, 68, 70, 72, 74, 70, 67, 0, 0, 0];
+  const BASS = [48, 48, 55, 48, 46, 46, 53, 46, 44, 44, 51, 44, 43, 43, 50, 43];
+  let musicTimer = null, musicStep = 0, musicNext = 0;
+  function startMusic() {
+    if (musicTimer || soundMode !== "music") return;
+    try { ctx(); } catch (e) { return; }
+    const step = 60 / 112 / 2;
+    musicNext = actx.currentTime + 0.1; musicStep = 0;
+    musicTimer = setInterval(() => {
+      while (musicNext < actx.currentTime + 0.25) {
+        const i = musicStep % LEAD.length;
+        if (LEAD[i]) tone(NOTE(LEAD[i]), 0, step * 0.9, "square", 0.022, musicNext);
+        if (i % 4 === 0) tone(NOTE(BASS[(i / 4) % BASS.length]), 0, step * 3.6, "triangle", 0.05, musicNext);
+        if (i % 2 === 1) tone(2400, 0, 0.012, "square", 0.006, musicNext);
+        musicNext += step; musicStep++;
+      }
+    }, 60);
+  }
+  function stopMusic() { clearInterval(musicTimer); musicTimer = null; }
+  // a new page needs one tap or key press before audio may start
+  ["pointerdown", "keydown"].forEach(ev => addEventListener(ev, () => { if (soundMode === "music") startMusic(); }, { passive: true }));
+
   function paintSound() {
     const b = document.getElementById("snd"); if (!b) return;
     b.setAttribute("aria-pressed", soundOn);
     document.getElementById("snd-ico").src = sprite(soundOn ? "soundOn" : "soundOff");
-    document.getElementById("snd-txt").textContent = T(soundOn ? "sound.on" : "sound.off");
-    b.setAttribute("aria-label", T(soundOn ? "sound.on" : "sound.off"));
+    const k = "sound." + soundMode;
+    document.getElementById("snd-txt").textContent = T(k);
+    b.setAttribute("aria-label", T(k));
   }
   function wireSound() {
     document.getElementById("snd").addEventListener("click", e => {
       e.stopPropagation();
-      soundOn = !soundOn;
-      try { localStorage.setItem("sound", soundOn ? "on" : "off"); } catch (err) {}
-      paintSound(); sfx("on");
+      soundMode = soundMode === "off" ? "fx" : soundMode === "fx" ? "music" : "off";
+      soundOn = soundMode !== "off";
+      try { localStorage.setItem("sound", soundMode); } catch (err) {}
+      paintSound();
+      if (soundMode === "music") startMusic(); else stopMusic();
+      sfx("on");
     });
     // blip on buttons; chirp and short delay before going to another page
     document.addEventListener("click", e => {
@@ -420,10 +497,11 @@
           <div class="chips">${p.tags.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
           <h3>${esc(p.title)}</h3>
           <p>${esc(L(p.desc))}</p>
-          ${p.github ? `<div class="actions"><a class="btn" href="${esc(p.github)}" target="_blank" rel="noopener">GitHub ↗</a></div>` : ""}
+          <div class="actions"><button class="btn" type="button" data-proj="${i}">${esc(T("item.details"))}</button>${p.github ? `<a class="btn" href="${esc(p.github)}" target="_blank" rel="noopener">GitHub ↗</a>` : ""}</div>
         </div>
       </article>`).join("");
     renderRepos();
+    if (window.SITE && window.SITE.renderSkills) window.SITE.renderSkills();
   }
 
   let actFilter = "all";
@@ -536,10 +614,12 @@
     document.title = isHome ? "Phanphisut Portfolio" : `${T(page.key)} · Phanphisut`;
     (RENDER[page.id] || (() => {}))();
     if (window.onSiteLang) window.onSiteLang(lang);
+    document.dispatchEvent(new CustomEvent("sitelang", { detail: lang }));
     paintSound();
   }
   window.siteT = T;
   window.siteLang = () => lang;
+  window.SITE = { T, L, esc, sprite, oreBlock, fmtD, groups, lang: () => lang, sfx: n => sfx(n), page, isHome };
 
   /* ---------- boot ---------- */
   buildChrome();
