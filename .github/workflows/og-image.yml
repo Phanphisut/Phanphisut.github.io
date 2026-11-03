@@ -1,0 +1,36 @@
+name: Update share card image
+
+# Rebuilds og.png (the picture shown when the link is shared on LINE / Facebook)
+# whenever the site data or the card template changes.
+on:
+  push:
+    branches: [main]
+    paths:
+      - assets/data.js
+      - assets/character.js
+      - tools/og.html
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Thai fonts (fallback)
+        run: sudo apt-get update -y && sudo apt-get install -y fonts-thai-tlwg
+      - name: Render og.png with headless Chrome
+        run: |
+          google-chrome --headless=new --disable-gpu --hide-scrollbars --no-sandbox \
+            --allow-file-access-from-files --window-size=1200,630 --virtual-time-budget=6000 \
+            --screenshot="$PWD/og.png" "file://$PWD/tools/og.html"
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- og.png; then echo "og.png unchanged"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add og.png
+          git commit -m "Update share card image"
+          git push

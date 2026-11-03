@@ -1,0 +1,57 @@
+<!doctype html><html lang="th"><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Chakra+Petch:wght@500;700&family=Press+Start+2P&family=Kanit:wght@400;600&display=swap">
+<style>
+html,body{margin:0;width:1200px;height:630px;overflow:hidden;background:#000;color:#eef6fb;font-family:"Chakra Petch",sans-serif}
+#sky{position:absolute;inset:0;width:1200px;height:630px;image-rendering:pixelated}
+.card{position:absolute;inset:0;display:grid;grid-template-columns:520px 1fr;gap:48px;align-items:center;padding:0 64px 70px}
+.screen{background:#0a0b0f;padding:10px;border-radius:6px;box-shadow:0 0 0 6px #1d3047,0 0 40px rgba(63,182,255,.25)}
+#char-cv{display:block;width:500px;height:375px;image-rendering:pixelated}
+.kick{font:700 18px/1 "Silkscreen";color:#f6d23a;letter-spacing:.1em}
+h1{margin:14px 0 6px;font:700 58px/1.02 "Silkscreen";color:#e8f4ff;text-shadow:0 4px 0 #3a7aa6,0 8px 0 #1d3a4a,0 0 28px rgba(63,182,255,.4)}
+.th{font:700 30px/1.2 "Chakra Petch";margin:14px 0 4px}
+.role{font:500 20px/1.35 "Chakra Petch";color:#9fb3c2;white-space:nowrap}
+.lv{margin-top:26px;display:flex;align-items:baseline;gap:14px;font:700 30px/1 "Silkscreen"}
+.lv b{color:#7ed83c}.lv span{color:#7ed83c}
+.bar{margin-top:12px;height:20px;background:#111;border:3px solid #000;padding:3px;width:480px}
+.bar i{display:block;height:100%;width:4%;background:repeating-linear-gradient(90deg,#7ed83c 0 18px,rgba(0,0,0,.25) 18px 21px)}
+.stats{margin-top:18px;font:600 20px/1.4 "Kanit";color:#cfe3f0}
+.url{position:absolute;right:64px;bottom:22px;font:700 20px/1 "Silkscreen";color:#3fb6ff;z-index:2}
+</style>
+<canvas id="sky" width="300" height="158"></canvas>
+<div class="card">
+  <div class="screen"><canvas id="char-cv" width="768" height="576"></canvas></div>
+  <div>
+    <div class="kick">PORTFOLIO</div>
+    <h1>PHANPHISUT<br>PHUMET</h1>
+    <div class="th">พันธุ์พิสุทธิ์ ภูเม็ด</div>
+    <div class="role">R&amp;D Software / Hardware Engineer · Drones, AI &amp; IoT</div>
+    <div class="lv"><b id="lv"></b><span id="rk"></span></div>
+    <div class="bar"><i id="bar"></i></div>
+    <div class="stats" id="counts"></div>
+  </div>
+</div>
+<div class="url">phanphisut.github.io</div>
+<script>
+function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const c=document.getElementById("sky").getContext("2d"),W=300,H=158,P=(x,y,w,h,col)=>{c.fillStyle=col;c.fillRect(x,y,w,h)};
+P(0,0,W,H,"#000");const r=rng(77);
+for(let i=0;i<70;i++){const x=Math.floor(r()*W),y=Math.floor(r()*(H-30)),big=r()<.18;
+ if(!big){P(x,y,1,1,"#2a7fb8");continue;} P(x,y-1,1,3,"#3fb6ff");P(x-1,y,3,1,"#3fb6ff");if(r()<.5){P(x,y-2,1,5,"#3fb6ff");P(x-2,y,5,1,"#3fb6ff");P(x,y,1,1,"#d8f3ff");}}
+const ground=H-12,bands=["#1a1023","#0f2124","#0f2a2c","#123437","#123a3d","#154446","#174e50","#1a5658"];
+bands.forEach((col,i)=>P(0,ground-16+i*2,W,2,col));
+P(0,ground,W,H-ground,"#0c1a24");for(let x=0;x<W;x++)P(x,ground,1,1+Math.floor(r()*2),["#1a5658","#2d6a8a","#1f6466"][Math.floor(r()*3)]);
+</script>
+<script src="../assets/data.js"></script>
+<script>const _r=Math.random;Math.random=()=>0;</script>
+<script src="../assets/character.js"></script>
+<script>Math.random=_r;</script>
+<script>
+// numbers come from assets/data.js so the card always matches the site
+const RANKS = [["Junior",1,25],["Mid Junior",26,50],["Senior",51,100],["Manager",101,200],["CEO",201,1000]];
+const lv = PROJECTS.length + ACTIVITIES.length + CERTS.length;
+const rk = RANKS.find(r => lv <= r[2]) || RANKS[RANKS.length - 1];
+document.getElementById("lv").textContent = "LV " + lv;
+document.getElementById("rk").textContent = "· " + rk[0].toUpperCase();
+document.getElementById("bar").style.width = Math.max(4, Math.min(100, (lv - rk[1] + 1) / (rk[2] - rk[1] + 1) * 100)) + "%";
+document.getElementById("counts").textContent = `ผลงาน ${PROJECTS.length} · กิจกรรม ${ACTIVITIES.length} · ใบประกาศ ${CERTS.length}`;
+</script>
