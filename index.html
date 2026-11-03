@@ -189,17 +189,77 @@ section { padding-block: 32px 12px; scroll-margin-top: 16px; }
 .repo-foot { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 6px; font: 400 11px/1.4 var(--f-pixel); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .repo-foot .lang { color: var(--ink); }
 
+.sub-h { margin: 36px 0 14px; font: 700 13px/1 var(--f-pixel); color: var(--on-deep); text-transform: uppercase; letter-spacing: .08em; text-shadow: 2px 2px 0 #000; }
+
+/* featured projects */
+.showcase { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 22px; }
+.show { display: flex; flex-direction: column; min-width: 0; }
+.shot { display: block; padding: 0; margin: 10px 10px 0; cursor: zoom-in; position: relative; aspect-ratio: 16 / 10; max-width: 100%; overflow: hidden; }
+.shot img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s steps(4); }
+.shot:hover img { transform: scale(1.05); }
+.shot .zoom { position: absolute; right: 6px; bottom: 6px; font: 700 10px/1 var(--f-pixel); color: #fff; background: rgba(0,0,0,.65); padding: 5px 6px; }
+.show-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.show h3 { margin: 0; font: 700 17px/1.3 var(--f-body); }
+.show p { margin: 0; font-size: 14px; color: var(--ink-soft); flex: 1; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 700 10px/1 var(--f-pixel); text-transform: uppercase; letter-spacing: .04em; padding: 5px 7px; background: var(--slot); color: var(--on-deep); border: 2px solid var(--slot-lo); }
+.show .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.show .btn { font-size: 11px; padding: 8px 10px; }
+
+/* activities timeline */
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+.filters .btn[aria-pressed="true"] { background: var(--grass); color: #fff; border-color: #8fd36b #2b5a1a #2b5a1a #8fd36b; }
+.timeline { position: relative; padding-left: 34px; }
+.timeline::before {
+  content: ""; position: absolute; left: 10px; top: 4px; bottom: 4px; width: 8px;
+  background: repeating-linear-gradient(#8a6d3b 0 6px, #5e4a26 6px 8px);
+  box-shadow: 0 0 0 2px #000;
+}
+.month { position: relative; margin: 26px 0 12px; font: 700 13px/1 var(--f-pixel); color: var(--gold); text-transform: uppercase; letter-spacing: .06em; text-shadow: 2px 2px 0 #000; }
+.month:first-child { margin-top: 0; }
+.month::before { content: ""; position: absolute; left: -30px; top: -2px; width: 16px; height: 16px; background: var(--gold); box-shadow: 0 0 0 3px #000, inset -4px -4px 0 #b8860b; }
+.act { display: grid; grid-template-columns: 180px 1fr; gap: 0; margin-bottom: 14px; min-width: 0; }
+.act .shot { margin: 8px; aspect-ratio: 4 / 3; }
+.act-body { padding: 12px 14px 12px 6px; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.act-top { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.when { font: 700 11px/1 var(--f-pixel); color: var(--ink); background: var(--panel-hi); padding: 5px 7px; border: 2px solid var(--panel-lo); font-variant-numeric: tabular-nums; }
+.type { font: 700 10px/1 var(--f-pixel); padding: 5px 7px; color: #fff; text-transform: uppercase; border: 2px solid #000; }
+.type.work { background: #3b6bd3; }
+.type.train { background: #3c8527; }
+.type.teach { background: #c26a12; }
+.type.event { background: #8e44ad; }
+.act h3 { margin: 0; font: 700 16px/1.3 var(--f-body); overflow-wrap: anywhere; }
+.act p { margin: 0; font-size: 14px; color: var(--ink-soft); }
+.pages { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 92px), 1fr)); gap: 10px; }
+.pages .shot { margin: 0; aspect-ratio: 1131 / 1600; }
+.pages .shot img { object-position: top; }
+
 /* certificates */
-.certs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); gap: 20px; }
-.cert { display: grid; grid-template-columns: 56px 1fr; gap: 14px; padding: 14px; min-width: 0; }
-.cert .slot { padding: 4px; width: 56px; height: 56px; }
-.cert .slot img { width: 40px; height: 40px; }
-.cert .kicker { font: 700 11px/1 var(--f-pixel); color: #b8860b; text-transform: uppercase; letter-spacing: .06em; }
-.cert h3 { margin: 4px 0 2px; font: 700 16px/1.3 var(--f-body); }
-.cert p { margin: 0; font-size: 14px; color: var(--ink-soft); }
-.cert.locked { opacity: .78; }
-.cert.locked .slot img { filter: grayscale(1) brightness(.6); }
-.cert.locked .kicker { color: var(--ink-soft); }
+.certs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 22px; }
+.cert { display: flex; flex-direction: column; min-width: 0; }
+.cert .shot { aspect-ratio: 4 / 3; background: #fff; }
+.cert .shot img { object-fit: contain; }
+.cert-body { padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 4px; }
+.cert .kicker { font: 700 10px/1 var(--f-pixel); color: #b8860b; text-transform: uppercase; letter-spacing: .06em; }
+.cert h3 { margin: 2px 0 0; font: 700 15px/1.35 var(--f-body); }
+.cert p { margin: 0; font-size: 13px; color: var(--ink-soft); }
+
+/* lightbox */
+dialog.lb { border: 0; padding: 0; background: transparent; max-width: min(96vw, 1100px); max-height: 94vh; color: var(--ink); }
+dialog.lb::backdrop { background: rgba(0,0,0,.82); }
+.lb-inner { display: flex; flex-direction: column; max-height: 94vh; }
+.lb-img { flex: 1; min-height: 0; display: grid; place-items: center; background: #111; padding: 6px; }
+.lb-img img { max-width: 100%; max-height: calc(94vh - 120px); object-fit: contain; display: block; }
+.lb-bar { display: flex; align-items: center; gap: 10px; padding: 10px 12px; flex-wrap: wrap; }
+.lb-cap { flex: 1; min-width: 160px; font: 600 14px/1.4 var(--f-body); }
+.lb-bar .btn { font-size: 12px; padding: 8px 10px; }
+@media (max-width: 600px) {
+  .act { grid-template-columns: 1fr; }
+  .act-body { padding: 4px 14px 14px; }
+  .timeline { padding-left: 26px; }
+  .timeline::before { left: 6px; width: 6px; }
+  .month::before { left: -25px; width: 12px; height: 12px; }
+}
 
 /* contact inventory */
 .inventory { padding: 18px; }
@@ -261,7 +321,7 @@ footer { text-align: center; padding-block: 24px 16px; font: 400 11px/1.6 var(--
   <div class="wrap title-block">
     <h1 class="title">PHANPHISUT</h1>
     <div class="splash-wrap" aria-hidden="true"><span class="splash" id="splash">บินโดรนด้วย Python!</span></div>
-    <p class="subtitle">นักพัฒนา · สายโดรนและ IoT</p>
+    <p class="subtitle">พันธุ์พิสุทธิ์ ภูเม็ด · R&amp;D Software / Hardware Engineer · โดรน AI และ IoT</p>
     <div class="xp" aria-label="จำนวนโปรเจกต์">
       <div class="xp-level" id="xp-level">LV 5</div>
       <div class="xp-bar"><div class="xp-fill" id="xp-fill"></div></div>
@@ -287,7 +347,7 @@ footer { text-align: center; padding-block: 24px 16px; font: 400 11px/1.6 var(--
         </div>
         <div class="dialog panel">
           <span class="name" id="npc-name">Phanphisut</span>
-          <p>สวัสดีครับ ผมชอบสร้างโปรเจกต์โดรน เขียน Python และทำแดชบอร์ดพลังงาน ดูผลงาน ใบประกาศ และติดต่อผมได้จากป้ายด้านล่างเลยครับ</p>
+          <p>สวัสดีครับ ผมพันธุ์พิสุทธิ์ ทำงานด้านโดรน Computer Vision และ IoT ตอนนี้เป็น R&amp;D Engineer ที่ SoT (STEAM of Things) ดูผลงาน กิจกรรม ใบประกาศ และช่องทางติดต่อได้จากป้ายด้านล่างเลยครับ</p>
           <span class="more" aria-hidden="true">▼</span>
         </div>
       </div>
@@ -296,6 +356,11 @@ footer { text-align: center; padding-block: 24px 16px; font: 400 11px/1.6 var(--
         <a class="sign panel" href="#projects">
           <span class="slot"><img class="pix" data-sprite="chest" alt=""></span>
           <span><strong>ดูผลงาน</strong><small>โปรเจกต์ทั้งหมดจาก GitHub</small></span>
+          <span class="arrow" aria-hidden="true">▶</span>
+        </a>
+        <a class="sign panel" href="#activities">
+          <span class="slot"><img class="pix" data-sprite="map" alt=""></span>
+          <span><strong>กิจกรรม</strong><small>งาน อบรม และการสอน</small></span>
           <span class="arrow" aria-hidden="true">▶</span>
         </a>
         <a class="sign panel" href="#certificates">
@@ -318,8 +383,29 @@ footer { text-align: center; padding-block: 24px 16px; font: 400 11px/1.6 var(--
         <img class="pix" data-sprite="chest" alt="">
         <div><small>Chest · Projects</small><h2 id="projects-h">ผลงาน</h2></div>
       </div>
+      <div class="showcase" id="showcase"></div>
+      <h3 class="sub-h">Repositories บน GitHub</h3>
       <p class="sync"><i id="sync-dot"></i><span id="sync-note">กำลังโหลดจาก GitHub…</span></p>
       <div class="repos" id="repos"></div>
+    </div>
+  </section>
+
+  <section id="activities" aria-labelledby="act-h">
+    <div class="wrap">
+      <div class="sec-label panel">
+        <img class="pix" data-sprite="map" alt="">
+        <div><small>Quest log · Activities</small><h2 id="act-h">กิจกรรมและประสบการณ์</h2></div>
+      </div>
+      <div class="filters" id="filters" role="group" aria-label="กรองกิจกรรม">
+        <button class="btn" type="button" data-f="all" aria-pressed="true">ทั้งหมด</button>
+        <button class="btn" type="button" data-f="work" aria-pressed="false">ทำงาน</button>
+        <button class="btn" type="button" data-f="teach" aria-pressed="false">สอน / สตาฟ</button>
+        <button class="btn" type="button" data-f="train" aria-pressed="false">อบรม</button>
+        <button class="btn" type="button" data-f="event" aria-pressed="false">กิจกรรม</button>
+      </div>
+      <div class="timeline" id="timeline"></div>
+      <h3 class="sub-h">หน้าพอร์ตฉบับเต็ม</h3>
+      <div class="pages" id="pages"></div>
     </div>
   </section>
 
@@ -327,7 +413,7 @@ footer { text-align: center; padding-block: 24px 16px; font: 400 11px/1.6 var(--
     <div class="wrap">
       <div class="sec-label panel">
         <img class="pix" data-sprite="medal" alt="">
-        <div><small>Achievements</small><h2 id="certs-h">ใบประกาศ</h2></div>
+        <div><small>Achievements · <span id="cert-count">8</span> ใบ</small><h2 id="certs-h">ใบประกาศ</h2></div>
       </div>
       <div class="certs" id="certs"></div>
     </div>
@@ -372,17 +458,99 @@ footer { text-align: center; padding-block: 24px 16px; font: 400 11px/1.6 var(--
 <nav class="hotbar" aria-label="เมนูลัด">
   <a href="#top" data-label="หน้าแรก"><span class="key">1</span><img class="pix" data-sprite="grass" alt="หน้าแรก"></a>
   <a href="#projects" data-label="ผลงาน"><span class="key">2</span><img class="pix" data-sprite="chest" alt="ผลงาน"></a>
-  <a href="#certificates" data-label="ใบประกาศ"><span class="key">3</span><img class="pix" data-sprite="medal" alt="ใบประกาศ"></a>
-  <a href="#contact" data-label="ติดต่อ"><span class="key">4</span><img class="pix" data-sprite="bubble" alt="ติดต่อ"></a>
+  <a href="#activities" data-label="กิจกรรม"><span class="key">3</span><img class="pix" data-sprite="map" alt="กิจกรรม"></a>
+  <a href="#certificates" data-label="ใบประกาศ"><span class="key">4</span><img class="pix" data-sprite="medal" alt="ใบประกาศ"></a>
+  <a href="#contact" data-label="ติดต่อ"><span class="key">5</span><img class="pix" data-sprite="bubble" alt="ติดต่อ"></a>
 </nav>
 
+<dialog class="lb panel" id="lb" aria-label="ดูภาพ">
+  <div class="lb-inner">
+    <div class="lb-img"><img id="lb-img" alt=""></div>
+    <div class="lb-bar">
+      <span class="lb-cap" id="lb-cap"></span>
+      <button class="btn" type="button" id="lb-prev" aria-label="ภาพก่อนหน้า">◀</button>
+      <button class="btn" type="button" id="lb-next" aria-label="ภาพถัดไป">▶</button>
+      <button class="btn" type="button" id="lb-close">ปิด</button>
+    </div>
+  </div>
+</dialog>
+
 <script>
-// ===================== แก้ไขใบประกาศได้ที่นี่ =====================
-// ใส่ข้อมูลจริงแล้วลบ locked: true ออก   url = ลิงก์ไปดูใบประกาศ (ถ้ามี)
+// ===================== ข้อมูลในหน้า แก้ไขได้ที่นี่ =====================
+// รูปอยู่ในโฟลเดอร์ images/  (thumbs = รูปย่อ, projects / activities / certificates = หน้าเต็ม)
+const PROJECTS = [
+  { img: "p-gesture", page: "projects/14", title: "UAV Hand Gesture", tags: ["Python", "Hula SDK", "Computer Vision"],
+    desc: "ระบบสั่งโดรนด้วยท่าทางมือผ่านกล้องของโดรน ชู 2 นิ้วให้ขึ้นบิน ชู 5 นิ้วให้ลงจอด ไม่ต้องใช้รีโมต" },
+  { img: "p-keyboard", page: "projects/15", title: "UAV Keyboard App", tags: ["Python", "YOLO", "QR Code"],
+    desc: "แอปบังคับโดรนด้วยคีย์บอร์ด (W/S, A/D, T, L) ใช้ YOLO ตรวจจับคนและสแกน QR code เพื่อสั่งภารกิจถัดไป ออกแบบเป็นภารกิจค้นหาผู้ประสบภัย" },
+  { img: "p-bicopter", page: "projects/portfolio", title: "UAV Bi-copter", tags: ["Raspberry Pi", "ROS 2", "AI"],
+    desc: "โดรนสองใบพัดที่ใช้ Raspberry Pi และ ROS 2 ควบคุมการบิน ตรวจจับวัตถุด้วย AI อ่านค่าเซนเซอร์ และแสดงผลแบบ real-time" },
+  { img: "p-quad", page: "projects/15", title: "UAV Quadcopter", tags: ["Flight Controller", "PID", "Hardware"],
+    desc: "ประกอบโดรนร่วมกับ SoT ตั้งแต่ flight controller, ESC และมอเตอร์ brushless ไปจนถึงแฟลชเฟิร์มแวร์ คาลิเบรตเซนเซอร์ และจูน PID" },
+  { img: "p-energy", page: "projects/14", title: "Smart Energy Monitor Dashboard", tags: ["JavaScript", "Chart.js", "ESP32"],
+    desc: "เว็บแอปแสดงการผลิตและใช้พลังงานแบบ real-time สลับไปใช้ไฟบ้านอัตโนมัติผ่านรีเลย์เมื่อพลังงานแสงอาทิตย์หรือแบตเตอรี่ต่ำ",
+    github: "https://github.com/Phanphisut/Smart-energy-dashboard" },
+  { img: "p-industrial", page: "projects/14", title: "Industrial Automation & IoT Training Kit", tags: ["PLC", "HMI", "IoT"],
+    desc: "ชุดฝึก ED-IOT-01 เขียน Mitsubishi PLC ด้วย GX Works3 ออกแบบหน้าจอ HMI ด้วย GT Designer คุมความเร็วมอเตอร์ด้วย Inverter และส่งข้อมูลผ่าน IoT" },
+];
+
+// type: work = ทำงาน, teach = สอน/สตาฟ, train = อบรม, event = กิจกรรม   ym = ปี-เดือน ใช้เรียงและจัดกลุ่ม
+const ACTIVITIES = [
+  { ym: "2026-09", when: "22 ก.ย. 2026", type: "teach", img: "a-airschool", page: "activities/10", title: "Staff Air School",
+    desc: "วิทยากร STEM workshop ตามโรงเรียน สอนใช้ Arduino และ micro:bit จำลองวงจรออนไลน์ เขียนโปรแกรมเซนเซอร์แบบบล็อก และทำโปรเจกต์วัดความชื้นดิน ความชื้นอากาศ และอุณหภูมิ" },
+  { ym: "2026-09", when: "2 ก.ย. 2026", type: "event", img: "a-chiba", page: "activities/10", title: "ต้อนรับนักศึกษา Chiba University",
+    desc: "ดูแลนักศึกษาจาก Chiba University ประเทศญี่ปุ่น ที่มาศึกษาดูงาน EGAT Learning Center และแลกเปลี่ยนวัฒนธรรมไทย–ญี่ปุ่น" },
+  { ym: "2026-08", when: "ส.ค. 2026 – ปัจจุบัน", type: "work", img: "a-sot", page: "activities/11", title: "R&D Software / Hardware Engineer · SoT (STEAM of Things)",
+    desc: "สหกิจศึกษา พัฒนาโปรแกรมโดรนด้วย HuLa Drone SDK, Python และ C/C++ งาน Computer Vision ด้วย YOLO ระบบสมองกลฝังตัว ESP32 / Arduino การควบคุม PID และ pipeline AI ตั้งแต่เตรียม dataset จนถึง real-time inference บนกล้องโดรน" },
+  { ym: "2026-08", when: "ส.ค. 2026 – ปัจจุบัน", type: "teach", img: "a-lecturer", page: "activities/9", title: "Lecturer Hula Mission",
+    desc: "สอนผู้เรียนใช้โปรแกรม AI Detection ที่ทีมพัฒนา ติด label เทรนโมเดล และเขียน Python ด้วย Hula SDK ให้โดรนบินอัตโนมัติ หลบสิ่งกีดขวาง ลอดห่วง และอ่าน QR code" },
+  { ym: "2026-08", when: "ส.ค. 2026 – ปัจจุบัน", type: "teach", img: "a-uavstaff", page: "activities/9", title: "UAV Staff",
+    desc: "ทีมสนับสนุนเทคนิค Drone Kit ดูแลการบิน จูน PID (Roll, Pitch, Yaw, Altitude) ซ่อมบำรุง บัดกรีสาย ESC เปลี่ยนมอเตอร์ ใบพัด แบตเตอรี่ และติดตั้งเฟิร์มแวร์" },
+  { ym: "2026-08", when: "ส.ค. 2026 – ปัจจุบัน", type: "train", img: "a-cv", page: "activities/10", title: "Computer Vision",
+    desc: "ฝึก AI Object Detection ด้วย Roboflow, Google Colab, Ultralytics และ YOLO ตั้งแต่เตรียม dataset เทรนโมเดล .pt จนถึงตรวจจับหมวกนิรภัย ยานพาหนะ บุคคล และผู้ประสบภัย" },
+  { ym: "2026-08", when: "10 ส.ค. 2026", type: "teach", img: "a-volunteer", page: "activities/9", title: "Volunteer Lecturer",
+    desc: "ตัวแทนรุ่นกล่าวต้อนรับและจัดเวทีแลกเปลี่ยนความรู้กับรุ่นพี่ เน้นการคิดเป็นระบบ การแก้ปัญหา และการตั้งคำถาม" },
+  { ym: "2026-07", when: "29 ก.ค. 2026", type: "train", img: "a-hls", page: "activities/9", title: "HLS Introduction Training",
+    desc: "เขียน C/C++ สำหรับพัฒนา FPGA ด้วยเครื่องมือ High-Level Synthesis ของ AMD สอนโดยวิศวกรจาก Design Gateway" },
+  { ym: "2026-07", when: "27–31 ก.ค. 2026", type: "train", img: "a-iot", page: "activities/8", title: "IoT for Industry",
+    desc: "เขียน LabVIEW ทำหน้าจอแสดงผล กราฟ และระบบรดน้ำอัตโนมัติเมื่อความชื้นต่ำกว่า 50% ส่งข้อมูลขึ้น ThingSpeak ทุก 10 วินาที" },
+  { ym: "2026-07", when: "13–17 ก.ค. 2026", type: "train", img: "a-genai", page: "activities/8", title: "Generative AI",
+    desc: "ฝึก prompt engineering สร้างภาพและวิดีโอด้วย ChatGPT, Gemini, NotebookLM, Claude, Canva, Google Flow และอื่น ๆ ทำ storyboard และสื่อโฆษณา" },
+  { ym: "2026-07", when: "9 ก.ค. 2026", type: "event", img: "a-aisol", page: "activities/8", title: "AI Solutions",
+    desc: "เรียนรู้ความต้องการของภาคอุตสาหกรรมไทย ดูสาธิตหุ่นยนต์สุนัขที่ใช้ ROS 2 และแนวทางความปลอดภัยไซเบอร์พื้นฐาน" },
+  { ym: "2026-07", when: "8 ก.ค. 2026", type: "train", img: "a-cyber", page: "activities/8", title: "Cyber Security",
+    desc: "พื้นฐานความปลอดภัยไซเบอร์ ทั้ง Network, Cloud, Application, Critical Infrastructure และ IoT Security" },
+  { ym: "2026-07", when: "1 ก.ค. 2026", type: "train", img: "a-hula", page: "activities/7", title: "Training Hula SDK",
+    desc: "ศึกษาการใช้งานโดรน Hula SDK และออกแบบภารกิจสอน Python + YOLO สำหรับงานค้นหาและกู้ภัย สำรวจ และเกษตร" },
+  { ym: "2026-06", when: "28–30 มิ.ย. 2026", type: "train", img: "a-uav", page: "activities/7", title: "UAV Training",
+    desc: "กฎหมายการบินโดรน การขออนุญาต การใช้งานด้านเกษตร สำรวจ และทำแผนที่ รวมถึงบินแบบ grid ค้นหาผู้ประสบภัยน้ำท่วม" },
+  { ym: "2026-06", when: "22–25 มิ.ย. 2026", type: "train", img: "a-plc", page: "activities/7", title: "PLC Level 1",
+    desc: "เขียน Ladder Diagram ออกแบบวงจรควบคุม ใช้ GX Works3 และ GT Designer สร้างหน้าจอ HMI เป็นพื้นฐานระบบ Smart Factory" },
+  { ym: "2026-06", when: "11 มิ.ย. 2026", type: "train", img: "a-3d", page: "activities/7", title: "3D Printer Training",
+    desc: "แปลงไฟล์ SolidWorks เป็นไฟล์พิมพ์ ตั้งค่า slicing สำหรับ PLA / ABS ดูแลเครื่องพิมพ์ และพิมพ์กล่องอุปกรณ์อิเล็กทรอนิกส์และชิ้นส่วนหุ่นยนต์" },
+  { ym: "2026-06", when: "10 มิ.ย. 2026", type: "train", img: "a-splicer", page: "activities/6", title: "Fusion Splicer",
+    desc: "ต่อสายไฟเบอร์ออปติกด้วยเครื่อง fusion splicer ทั้งปอก ตัด ต่อ และหุ้มด้วยท่อหด ตามมาตรฐานอุตสาหกรรม" },
+  { ym: "2026-06", when: "9 มิ.ย. 2026", type: "train", img: "a-otdr", page: "activities/6", title: "EXFO OTDR Training",
+    desc: "ใช้ EXFO MaxTester OTDR อ่านกราฟ trace หาจุดต่อ connector และจุดเสียในสายไฟเบอร์ พร้อมตรวจและทำความสะอาดหัวต่อ" },
+  { ym: "2026-02", when: "14 ก.พ. 2026", type: "event", img: "a-youth", page: "activities/6", title: "Youth Innovation Project",
+    desc: "พัฒนาระบบ AIoT ออกแบบวงจรเซนเซอร์ เขียนไมโครคอนโทรลเลอร์ เชื่อมต่อ server และทำแดชบอร์ดแบบ real-time" },
+  { ym: "2025-05", when: "5–20 พ.ค. 2025", type: "train", img: "a-arduino", page: "activities/6", title: "Arduino Testing",
+    desc: "ทดลองวงจรบน breadboard บัดกรี และทำ mini-project ตรวจจับสิ่งกีดขวางด้วย IR รดน้ำต้นไม้อัตโนมัติ ไฟจราจร ตรวจจับเสียง และวัดอุณหภูมิ" },
+  { ym: "2024-08", when: "ส.ค. – ธ.ค. 2024", type: "work", img: "a-bkc", page: "activities/11", title: "IT Administrator & IT Support · Baan Klong Cake",
+    desc: "สหกิจศึกษา 5 เดือน ดูแลแก้ปัญหาฮาร์ดแวร์และซอฟต์แวร์ให้ 24 สาขาทั่วประเทศ ทำคอนเทนต์ด้าน IT และช่วยตั้งค่าโฆษณาออนไลน์" },
+];
+const PORTFOLIO_PAGES = ["projects/14", "projects/15", "projects/portfolio", "activities/11", "activities/10", "activities/9", "activities/8", "activities/7", "activities/6"];
+
+// เรียงจากใหม่ไปเก่า
 const CERTS = [
-  { title: "ชื่อใบประกาศ", issuer: "หน่วยงานที่ออกให้", date: "2026", url: "", locked: true },
-  { title: "ชื่อใบประกาศ", issuer: "หน่วยงานที่ออกให้", date: "2026", url: "", locked: true },
-  { title: "ชื่อใบประกาศ", issuer: "หน่วยงานที่ออกให้", date: "2026", url: "", locked: true },
+  { img: "cert-1", title: "จัดระเบียบงานและสร้างระบบอัตโนมัติด้วย AI", issuer: "สำนักงานคณะกรรมการดิจิทัลเพื่อเศรษฐกิจและสังคมแห่งชาติ · TH AI Passport × OpenAI", date: "24 ก.ย. 2026" },
+  { img: "cert-2", title: "การตลาดยุค AI เข้าใจลูกค้า วัดผลอย่างมีข้อมูล", issuer: "สำนักงานคณะกรรมการดิจิทัลเพื่อเศรษฐกิจและสังคมแห่งชาติ · TH AI Passport", date: "23 ก.ย. 2026" },
+  { img: "cert-6", title: "Industrial Applications of Internet of Things (IoT) · 30 ชั่วโมง", issuer: "กรมพัฒนาฝีมือแรงงาน กระทรวงแรงงาน", date: "27–31 ก.ค. 2026" },
+  { img: "cert-5", title: "Multimedia Development with Generative AI Technology · 30 ชั่วโมง", issuer: "กรมพัฒนาฝีมือแรงงาน กระทรวงแรงงาน", date: "13–17 ก.ค. 2026" },
+  { img: "cert-3", title: "รู้ทันป้องกันได้: ภัยไซเบอร์ในยุคดิจิทัล (Cyber Aware)", issuer: "สำนักวิทยบริการและเทคโนโลยีสารสนเทศ มหาวิทยาลัยราชภัฏสวนสุนันทา", date: "8 ก.ค. 2026" },
+  { img: "cert-4", title: "PLC Control Technician: PLC Level 1", issuer: "Thai-French Innovation Institute, KMUTNB", date: "26 มิ.ย. 2026" },
+  { img: "cert-8", title: "PLC ระดับ 1 · 30 ชั่วโมง", issuer: "กรมพัฒนาฝีมือแรงงาน กระทรวงแรงงาน", date: "22–25 มิ.ย. 2026" },
+  { img: "cert-7", title: "Certificate of Contribution · Youth Innovation Project #3: AIoT for Future Innovation", issuer: "11th International STEM Education Conference 2026 · มหาวิทยาลัยราชภัฏสวนสุนันทา", date: "14 ก.พ. 2026" },
 ];
 const GH_USER = "Phanphisut";
 // ข้อมูลสำรอง ใช้เมื่อเรียก GitHub API ไม่ได้
@@ -470,6 +638,10 @@ const S = {
     "kkkkkkkkkkkk", "kssssssssssk", "kkkkkkkkkkkk", "kgkkkkkkkkkk", "kkgkkkkkkkkk", "kkkgkkkkkkkk",
     "kkgkkkkkkkkk", "kgkkkggggkkk", "kkkkkkkkkkkk", "kkkkkkkkkkkk", "kkkkkkkkkkkk", "kkkkkkkkkkkk"
   ], { k: "#1d1d1d", s: "#5a5a5a", g: "#3fd65a" }),
+  map: fromRows([
+    "............", ".dddddddddd.", ".dppgppbbpd.", ".dpgggpbbpd.", ".dppgppppbd.", ".dpppprppbd.",
+    ".dbppprrppd.", ".dbbppprpgd.", ".dbbppppggd.", ".dpbbppgggd.", ".dddddddddd.", "............"
+  ], { p: "#e8d9a8", d: "#8a6d3b", r: "#d33b3b", g: "#4a8f3a", b: "#4b7bd3" }),
   grass: grassBlock(42),
 };
 const url = c => c.toDataURL();
@@ -542,17 +714,88 @@ async function loadRepos() {
 renderRepos(FALLBACK);
 loadRepos();
 
-/* certificates */
-const medal = url(S.medal);
-document.getElementById("certs").innerHTML = CERTS.map(c => `
-  <div class="cert panel${c.locked ? " locked" : ""}">
-    <span class="slot"><img class="pix" src="${medal}" width="40" height="40" alt=""></span>
-    <div>
-      <span class="kicker">${c.locked ? "ยังไม่ปลดล็อก" : "ปลดล็อกความสำเร็จ!"}</span>
-      <h3>${c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.title)}</a>` : esc(c.title)}</h3>
-      <p>${esc(c.issuer)} · ${esc(c.date)}</p>
+/* lightbox */
+const lb = document.getElementById("lb"), lbImg = document.getElementById("lb-img"), lbCap = document.getElementById("lb-cap");
+let lbList = [], lbI = 0;
+function lbShow() { const it = lbList[lbI]; lbImg.src = it.src; lbImg.alt = it.cap; lbCap.textContent = it.cap + (lbList.length > 1 ? `  (${lbI + 1}/${lbList.length})` : ""); }
+function openLb(list, i) {
+  lbList = list; lbI = i; lbShow();
+  document.getElementById("lb-prev").hidden = document.getElementById("lb-next").hidden = list.length < 2;
+  if (lb.showModal) lb.showModal(); else lb.setAttribute("open", "");
+}
+document.getElementById("lb-close").onclick = () => lb.close();
+document.getElementById("lb-prev").onclick = () => { lbI = (lbI - 1 + lbList.length) % lbList.length; lbShow(); };
+document.getElementById("lb-next").onclick = () => { lbI = (lbI + 1) % lbList.length; lbShow(); };
+lb.addEventListener("click", e => { if (e.target === lb) lb.close(); });
+lb.addEventListener("keydown", e => {
+  if (e.key === "ArrowLeft") document.getElementById("lb-prev").click();
+  if (e.key === "ArrowRight") document.getElementById("lb-next").click();
+});
+const IMG = p => `images/${p}.jpg`, TH = n => `images/thumbs/${n}.jpg`;
+function shotBtn(thumb, label, group, i) {
+  return `<button class="shot slot" type="button" data-g="${group}" data-i="${i}" aria-label="ดูภาพ ${esc(label)}">
+    <img src="${thumb}" alt="${esc(label)}" loading="lazy"><span class="zoom">ดูภาพ</span></button>`;
+}
+const groups = {};
+document.addEventListener("click", e => {
+  const b = e.target.closest(".shot[data-g]"); if (!b) return;
+  openLb(groups[b.dataset.g], +b.dataset.i);
+});
+
+/* featured projects */
+groups.proj = PROJECTS.map(p => ({ src: IMG(p.page), cap: p.title }));
+document.getElementById("showcase").innerHTML = PROJECTS.map((p, i) => `
+  <article class="show panel">
+    ${shotBtn(TH(p.img), p.title, "proj", i)}
+    <div class="show-body">
+      <div class="chips">${p.tags.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
+      <h3>${esc(p.title)}</h3>
+      <p>${esc(p.desc)}</p>
+      ${p.github ? `<div class="actions"><a class="btn" href="${esc(p.github)}" target="_blank" rel="noopener">GitHub ↗</a></div>` : ""}
     </div>
-  </div>`).join("");
+  </article>`).join("");
+
+/* activities */
+const TYPE_LABEL = { work: "ทำงาน", teach: "สอน / สตาฟ", train: "อบรม", event: "กิจกรรม" };
+const ymLabel = ym => { const [y, m] = ym.split("-"); return `${TH_M[+m - 1]} ${y}`; };
+function renderActs(filter) {
+  const list = ACTIVITIES.filter(a => filter === "all" || a.type === filter);
+  groups.act = list.map(a => ({ src: IMG(a.page), cap: `${a.title} · ${a.when}` }));
+  let last = "", html = "";
+  list.forEach((a, i) => {
+    if (a.ym !== last) { html += `<div class="month">${ymLabel(a.ym)}</div>`; last = a.ym; }
+    html += `<article class="act panel">
+      ${shotBtn(TH(a.img), a.title, "act", i)}
+      <div class="act-body">
+        <div class="act-top"><span class="when">${esc(a.when)}</span><span class="type ${a.type}">${TYPE_LABEL[a.type]}</span></div>
+        <h3>${esc(a.title)}</h3>
+        <p>${esc(a.desc)}</p>
+      </div>
+    </article>`;
+  });
+  document.getElementById("timeline").innerHTML = html;
+}
+document.getElementById("filters").addEventListener("click", e => {
+  const b = e.target.closest("[data-f]"); if (!b) return;
+  document.querySelectorAll("#filters [data-f]").forEach(x => x.setAttribute("aria-pressed", x === b));
+  renderActs(b.dataset.f);
+});
+renderActs("all");
+groups.pages = PORTFOLIO_PAGES.map((p, i) => ({ src: IMG(p), cap: `หน้าพอร์ต ${i + 1}` }));
+document.getElementById("pages").innerHTML = PORTFOLIO_PAGES.map((p, i) => shotBtn(IMG(p), `หน้าพอร์ต ${i + 1}`, "pages", i)).join("");
+
+/* certificates */
+groups.cert = CERTS.map(c => ({ src: `images/certificates/${c.img}.jpg`, cap: c.title }));
+document.getElementById("cert-count").textContent = CERTS.length;
+document.getElementById("certs").innerHTML = CERTS.map((c, i) => `
+  <article class="cert panel">
+    ${shotBtn(`images/certificates/${c.img}.jpg`, c.title, "cert", i)}
+    <div class="cert-body">
+      <span class="kicker">ปลดล็อกความสำเร็จ! · ${esc(c.date)}</span>
+      <h3>${esc(c.title)}</h3>
+      <p>${esc(c.issuer)}</p>
+    </div>
+  </article>`).join("");
 
 /* LINE copy */
 document.getElementById("copy-line").addEventListener("click", async e => {
@@ -575,7 +818,8 @@ const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting
 targets.forEach(t => io.observe(t));
 addEventListener("keydown", e => {
   if (e.target.closest("input,textarea") || e.ctrlKey || e.metaKey || e.altKey) return;
-  const n = +e.key; if (n >= 1 && n <= 4) { slots[n - 1].click(); }
+  if (lb.open) return;
+  const n = +e.key; if (n >= 1 && n <= slots.length) { slots[n - 1].click(); }
 });
 select(0);
 
