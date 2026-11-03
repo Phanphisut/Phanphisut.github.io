@@ -245,10 +245,17 @@
     const rows = Math.ceil((H - 24) / 6);
     for (let i = 0; i < rows; i++) P(0, i * 6, W, 6, mix(ph.top, ph.bot, i / Math.max(1, rows - 1)));
     if (ph.sun) { const sx0 = Math.floor(W * ph.sun[0]), sy0 = Math.floor((H - 40) * ph.sun[1]); P(sx0 - 4, sy0 - 4, 9, 9, ph.sunC); P(sx0 - 3, sy0 - 5, 7, 11, ph.sunC); P(sx0 - 5, sy0 - 3, 11, 7, ph.sunC); P(sx0 - 2, sy0 - 3, 3, 2, "rgba(255,255,255,.55)"); }
-    if (ph.clouds) [[.12, .18], [.42, .1], [.78, .22]].forEach(([cx, cy], i) => {
-      const x = Math.floor(((cx * W + t * (1.5 + i * .5)) % (W + 40)) - 20), y = Math.floor((H - 40) * cy);
-      P(x, y, 18, 3, ph.cloud); P(x + 4, y - 2, 9, 2, ph.cloud); P(x + 2, y + 3, 14, 1, ph.cloudSh);
-    });
+    // clouds: a few on clear days, many when Bangkok is actually cloudy or rainy (weather set by fx.js)
+    const wx = window.SITE_WEATHER || {};
+    const nClouds = Math.round((ph.clouds ? 3 : 0) + (wx.clouds || 0) * 7 + (wx.rain ? 3 : 0));
+    const grey = wx.rain || (wx.clouds || 0) > .75;
+    const cC = ph.clouds ? (grey ? "#aebccb" : ph.cloud) : (grey ? "#1f2a38" : "#18222f");
+    const cS = ph.clouds ? (grey ? "#8494a6" : ph.cloudSh) : "#0e151e";
+    for (let i = 0; i < nClouds; i++) {
+      const cx = ((i * 0.37 + 0.12) % 1), cy = 0.06 + ((i * 0.29) % 0.34), sp = 1.2 + (i % 3) * .5;
+      const x = Math.floor(((cx * W + t * sp) % (W + 40)) - 20), y = Math.floor((H - 40) * cy), s = 1 + (i % 2);
+      P(x, y, 18 * s, 3 * s, cC); P(x + 4 * s, y - 2 * s, 9 * s, 2 * s, cC); P(x + 2 * s, y + 3 * s, 14 * s, 1 * s, cS);
+    }
     if (ph.stars > 0) skyStars.forEach((s, idx) => {
       if (ph.stars < 1 && (idx % 10) / 10 >= ph.stars) return;
       const k = Math.floor(t * s.sp + s.ph);
@@ -402,14 +409,54 @@
     // blip on buttons; chirp and short delay before going to another page
     document.addEventListener("click", e => {
       const a = e.target.closest("a[href]");
-      if (a && soundOn && !a.target && /\.html(#.*)?$/.test(a.getAttribute("href")) && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
-        e.preventDefault(); sfx("page"); setTimeout(() => { location.href = a.href; }, 140); return;
+      if (a && !a.target && /\.html(#.*)?$/.test(a.getAttribute("href")) && !e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+        e.preventDefault(); go(a.href); return;
       }
       if (e.target.closest(".shot[data-g]")) return sfx("open");
       if (e.target.closest("#lb-close")) return sfx("close");
       if (e.target.closest(".btn, .stat-row, a.inv, .repo")) sfx("click");
     });
   }
+  /* game-style page change: pixel blocks close in diagonally, the next page opens them again */
+  const REDUCE = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let wipe = null, going = false;
+  function wipeCanvas() {
+    if (wipe) return wipe;
+    wipe = document.createElement("canvas"); wipe.className = "wipe"; wipe.setAttribute("aria-hidden", "true");
+    document.body.appendChild(wipe);
+    return wipe;
+  }
+  function runWipe(closing, done) {
+    const cv = wipeCanvas(), B = 32, cols = Math.ceil(innerWidth / B), rows = Math.ceil(innerHeight / B);
+    cv.width = cols; cv.height = rows; cv.hidden = false;
+    const g = cv.getContext("2d"), maxD = cols + rows, dur = 380, t0 = performance.now();
+    const order = []; for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) order.push([x, y, (x + y) / maxD + ((x * 7 + y * 13) % 5) * .02]);
+    const frame = now => {
+      const k = Math.min(1, (now - t0) / dur);
+      g.clearRect(0, 0, cols, rows);
+      order.forEach(([x, y, d]) => {
+        const on = closing ? k >= d * .9 : k < d * .9 + .1;
+        if (on) { g.fillStyle = (x + y) % 2 ? "#05080c" : "#0a1018"; g.fillRect(x, y, 1, 1); }
+      });
+      if (k < 1) requestAnimationFrame(frame);
+      else { if (!closing) cv.hidden = true; done && done(); }
+    };
+    requestAnimationFrame(frame);
+  }
+  function go(href) {
+    if (going) return; going = true;
+    sfx("page");
+    if (REDUCE) { location.href = href; return; }
+    try { sessionStorage.setItem("wipe", "1"); } catch (e) {}
+    runWipe(true, () => { location.href = href; });
+    setTimeout(() => { location.href = href; }, 1200);
+  }
+  function wipeIn() {
+    let flag = false; try { flag = sessionStorage.getItem("wipe") === "1"; sessionStorage.removeItem("wipe"); } catch (e) {}
+    if (flag && !REDUCE) runWipe(false);
+  }
+  addEventListener("pageshow", e => { if (e.persisted) { going = false; if (wipe) wipe.hidden = true; } });
+
   function animateSky() {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     let visible = true;
@@ -619,7 +666,11 @@
   }
   window.siteT = T;
   window.siteLang = () => lang;
-  window.SITE = { T, L, esc, sprite, oreBlock, fmtD, groups, lang: () => lang, sfx: n => sfx(n), page, isHome };
+  window.SITE = { T, L, esc, sprite, oreBlock, fmtD, groups, lang: () => lang, sfx: n => sfx(n), page, isHome, go: h => go(h), redrawSky: () => drawSky(),
+    setLang: l => { lang = l === "en" ? "en" : "th"; try { localStorage.setItem("lang", lang); } catch (e) {} applyLang(); },
+    cycleSound: () => document.getElementById("snd").click(), soundMode: () => soundMode,
+    rank: () => { const lv = PROJECTS.length + ACTIVITIES.length + CERTS.length; return { lv, r: RANKS.find(r => lv <= r.max) || RANKS[RANKS.length - 1] }; } };
+  wipeIn();
 
   /* ---------- boot ---------- */
   buildChrome();
@@ -659,7 +710,7 @@
   addEventListener("keydown", e => {
     if (document.getElementById("lb").open || e.ctrlKey || e.metaKey || e.altKey || e.target.closest("input,textarea")) return;
     const n = +e.key;
-    if (n >= 1 && n <= slots.length) { sfx("page"); setTimeout(() => { location.href = slots[n - 1].getAttribute("href"); }, soundOn ? 140 : 0); }
+    if (n >= 1 && n <= slots.length) go(slots[n - 1].href);
   });
 
   applyLang();

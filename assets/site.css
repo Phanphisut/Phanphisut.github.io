@@ -420,3 +420,35 @@ dialog.item::backdrop { background: rgba(0, 0, 0, .75); }
 .sk-name { font: 700 13px/1.25 var(--f-body); }
 .skills-hint { margin: 0 14px 14px; font-size: 13px; color: var(--ink-soft); }
 .dialog .more[hidden] { display: none; }
+
+/* weather + festival effects layer */
+.overworld canvas.fx { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+.fest-badge {
+  position: absolute; z-index: 3; left: max(12px, env(safe-area-inset-left, 0px)); top: 12px;
+  padding: 6px 10px; font: 700 13px/1.2 var(--f-body); color: #fff; background: rgba(0,0,0,.55); border: 2px solid var(--gold);
+}
+
+/* page-change pixel wipe */
+.wipe { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 100; image-rendering: pixelated; pointer-events: none; }
+
+/* terminal */
+.term { background: #03060a; border: 4px solid; border-color: #2e4560 #070b11 #070b11 #2e4560; box-shadow: 0 0 0 4px #000, 0 0 30px rgba(63,182,255,.12); font: 400 14px/1.55 ui-monospace, "Cascadia Mono", Consolas, "Chakra Petch", monospace; color: #cfe8f5; }
+.term-bar { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: #0d1622; border-bottom: 2px solid #000; font: 700 11px/1 var(--f-pixel); color: var(--ink-soft); }
+.term-bar i { width: 10px; height: 10px; background: #ff5f56; display: inline-block; }
+.term-bar i:nth-child(2) { background: #ffbd2e; } .term-bar i:nth-child(3) { background: #27c93f; }
+.term-bar span { margin-left: 8px; }
+.term-out { height: 280px; overflow-y: auto; padding: 12px 14px 4px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.term .tl { min-height: 1.55em; }
+.term .tl b { color: #ffffff; font-weight: 700; }
+.term .tl a { color: var(--cyan); }
+.term .dim { color: #6f8798; }
+.term .tg { color: #7ed83c; }
+.term .ok { color: #7fe0ff; }
+.term .err { color: #ff7a7a; }
+.term .pre { white-space: pre; }
+.term .pr { color: #7ed83c; margin-right: 8px; white-space: nowrap; }
+.term-line { display: flex; align-items: center; padding: 6px 14px 12px; cursor: text; }
+.term-line input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; color: #fff; font: inherit; caret-color: #7ed83c; }
+.term-keys { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px 12px; border-top: 2px solid #0d1622; }
+.term-keys .btn { font: 700 12px/1 ui-monospace, Consolas, monospace; text-transform: none; padding: 7px 10px; }
+@media (max-width: 520px) { .term .pr { font-size: 12px; } .term-out { height: 240px; font-size: 13px; } }

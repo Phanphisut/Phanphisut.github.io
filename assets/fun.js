@@ -208,6 +208,7 @@
     el.innerHTML = SKILLS.map(s => `<button class="skill slot" type="button" data-skill="${s.id}">${skillIcon(s)}<span class="sk-name">${esc(s.name)}</span>${stars(s.stars)}</button>`).join("");
   };
   S.renderSkills();
+  S.openProject = openProject; S.openSkill = openSkill; S.party = party;
   const m = /^#project-(\d+)$/.exec(location.hash);
   if (m && S.page.id === "projects") setTimeout(() => openProject(+m[1]), 300);
 
