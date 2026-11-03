@@ -290,8 +290,9 @@
 
   function renderHome() {
     const total = PROJECTS.length + ACTIVITIES.length + CERTS.length;
-    document.getElementById("xp-level").textContent = "LV " + total;
-    requestAnimationFrame(() => document.getElementById("xp-fill").style.width = Math.min(100, total * 2.5) + "%");
+    const rk = RANKS.find(r => total <= r.max) || RANKS[RANKS.length - 1];
+    document.getElementById("xp-level").textContent = `LV ${total} · ${rk.name}`;
+    requestAnimationFrame(() => document.getElementById("xp-fill").style.width = Math.max(4, Math.min(100, (total - rk.min + 1) / (rk.max - rk.min + 1) * 100)) + "%");
     const counts = { projects: PROJECTS.length, activities: ACTIVITIES.length, certificates: CERTS.length };
     document.querySelectorAll("[data-count]").forEach(el => el.textContent = `${counts[el.dataset.count]} ${T("unit.items")}`);
     const lines = L(I18N.splash);
@@ -299,10 +300,34 @@
     renderStats();
   }
 
+  /* career rank from total LV (projects + activities + certificates) */
+  const RANKS = [
+    { name: "Junior", min: 1, max: 25, color: "#9aa1b0" },
+    { name: "Mid Junior", min: 26, max: 50, color: "#7ed83c" },
+    { name: "Senior", min: 51, max: 100, color: "#4fb3ff" },
+    { name: "Manager", min: 101, max: 200, color: "#c792ea" },
+    { name: "CEO", min: 201, max: 1000, color: "#f6d23a" },
+  ];
+  function renderRank() {
+    const el = document.getElementById("rank"); if (!el) return;
+    const lv = PROJECTS.length + ACTIVITIES.length + CERTS.length;
+    let i = RANKS.findIndex(r => lv <= r.max); if (i < 0) i = RANKS.length - 1;
+    const r = RANKS[i], next = RANKS[i + 1];
+    const pct = Math.max(4, Math.min(100, ((lv - r.min + 1) / (r.max - r.min + 1)) * 100));
+    const hint = next ? T("rank.next").replace("{n}", next.min - lv).replace("{r}", next.name) : T("rank.max");
+    el.style.setProperty("--rank", r.color);
+    el.innerHTML = `
+      <div class="rank-top"><span class="rank-lv">LV ${lv}</span><span class="rank-name">${r.name}</span><span class="rank-step">${T("rank.step")} ${i + 1}/${RANKS.length}</span></div>
+      <ol class="rank-ladder">${RANKS.map((x, j) => `<li class="${j < i ? "done" : j === i ? "cur" : ""}" style="--c:${x.color}"><b>${x.name}</b><small>LV ${x.min}–${x.max}</small></li>`).join("")}</ol>
+      <div class="rank-bar" role="meter" aria-valuemin="${r.min}" aria-valuemax="${r.max}" aria-valuenow="${lv}" aria-label="${r.name} LV ${lv}"><i style="width:${pct}%"></i></div>
+      <span class="rank-hint">${esc(hint)}</span>`;
+  }
+
   /* character stats: 10 gauge steps per skill, sorted by count (largest first) */
   const STEPS = [3, 5, 10, 15, 20, 25, 35, 50, 100, 500];
   function renderStats() {
     const el = document.getElementById("stats"); if (!el) return;
+    renderRank();
     const rows = [
       { id: "projects", key: "nav.projects", sprite: "chest", n: PROJECTS.length, href: "projects.html" },
       { id: "activities", key: "nav.activities", sprite: "map", n: ACTIVITIES.length, href: "activities.html" },
