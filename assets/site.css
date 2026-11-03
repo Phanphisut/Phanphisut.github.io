@@ -477,3 +477,4 @@ dialog.item::backdrop { background: rgba(0, 0, 0, .75); }
   .rank-ladder li b { font-size: 8px; overflow-wrap: normal; word-break: keep-all; }
   .rank-ladder li small { font-size: 8px; }
 }
+#face { image-rendering: auto; }
