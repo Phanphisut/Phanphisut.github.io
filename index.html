@@ -1,0 +1,298 @@
+<title>Phanphisut Portfolio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: flight-log sheet — header strip, then three stacked sections (projects / certificates / contact) on a faint grid ground */
+:root {
+  --bg: #eef2f4;
+  --surface: #ffffff;
+  --ink: #13212c;
+  --muted: #5b6b77;
+  --line: #d3dce2;
+  --accent: #0a6c93;
+  --accent-soft: #dcecf3;
+  --signal: #c96a12;
+  --grid: rgba(10, 108, 147, 0.06);
+  --f-display: "Chakra Petch", "IBM Plex Sans Thai", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans Thai", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d151b; --surface: #142029; --ink: #e4ecf1; --muted: #8fa1ad; --line: #24343f;
+    --accent: #4fb3dc; --accent-soft: #15303d; --signal: #f0a050; --grid: rgba(79, 179, 220, 0.05);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d151b; --surface: #142029; --ink: #e4ecf1; --muted: #8fa1ad; --line: #24343f;
+  --accent: #4fb3dc; --accent-soft: #15303d; --signal: #f0a050; --grid: rgba(79, 179, 220, 0.05);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  color: var(--ink);
+  font: 400 16px/1.65 var(--f-body);
+}
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+.wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* Header */
+header { padding-block: 56px 40px; }
+.id { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+.mark {
+  width: 84px; height: 84px; flex: none;
+  display: grid; place-items: center;
+  border: 2px solid var(--ink);
+  font: 700 40px/1 var(--f-display);
+  position: relative;
+  background: var(--surface);
+}
+.mark::before, .mark::after {
+  content: ""; position: absolute; width: 10px; height: 10px; border: 2px solid var(--signal);
+}
+.mark::before { top: -7px; left: -7px; border-right: 0; border-bottom: 0; }
+.mark::after { bottom: -7px; right: -7px; border-left: 0; border-top: 0; }
+.eyebrow {
+  font: 500 12px/1 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+}
+h1 {
+  margin: 8px 0 6px; font: 700 clamp(34px, 6vw, 54px)/1.05 var(--f-display); letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.tagline { margin: 0; color: var(--muted); max-width: 60ch; }
+.stats { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 28px; }
+.stat {
+  font: 500 13px/1 var(--f-mono); padding: 9px 12px; border: 1px solid var(--line); background: var(--surface);
+  font-variant-numeric: tabular-nums;
+}
+.stat b { color: var(--accent); font-weight: 500; }
+
+/* Sections */
+section { padding-block: 36px; border-top: 1px solid var(--line); }
+.sec-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 22px; }
+h2 { margin: 0; font: 600 26px/1.2 var(--f-display); }
+.sec-meta { font: 400 12px/1.4 var(--f-mono); color: var(--muted); }
+.live-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--muted); margin-right: 6px; vertical-align: 1px; }
+.live-dot.on { background: #2f9e5b; }
+
+/* Projects */
+.repos { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+.repo {
+  display: flex; flex-direction: column; gap: 10px; min-width: 0;
+  background: var(--surface); border: 1px solid var(--line); padding: 18px 18px 16px;
+  text-decoration: none; color: inherit;
+  transition: border-color .15s, transform .15s;
+}
+.repo:hover { border-color: var(--accent); transform: translateY(-2px); }
+.repo-name { font: 600 18px/1.3 var(--f-display); color: var(--ink); overflow-wrap: anywhere; }
+.repo-desc { margin: 0; color: var(--muted); font-size: 14px; flex: 1; }
+.repo-foot { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; font: 400 12px/1 var(--f-mono); color: var(--muted); }
+.lang { display: inline-flex; align-items: center; gap: 6px; }
+.lang i { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); display: inline-block; }
+.repo-go { margin-left: auto; color: var(--accent); }
+
+/* Certificates */
+.certs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+.cert {
+  background: var(--surface); border: 1px solid var(--line); padding: 18px; min-width: 0;
+  display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start;
+}
+.cert.sample { border-style: dashed; }
+.seal {
+  width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--signal); color: var(--signal);
+  display: grid; place-items: center; font: 700 13px/1 var(--f-mono);
+}
+.cert h3 { margin: 0 0 2px; font: 600 16px/1.35 var(--f-display); }
+.cert p { margin: 0; font-size: 14px; color: var(--muted); }
+.cert .when { font: 400 12px/1.4 var(--f-mono); color: var(--muted); margin-top: 6px; }
+.tag-sample { font: 500 11px/1 var(--f-mono); color: var(--signal); letter-spacing: .08em; text-transform: uppercase; }
+
+/* Contact */
+.contacts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 14px; }
+.contact {
+  background: var(--surface); border: 1px solid var(--line); padding: 18px; min-width: 0;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.contact .label { font: 500 12px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.contact .value { font: 600 22px/1.3 var(--f-display); user-select: all; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.contact .row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.btn {
+  font: 500 13px/1 var(--f-body); padding: 9px 12px; border: 1px solid var(--accent);
+  background: transparent; color: var(--accent); cursor: pointer; text-decoration: none;
+}
+.btn.solid { background: var(--accent); color: var(--surface); }
+.btn:hover { background: var(--accent-soft); }
+.btn.solid:hover { background: var(--accent); filter: brightness(1.1); }
+
+footer { padding-block: 28px 48px; border-top: 1px solid var(--line); font: 400 12px/1.6 var(--f-mono); color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) { .repo { transition: none; } .repo:hover { transform: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="id">
+      <div class="mark" aria-hidden="true">P</div>
+      <div>
+        <div class="eyebrow">github.com/Phanphisut</div>
+        <h1>Phanphisut</h1>
+        <p class="tagline">งานด้านโดรน, Python และแดชบอร์ดพลังงาน รวมโปรเจกต์จาก GitHub ใบประกาศ และช่องทางติดต่อไว้ในหน้าเดียว</p>
+      </div>
+    </div>
+    <div class="stats">
+      <span class="stat">Repos <b id="stat-repos">5</b></span>
+      <span class="stat">Languages <b id="stat-langs">Python · JavaScript</b></span>
+      <span class="stat">Updated <b id="stat-updated">20 ส.ค. 2026</b></span>
+    </div>
+  </header>
+
+  <section id="projects">
+    <div class="sec-head">
+      <h2>โปรเจกต์</h2>
+      <span class="sec-meta"><span class="live-dot" id="live-dot"></span><span id="sync-note">ข้อมูลจาก GitHub ณ 4 พ.ย. 2026</span></span>
+    </div>
+    <div class="repos" id="repos"></div>
+  </section>
+
+  <section id="certificates">
+    <div class="sec-head">
+      <h2>ใบประกาศ</h2>
+      <span class="sec-meta">Certificates</span>
+    </div>
+    <div class="certs" id="certs"></div>
+  </section>
+
+  <section id="contact">
+    <div class="sec-head">
+      <h2>ช่องทางติดต่อ</h2>
+      <span class="sec-meta">Contact</span>
+    </div>
+    <div class="contacts">
+      <div class="contact">
+        <span class="label">LINE</span>
+        <span class="value" id="line-val">0653057699</span>
+        <div class="row">
+          <button class="btn solid" type="button" data-copy="0653057699" id="copy-line">คัดลอก</button>
+          <a class="btn" href="https://line.me/ti/p/~0653057699" target="_blank" rel="noopener">เปิด LINE</a>
+        </div>
+      </div>
+      <div class="contact">
+        <span class="label">Facebook</span>
+        <span class="value">Phaxr</span>
+        <div class="row">
+          <a class="btn solid" href="https://www.facebook.com/Phaxr" target="_blank" rel="noopener">ไปที่ Facebook</a>
+        </div>
+      </div>
+      <div class="contact">
+        <span class="label">Instagram</span>
+        <span class="value">@Phaxr</span>
+        <div class="row">
+          <a class="btn solid" href="https://www.instagram.com/Phaxr" target="_blank" rel="noopener">ไปที่ Instagram</a>
+        </div>
+      </div>
+      <div class="contact">
+        <span class="label">GitHub</span>
+        <span class="value">Phanphisut</span>
+        <div class="row">
+          <a class="btn solid" href="https://github.com/Phanphisut?tab=repositories" target="_blank" rel="noopener">ดู Repositories</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>© 2026 Phanphisut · รายชื่อโปรเจกต์ดึงจาก GitHub API อัตโนมัติเมื่อเปิดหน้า</footer>
+</div>
+
+<script>
+// ---------- แก้ไขใบประกาศได้ที่นี่ (ลบ sample: true เมื่อใส่ข้อมูลจริง) ----------
+const CERTS = [
+  { title: "ชื่อใบประกาศ", issuer: "หน่วยงานที่ออกให้", date: "2026", url: "", sample: true },
+  { title: "ชื่อใบประกาศ", issuer: "หน่วยงานที่ออกให้", date: "2026", url: "", sample: true },
+];
+
+// ข้อมูลสำรอง (ใช้เมื่อเรียก GitHub API ไม่ได้)
+const FALLBACK = [
+  { name: "DronePhad_Finished", description: null, language: null, html_url: "https://github.com/Phanphisut/DronePhad_Finished", updated_at: "2026-08-20T20:08:44Z", stargazers_count: 0 },
+  { name: "Dron_hula_phad_finish-1-", description: null, language: "Python", html_url: "https://github.com/Phanphisut/Dron_hula_phad_finish-1-", updated_at: "2026-08-20T19:40:03Z", stargazers_count: 0 },
+  { name: "Hula-by-ton", description: null, language: null, html_url: "https://github.com/Phanphisut/Hula-by-ton", updated_at: "2026-08-11T05:48:55Z", stargazers_count: 0 },
+  { name: "Drone_Project_Phad", description: null, language: "Python", html_url: "https://github.com/Phanphisut/Drone_Project_Phad", updated_at: "2026-08-10T16:10:55Z", stargazers_count: 0 },
+  { name: "Smart-energy-dashboard", description: null, language: "JavaScript", html_url: "https://github.com/Phanphisut/Smart-energy-dashboard", updated_at: "2026-07-01T15:15:00Z", stargazers_count: 0 },
+];
+
+const LANG_COLORS = { Python: "#3572A5", JavaScript: "#e0c82f", TypeScript: "#3178c6", HTML: "#e34c26", CSS: "#563d7c", "C++": "#f34b7d", C: "#555555", Java: "#b07219", Jupyter: "#DA5B0B" };
+const TH_MONTHS = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+const fmtDate = iso => { const d = new Date(iso); return `${d.getDate()} ${TH_MONTHS[d.getMonth()]} ${d.getFullYear()}`; };
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+const prettyName = n => n.replace(/[-_]+/g, " ").trim();
+
+function renderRepos(list) {
+  const el = document.getElementById("repos");
+  el.innerHTML = list.map(r => `
+    <a class="repo" href="${esc(r.html_url)}" target="_blank" rel="noopener">
+      <span class="repo-name">${esc(prettyName(r.name))}</span>
+      <p class="repo-desc">${r.description ? esc(r.description) : "ยังไม่มีคำอธิบาย"}</p>
+      <span class="repo-foot">
+        <span class="lang"><i style="background:${LANG_COLORS[r.language] || "var(--muted)"}"></i>${esc(r.language || "—")}</span>
+        <span>★ ${r.stargazers_count}</span>
+        <span>${fmtDate(r.updated_at)}</span>
+        <span class="repo-go">เปิด ↗</span>
+      </span>
+    </a>`).join("");
+  const langs = [...new Set(list.map(r => r.language).filter(Boolean))];
+  document.getElementById("stat-repos").textContent = list.length;
+  document.getElementById("stat-langs").textContent = langs.join(" · ") || "—";
+  const latest = list.map(r => r.updated_at).sort().pop();
+  if (latest) document.getElementById("stat-updated").textContent = fmtDate(latest);
+}
+
+function renderCerts() {
+  document.getElementById("certs").innerHTML = CERTS.map(c => `
+    <div class="cert${c.sample ? " sample" : ""}">
+      <span class="seal" aria-hidden="true">✓</span>
+      <div>
+        ${c.sample ? '<span class="tag-sample">ตัวอย่าง · แก้ไขได้ในโค้ด</span>' : ""}
+        <h3>${c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.title)}</a>` : esc(c.title)}</h3>
+        <p>${esc(c.issuer)}</p>
+        <div class="when">${esc(c.date)}</div>
+      </div>
+    </div>`).join("");
+}
+
+async function loadLive() {
+  try {
+    const res = await fetch("https://api.github.com/users/Phanphisut/repos?per_page=100&sort=updated");
+    if (!res.ok) throw new Error(res.status);
+    const data = (await res.json()).filter(r => !r.fork);
+    if (!data.length) return;
+    renderRepos(data);
+    document.getElementById("live-dot").classList.add("on");
+    document.getElementById("sync-note").textContent = "เชื่อมต่อ GitHub แบบสด";
+  } catch (e) { /* ใช้ข้อมูลสำรองต่อ */ }
+}
+
+document.getElementById("copy-line").addEventListener("click", async e => {
+  const btn = e.currentTarget;
+  try { await navigator.clipboard.writeText(btn.dataset.copy); btn.textContent = "คัดลอกแล้ว"; }
+  catch { const r = document.createRange(); r.selectNodeContents(document.getElementById("line-val")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = "เลือกข้อความแล้ว"; }
+  setTimeout(() => btn.textContent = "คัดลอก", 1800);
+});
+
+renderRepos(FALLBACK);
+renderCerts();
+loadLive();
+</script>
