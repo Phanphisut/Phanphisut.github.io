@@ -5,8 +5,6 @@
 //  วันที่ (d): "2026-09-22" | "2026-07-27/31" (ช่วงวันในเดือนเดียว) | "2026-08/now" | "2024-08/2024-12"
 // =====================================================================
 const GH_USER = "Phanphisut";
-// ตัวนับผู้เข้าชม: ใส่ชื่อเว็บที่ตั้งไว้ใน GoatCounter เช่น "phanphisut" (จาก phanphisut.goatcounter.com) เว้นว่างไว้ = ปิด
-const GOATCOUNTER = "";
 
 const PROJECTS = [
   { img: "p-gesture", page: "projects/14", title: "UAV Hand Gesture", tags: ["Python", "Hula SDK", "Computer Vision"],
@@ -194,8 +192,6 @@ const I18N = {
   "view": ["ดูภาพ", "View"], "close": ["ปิด", "Close"], "page": ["หน้าพอร์ต", "Portfolio page"],
   "now": ["ปัจจุบัน", "Present"],
   "footer": ["© 2026 PHANPHISUT · สร้างทีละบล็อก", "© 2026 PHANPHISUT · BUILT BLOCK BY BLOCK"],
-  "visits.total": ["ผู้เข้าชมทั้งหมด", "Total visits"],
-  "visits.today": ["วันนี้", "Today"],
   "splash": [["บินโดรนด้วย Python!", "ขุดโค้ดทุกวัน!", "ประหยัดพลังงาน!", "YOLO ตรวจจับได้!"], ["Flying drones with Python!", "Mining code daily!", "Now with YOLO!", "Powered by ESP32!"]],
 };
 
