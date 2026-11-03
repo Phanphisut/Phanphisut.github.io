@@ -19,6 +19,7 @@
   --f-pixel: "Silkscreen", "Chakra Petch", ui-monospace, monospace;
   --f-body: "Chakra Petch", system-ui, -apple-system, "Segoe UI", sans-serif;
   --px: 4px;
+  --ground: 96px;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -114,11 +115,11 @@ a { color: inherit; }
 
 .land { position: relative; z-index: 1; margin-top: 32px; height: 168px; }
 .overworld.small .land { margin-top: 12px; height: 140px; }
-.land canvas.terrain { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 96px; }
-.hero-char { position: absolute; bottom: 96px; left: 8%; width: 32px; animation: walk 26s linear infinite alternate, bob .5s steps(2) infinite; }
-.drone { position: absolute; bottom: 136px; left: 0; width: 52px; animation: fly 16s steps(64) infinite alternate; }
-.overworld.small .drone { bottom: 112px; }
-.tree { position: absolute; bottom: 96px; left: 10%; width: 64px; }
+.land canvas.terrain { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: var(--ground); }
+.hero-char { position: absolute; bottom: var(--ground); left: 8%; width: 32px; animation: walk 26s linear infinite alternate, bob .5s steps(2) infinite; }
+.drone { position: absolute; bottom: calc(var(--ground) + 40px); left: 0; width: 52px; animation: fly 16s steps(64) infinite alternate; }
+.overworld.small .drone { bottom: calc(var(--ground) + 16px); }
+.tree { position: absolute; bottom: var(--ground); left: 10%; width: 64px; }
 .tree2 { left: auto; right: 12%; width: 48px; }
 @keyframes bob { 50% { translate: 0 -4px; } }
 @keyframes walk { from { left: 8%; } to { left: calc(92% - 32px); } }
@@ -355,15 +356,15 @@ dialog.lb::backdrop { background: rgba(0,0,0,.82); }
 /* ---------- playful extras ---------- */
 .hero-char, .drone { z-index: 3; }
 .quip {
-  position: absolute; z-index: 4; bottom: 172px; max-width: 240px; padding: 8px 12px;
+  position: absolute; z-index: 4; bottom: calc(var(--ground) + 76px); max-width: 240px; padding: 8px 12px;
   font: 600 14px/1.35 var(--f-body); color: #fff; background: #000; border: 3px solid #fff;
   box-shadow: 0 0 0 3px #000; white-space: normal; pointer-events: none;
 }
-.overworld.small .quip { bottom: 168px; }
+.overworld.small .quip { bottom: calc(var(--ground) + 72px); }
 .quip::after { content: ""; position: absolute; left: calc(50% - 6px); bottom: -12px; border: 6px solid transparent; border-top-color: #fff; }
 .gift { position: absolute; z-index: 3; width: 40px; height: 36px; }
 .gift-pop {
-  position: absolute; z-index: 5; bottom: 148px; display: flex; flex-direction: column; gap: 6px;
+  position: absolute; z-index: 5; bottom: calc(var(--ground) + 52px); display: flex; flex-direction: column; gap: 6px;
   padding: 10px 12px; text-decoration: none; max-width: 280px; animation: pop .25s steps(3);
 }
 .gift-pop .gp-kick { font: 700 10px/1.2 var(--f-pixel); color: var(--gold); text-transform: uppercase; letter-spacing: .06em; }
@@ -451,4 +452,27 @@ dialog.item::backdrop { background: rgba(0, 0, 0, .75); }
 .term-line input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; color: #fff; font: inherit; caret-color: #7ed83c; }
 .term-keys { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px 12px; border-top: 2px solid #0d1622; }
 .term-keys .btn { font: 700 12px/1 ui-monospace, Consolas, monospace; text-transform: none; padding: 7px 10px; }
-@media (max-width: 520px) { .term .pr { font-size: 12px; } .term-out { height: 240px; font-size: 13px; } }
+
+/* ---------- phone tweaks (desktop untouched) ---------- */
+@media (max-width: 600px) {
+  /* shorter sky header: ground strip drops from 3 block rows to 2 */
+  :root { --ground: 64px; }
+  .title-block { padding-block: 26px 2px; }
+  .overworld.small .title-block { padding-block: 22px 2px; }
+  .subtitle { margin-top: 16px; font-size: 14px; }
+  .overworld.small .subtitle { margin-top: 10px; }
+  .xp { margin-top: 10px; }
+  .xp-note { display: none; }
+  .land { margin-top: 6px; height: 140px; }
+  .overworld.small .land { margin-top: 4px; height: 128px; }
+  .fest-badge { top: 6px; font-size: 11px; padding: 4px 8px; }
+
+  /* terminal looks the same as on desktop (Windows renders Cascadia Mono); phones get the close match JetBrains Mono */
+  .term, .term-keys .btn { font-family: "Cascadia Mono", "JetBrains Mono", Consolas, monospace; }
+  .term-line input { font-size: 16px; }  /* stops iOS from zooming the page when the input is tapped */
+
+  /* rank ladder labels fit without breaking words */
+  .rank-ladder li { padding: 6px 2px; }
+  .rank-ladder li b { font-size: 8px; overflow-wrap: normal; word-break: keep-all; }
+  .rank-ladder li small { font-size: 8px; }
+}

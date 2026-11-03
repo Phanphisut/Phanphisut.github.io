@@ -84,13 +84,13 @@
     drone.addEventListener("click", () => {
       if (giftBusy) return; giftBusy = true;
       const lr = land.getBoundingClientRect(), dr = drone.getBoundingClientRect();
-      const x = dr.left - lr.left + dr.width / 2 - 20, fromB = lr.bottom - dr.bottom;
+      const x = dr.left - lr.left + dr.width / 2 - 20, fromB = lr.bottom - dr.bottom, GR = (document.getElementById("terrain") || {}).clientHeight || 96;
       const g = document.createElement("img");
       g.className = "pix gift"; g.src = GIFT; g.alt = "";
-      g.style.left = x + "px"; g.style.bottom = "96px";
+      g.style.left = x + "px"; g.style.bottom = GR + "px";
       land.appendChild(g);
       S.sfx("click");
-      const fall = reduce ? null : g.animate([{ transform: `translateY(${-(fromB - 96)}px)` }, { transform: "translateY(0)" }], { duration: 700, easing: "cubic-bezier(.5,0,1,1)" });
+      const fall = reduce ? null : g.animate([{ transform: `translateY(${-(fromB - GR)}px)` }, { transform: "translateY(0)" }], { duration: 700, easing: "cubic-bezier(.5,0,1,1)" });
       const open = () => {
         S.sfx("drop");
         setTimeout(() => {

@@ -80,7 +80,7 @@
   let w = 0, h = 0, groundY = 0;
   function size() {
     w = Math.ceil(hero.clientWidth / K); h = Math.ceil(hero.clientHeight / K);
-    cv.width = w; cv.height = h; groundY = Math.round((hero.clientHeight - 96) / K);
+    cv.width = w; cv.height = h; const te = document.getElementById("terrain"); groundY = Math.round((hero.clientHeight - (te ? te.clientHeight : 96)) / K);
   }
   size(); addEventListener("resize", size);
   const P = (x, y, ww, hh, c) => { g.fillStyle = c; g.fillRect(Math.round(x), Math.round(y), ww, hh); };

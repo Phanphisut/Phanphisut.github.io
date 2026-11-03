@@ -193,12 +193,13 @@
   function drawTerrain() {
     const cv = document.getElementById("terrain"); if (!cv) return;
     const B = 16, cols = Math.ceil(cv.clientWidth / 32) + 1;
-    cv.width = cols * B; cv.height = 3 * B;
+    const rows = Math.max(2, Math.round(cv.clientHeight / 32));
+    cv.width = cols * B; cv.height = rows * B;
     const g = cv.getContext("2d");
     for (let x = 0; x < cols; x++) {
       g.drawImage(crustBlock(x * 13 + 1), x * B, 0);
       g.drawImage(noiseTile(ROCK, x * 7 + 300), x * B, B);
-      g.drawImage(x % 7 === 3 ? crystalOre(x) : noiseTile(DEEP, x * 5 + 600), x * B, 2 * B);
+      if (rows > 2) g.drawImage(x % 7 === 3 ? crystalOre(x) : noiseTile(DEEP, x * 5 + 600), x * B, 2 * B);
     }
     cv.style.width = cols * 32 + "px";
     drawSky();
@@ -264,21 +265,22 @@
       P(s.x, s.y - 1, 1, 3, "#3fb6ff"); P(s.x - 1, s.y, 3, 1, "#3fb6ff");
       if (lvl === 2) { P(s.x, s.y - 2, 1, 5, "#3fb6ff"); P(s.x - 2, s.y, 5, 1, "#3fb6ff"); P(s.x, s.y, 1, 1, "#d8f3ff"); }
     });
-    const ground = H - 24;                                   // terrain strip is 96px = 24 low-res px
+    const tEl = document.getElementById("terrain");
+    const ground = H - Math.round((tEl ? tEl.clientHeight : 96) / 4);   // terrain strip height in 1/4-res px
     const bands = ["#1a1023", "#0f2124", "#0f2a2c", "#123437", "#123a3d", "#154446", "#174e50", "#1a5658"];
     const top = ground - bands.length * 2;
     // skyline sits on the horizon, right of centre
-    const sx = Math.floor(W * .62);
+    const sx = Math.floor(W * .62), tk = hero.clientWidth < 600 ? .55 : 1;   // shorter skyline on phones
     [[0, 9, 4], [5, 14, 5], [11, 7, 3], [15, 11, 4], [20, 5, 3]].forEach(([dx, h, w], k) => {
-      const x = sx + dx, y = top - h;
+      const x = sx + dx; h = Math.round(h * tk); const y = top - h;
       P(x, y, w, h, "#1f3c52"); P(x, y, 1, h, "#2b5470");
       for (let yy = y + 2; yy < top - 1; yy += 3) for (let i = 1; i < w - 1; i += 2) {
         if (!ph.lights) P(x + i, yy, 1, 1, "#16303f");
         else if ((i * 7 + yy * 3 + k) % 5) P(x + i, yy, 1, 1, "#7fd6ff");
       }
     });
-    P(sx + 7, top - 18, 1, 4, "#2b5470");
-    if (reduce || Math.floor(t * 1.5) % 2) P(sx + 7, top - 19, 1, 1, "#ff4a4a");
+    P(sx + 7, top - Math.round(18 * tk), 1, Math.round(4 * tk), "#2b5470");
+    if (reduce || Math.floor(t * 1.5) % 2) P(sx + 7, top - Math.round(18 * tk) - 1, 1, 1, "#ff4a4a");
     (ph.bands || bands).forEach((c, i) => P(0, top + i * 2, W, 2, c));
     // crystal outcrops at both edges
     [1, -1].forEach(side => {
