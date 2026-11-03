@@ -17,24 +17,56 @@
   function R(x, y, w, h, c) { g.fillStyle = c; g.fillRect(x + ox, y + oy, w, h); }
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  function scene() {
+  /* night scene: starry void, glowing horizon bands, crystal outcrops and a distant office skyline */
+  const STARS = (() => {
+    let s = 7; const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+    const out = [];
+    for (let i = 0; i < 46; i++) out.push({ x: Math.floor(rnd() * 94) + 1, y: Math.floor(rnd() * 36) + 1, big: rnd() < 0.22, ph: rnd() * 3, sp: 0.6 + rnd() * 0.9 });
+    return out;
+  })();
+  function star(x, y, lvl) {
+    if (lvl === 0) { R(x, y, 1, 1, "#2a7fb8"); return; }
+    R(x, y - 1, 1, 3, "#3fb6ff"); R(x - 1, y, 3, 1, "#3fb6ff");
+    if (lvl === 2) { R(x, y - 2, 1, 5, "#3fb6ff"); R(x - 2, y, 5, 1, "#3fb6ff"); R(x, y, 1, 1, "#d8f3ff"); }
+  }
+  function crystals(side) {
+    // side: 1 = left, -1 = right (mirrored)
+    const X = x => side === 1 ? x : 95 - x;
+    const cols = [[0, 36, 5], [5, 42, 4], [9, 47, 3], [12, 52, 3], [2, 30, 3]];
+    cols.forEach(([x, top, w]) => {
+      for (let i = 0; i < w; i++) {
+        const xx = X(x + i), yy = top + Math.abs(i - Math.floor(w / 2));
+        R(xx, yy, 1, 60 - yy, "#13293a");
+        R(xx, yy, 1, 2, i < w / 2 ? "#49b7e8" : "#2d6a8a");
+        if (i === 0) R(xx, yy + 2, 1, Math.max(0, 54 - yy), "#1d3a4a");
+      }
+    });
+    R(X(side === 1 ? 0 : 0) - (side === 1 ? 0 : 15), 56, 16, 4, "#0c1a24");
+  }
+  function skyline(t) {
+    // distant office towers on the right, windows lit in cyan
+    const towers = [[64, 30, 5], [70, 25, 6], [77, 32, 4], [82, 35, 5]];
+    towers.forEach(([x, top, w], k) => {
+      R(x, top, w, 41 - top, "#1f3c52"); R(x, top, 1, 41 - top, "#2b5470");
+      for (let y = top + 2; y < 40; y += 3) for (let i = 1; i < w - 1; i += 2) if ((i * 7 + y * 3 + k) % 5) R(x + i, y, 1, 1, "#7fd6ff");
+    });
+    R(72, 21, 1, 4, "#2b5470");
+    if (reduce || Math.floor(t * 1.5) % 2) R(72, 20, 1, 1, "#ff4a4a");
+  }
+  function scene(t) {
     ox = 0; oy = 0;
-    R(0, 0, 96, 58, "#a7aea6");
-    R(0, 0, 11, 58, "#929a92"); R(11, 0, 1, 58, "#c4cac3");
-    R(30, 0, 1, 58, "#9da49c"); R(84, 0, 1, 58, "#9da49c");
-    for (let y = 6; y < 58; y++) for (let x = 50; x < 84; x++) {
-      const dx = x - 67, dy = y - 26, d = Math.hypot(dx, dy);
-      const inR = (y >= 26 && x >= 54 && x <= 80) || d <= 13;
-      const inI = (y >= 26 && x >= 56 && x <= 78) || d <= 11;
-      if (inI) { let c = "#36342e"; if (y < 24) c = "#d9a44a"; else if (y < 27) c = "#8a6a35"; g.fillStyle = c; g.fillRect(x, y, 1, 1); }
-      else if (inR) { g.fillStyle = (x < 60 ? "#e3e6e1" : "#c4c9c2"); g.fillRect(x, y, 1, 1); }
-    }
-    R(71, 30, 2, 26, "#d8d0bd"); R(73, 30, 1, 26, "#b5ad9a");
-    [[68, 33], [74, 36], [69, 40], [75, 44], [70, 48], [74, 30]].forEach(([x, y]) => { R(x, y, 3, 2, "#3f7a3a"); R(x + 1, y - 1, 1, 1, "#5ea153"); });
-    R(0, 58, 96, 14, "#d9ccb8");
-    for (let x = 0; x < 96; x += 12) R(x, 58, 1, 14, "#c5b7a2");
-    R(0, 64, 96, 1, "#c5b7a2");
-    R(0, 57, 96, 1, "#8c8a80");
+    R(0, 0, 96, 72, "#000000");
+    STARS.forEach(s => {
+      const lvl = reduce ? (s.big ? 2 : 0) : (s.big ? (Math.floor(t * s.sp + s.ph) % 3 === 0 ? 1 : 2) : (Math.floor(t * s.sp + s.ph) % 4 === 0 ? 1 : 0));
+      star(s.x, s.y, lvl);
+    });
+    skyline(t);
+    const bands = ["#1a1023", "#0f2124", "#0f2a2c", "#123437", "#123a3d", "#154446", "#174e50", "#1a5658"];
+    bands.forEach((c, i) => R(0, 41 + i * 2, 96, 2, c));
+    R(0, 57, 96, 15, "#05090b");
+    R(0, 57, 96, 1, "#0f2a2c");
+    for (let y = 62; y < 70; y++) { const hw = Math.round(16 * Math.sqrt(1 - ((y - 66) / 4.5) ** 2)); R(48 - hw, y, hw * 2, 1, "#0b1c21"); }
+    crystals(1); crystals(-1);
   }
 
   function head(face) {
@@ -159,7 +191,7 @@
     if (left !== lastSec && cdEl) { lastSec = left; cdEl.textContent = T("char.next").replace("{n}", left); }
     if (visible) {
       const t = (now - t0) / 1000;
-      g.clearRect(0, 0, LW, LH); scene();
+      g.clearRect(0, 0, LW, LH); scene(t);
       R(37, 66, 22, 2, "rgba(0,0,0,0.18)");
       oy = (pose !== 1 && !reduce && Math.floor(t / 0.9) % 2) ? 1 : 0; ox = 0;
       poses[pose](t);
