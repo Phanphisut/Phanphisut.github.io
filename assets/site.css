@@ -114,12 +114,14 @@ a { color: inherit; }
 .land { position: relative; z-index: 1; margin-top: 32px; height: 168px; }
 .overworld.small .land { margin-top: 12px; height: 140px; }
 .land canvas.terrain { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 96px; }
-.hero-char { position: absolute; bottom: 96px; left: calc(50% - 60px); width: 32px; animation: bob 1s steps(2) infinite; }
+.hero-char { position: absolute; bottom: 96px; left: 8%; width: 32px; animation: walk 26s linear infinite alternate, bob .5s steps(2) infinite; }
 .drone { position: absolute; bottom: 136px; left: 0; width: 52px; animation: fly 16s steps(64) infinite alternate; }
 .overworld.small .drone { bottom: 112px; }
 .tree { position: absolute; bottom: 96px; left: 10%; width: 64px; }
 .tree2 { left: auto; right: 12%; width: 48px; }
-@keyframes bob { 50% { transform: translateY(-4px); } }
+@keyframes bob { 50% { translate: 0 -4px; } }
+@keyframes walk { from { left: 8%; } to { left: calc(92% - 32px); } }
+.hero-char.flip { transform: scaleX(-1); }
 @keyframes fly { from { transform: translateX(8vw); } to { transform: translateX(80vw); } }
 
 /* ---------- underground ---------- */
@@ -278,6 +280,7 @@ dialog.lb::backdrop { background: rgba(0,0,0,.82); }
 }
 @media (prefers-reduced-motion: reduce) {
   .cloud, .splash, .hero-char, .drone, .dialog .more { animation: none; }
+  .hero-char { left: calc(50% - 60px); }
   .drone { transform: translateX(60vw); }
 }
 

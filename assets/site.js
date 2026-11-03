@@ -68,6 +68,8 @@
   const S = {
     hero: fromRows(["..hhhh..", ".hhhhhh.", ".hssssh.", ".sesses.", ".ssssss.", "..smms..", "oooooooo", "oooddooo", "soooooos", "s.oooo.s",
                     ".pppppp.", ".pp..pp.", ".pp..pp.", ".pp..pp.", ".bb..bb.", ".bb..bb."], HERO_PAL),
+    heroStep: fromRows(["..hhhh..", ".hhhhhh.", ".hssssh.", ".sesses.", ".ssssss.", "..smms..", "oooooooo", "oooddooo", "soooooos", "s.oooo.s",
+                    ".pppppp.", ".pp..pp.", "pp....pp", "pp....pp", "bb....bb", "bb....bb"], HERO_PAL),
     face: fromRows(["..hhhh..", ".hhhhhh.", ".hssssh.", ".sesses.", ".ssssss.", "..smms..", "oooooooo", "oooddooo"], HERO_PAL),
     drone: fromRows(["ppp.......ppp", ".f.........f.", ".fffbbbbbfff.", "....bblbb....", "....f...f...."], { p: "#cfd6dc", f: "#2b2b2b", b: "#e9e9e9", l: "#ff3b3b" }),
     tree: fromRows(["..gggggg..", ".gGgggGgg.", "gggGgggGgg", "gGgggggggG", "ggggGgGggg", ".gggggggg.", "..ggttgg..", "....tt....", "....tt....", "....tt....", "....tt....", "....tt...."],
@@ -238,6 +240,20 @@
         }
       });
     });
+  }
+  /* orange hero walks along the ground: swap leg frames and face the walking direction */
+  function walkHero() {
+    const el = document.querySelector(".hero-char"); if (!el) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const a = sprite("hero"), b = sprite("heroStep");
+    let step = false, lastX = el.getBoundingClientRect().left;
+    setInterval(() => {
+      if (document.hidden) return;
+      step = !step; el.src = step ? b : a;
+      const x = el.getBoundingClientRect().left;
+      if (Math.abs(x - lastX) > 0.5) el.classList.toggle("flip", x < lastX);
+      lastX = x;
+    }, 250);
   }
   function animateSky() {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -452,6 +468,7 @@
   drawTerrain();
   paintUnderground();
   animateSky();
+  walkHero();
   wireLightbox();
   let rT; addEventListener("resize", () => { clearTimeout(rT); rT = setTimeout(drawTerrain, 150); });
 
