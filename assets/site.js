@@ -155,7 +155,7 @@
         <img class="pix hero-char" data-sprite="hero" alt="">
         <canvas class="terrain pix" id="terrain"></canvas>
       </div>`;
-    document.getElementById("main").insertAdjacentHTML("beforeend", `<footer data-i18n="footer"></footer>`);
+    document.getElementById("main").insertAdjacentHTML("beforeend", `<footer><div class="wrap foot"><span data-i18n="footer"></span><span class="visits" id="visits" hidden><img class="pix" data-sprite="term" alt=""><span id="visits-txt"></span></span></div></footer>`);
     document.body.insertAdjacentHTML("beforeend", `
       <div class="hotbar-label" id="hotbar-label" aria-hidden="true"></div>
       <nav class="hotbar" aria-label="Hotbar">
@@ -673,6 +673,25 @@
     cycleSound: () => document.getElementById("snd").click(), soundMode: () => soundMode,
     rank: () => { const lv = PROJECTS.length + ACTIVITIES.length + CERTS.length; return { lv, r: RANKS.find(r => lv <= r.max) || RANKS[RANKS.length - 1] }; } };
   wipeIn();
+
+  /* visitor counter (GoatCounter): counts page views without cookies, shows totals at the bottom right of each page */
+  function visits() {
+    const code = (typeof GOATCOUNTER === "string" && GOATCOUNTER.trim()) || ""; if (!code) return;
+    const base = `https://${code}.goatcounter.com`;
+    if (!/^(localhost|127.|file:)/.test(location.host || location.protocol)) {
+      const s = document.createElement("script"); s.async = true; s.src = "https://gc.zgo.at/count.js"; s.dataset.goatcounter = base + "/count";
+      document.head.appendChild(s);
+    }
+    let today = ""; try { today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Bangkok" }).format(new Date()); } catch (e) {}
+    const get = q => fetch(`${base}/counter/TOTAL.json${q}`).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(j => j.count);
+    const paint = (all, day) => {
+      const el = document.getElementById("visits"); if (!el) return;
+      document.getElementById("visits-txt").innerHTML = `${esc(T("visits.total"))} <b>${esc(all)}</b> · ${esc(T("visits.today"))} <b>${esc(day ?? "–")}</b>`;
+      el.hidden = false;
+    };
+    Promise.all([get(""), get(today ? `?start=${today}` : "").catch(() => null)]).then(([a, d]) => { paint(a, d); document.addEventListener("sitelang", () => paint(a, d)); }).catch(() => {});
+  }
+  visits();
 
   /* ---------- boot ---------- */
   buildChrome();
