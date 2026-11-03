@@ -53,6 +53,17 @@
     }
     return c;
   }
+  // dark rock block with a teal crust and glowing crystals (hotbar "home" icon)
+  function crystalBlockIcon() {
+    const c = noiseTile(["#0c1a24", "#0f202c", "#0a151e", "#112532"], 4242), g = c.getContext("2d"), r = rng(4243);
+    for (let x = 0; x < 16; x++) { const d = 2 + Math.floor(r() * 2); for (let y = 0; y < d; y++) { g.fillStyle = ["#1a5658", "#1f6466", "#2d6a8a"][Math.floor(r() * 3)]; g.fillRect(x, y, 1, 1); } }
+    [[3, 6, 5], [8, 4, 7], [12, 8, 4]].forEach(([x, y, h]) => {
+      g.fillStyle = "#2d6a8a"; g.fillRect(x, y, 2, h);
+      g.fillStyle = "#49b7e8"; g.fillRect(x, y, 1, h - 1);
+      g.fillStyle = "#d8f3ff"; g.fillRect(x, y, 1, 1);
+    });
+    return c;
+  }
   const HERO_PAL = { h: "#2e2018", s: "#e0ac7e", e: "#1d1d1d", m: "#b5795a", o: "#e07a2a", d: "#b85d17", p: "#4a4f5a", b: "#262626" };
   const S = {
     hero: fromRows(["..hhhh..", ".hhhhhh.", ".hssssh.", ".sesses.", ".ssssss.", "..smms..", "oooooooo", "oooddooo", "soooooos", "s.oooo.s",
@@ -80,6 +91,7 @@
     term: fromRows(["kkkkkkkkkkkk", "kssssssssssk", "kkkkkkkkkkkk", "kgkkkkkkkkkk", "kkgkkkkkkkkk", "kkkgkkkkkkkk", "kkgkkkkkkkkk", "kgkkkggggkkk", "kkkkkkkkkkkk", "kkkkkkkkkkkk", "kkkkkkkkkkkk", "kkkkkkkkkkkk"],
                    { k: "#1d1d1d", s: "#5a5a5a", g: "#3fd65a" }),
     grass: grassBlock(42),
+    crystal: crystalBlockIcon(),
   };
   const URLS = {};
   const sprite = n => URLS[n] || (URLS[n] = S[n].toDataURL());
@@ -92,7 +104,7 @@
 
   /* ---------- page config ---------- */
   const PAGES = [
-    { id: "home", file: "index.html", key: "nav.home", sprite: "grass" },
+    { id: "home", file: "index.html", key: "nav.home", sprite: "crystal" },
     { id: "projects", file: "projects.html", key: "nav.projects", sprite: "chest", sub: "projects.sub" },
     { id: "activities", file: "activities.html", key: "nav.activities", sprite: "map", sub: "activities.sub" },
     { id: "certificates", file: "certificates.html", key: "nav.certs", sprite: "medal", sub: "certs.sub" },
