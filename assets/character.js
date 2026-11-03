@@ -137,16 +137,10 @@
   }
 
   const poses = [poseIdle, poseCode, posePhone, poseJacket];
-  const pad = document.getElementById("char-pad"), autoBtn = document.getElementById("char-auto");
-  let pose = 0, t0 = performance.now(), auto = !reduce, autoT = 0;
-  function setPose(p) {
-    pose = p; t0 = performance.now(); autoT = 0;
-    pad.querySelectorAll("[data-p]").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.p === p)));
-  }
-  pad.addEventListener("click", e => { const b = e.target.closest("[data-p]"); if (b) setPose(+b.dataset.p); });
-  autoBtn.addEventListener("click", () => { auto = !auto; autoBtn.setAttribute("aria-pressed", String(auto)); autoT = 0; });
-  autoBtn.setAttribute("aria-pressed", String(auto));
-  setPose(0);
+  // random action every 6 seconds (never the same one twice in a row)
+  let pose = Math.floor(Math.random() * poses.length), t0 = performance.now(), autoT = 0;
+  function setPose(p) { pose = p; t0 = performance.now(); autoT = 0; }
+  function randomPose() { let p; do { p = Math.floor(Math.random() * poses.length); } while (p === pose); setPose(p); }
 
   const PX = '"Silkscreen", monospace', TH = '"Chakra Petch", sans-serif';
   function txt(s, x, y, size, color, font) { ctx.font = `700 ${size}px ${font}`; ctx.fillStyle = color; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(s, x, y); }
@@ -156,7 +150,7 @@
   function frame(now) {
     const dt = (now - last) / 1000; last = now;
     if (visible) {
-      if (auto) { autoT += dt; if (autoT > 6) setPose((pose + 1) % 4); }
+      autoT += dt; if (autoT > 6) randomPose();
       const t = (now - t0) / 1000;
       g.clearRect(0, 0, LW, LH); scene();
       R(37, 66, 22, 2, "rgba(0,0,0,0.18)");
