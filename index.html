@@ -4,426 +4,64 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Phanphisut Portfolio</title>
-<meta name="description" content="Portfolio ของ Phanphisut: โปรเจกต์จาก GitHub ใบประกาศ และช่องทางติดต่อ">
+<meta name="description" content="Portfolio ของ พันธุ์พิสุทธิ์ ภูเม็ด (Phanphisut): ผลงานโดรน AI และ IoT กิจกรรม ใบประกาศ และช่องทางติดต่อ">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Chakra+Petch:wght@400;500;600;700&display=swap">
-<style>
-/* Layout: a blocky overworld. Sky + title sign + terrain strip on top, then an underground stone layer holding beveled inventory panels. Fixed hotbar at the bottom jumps between sections. */
-:root {
-  --sky-top: #6f9ff5;
-  --sky-bot: #bcd7ff;
-  --deep: #3a3a3a;
-  --panel: #c6c6c6;
-  --panel-hi: #ffffff;
-  --panel-lo: #555555;
-  --outline: #111111;
-  --slot: #8b8b8b;
-  --slot-lo: #373737;
-  --ink: #262626;
-  --ink-soft: #4a4a4a;
-  --on-deep: #f3f3f3;
-  --on-deep-soft: #c9c9c9;
-  --grass: #5aa53a;
-  --gold: #f6d23a;
-  --xp: #7ed83c;
-  --cloud: #ffffff;
-  --f-pixel: "Silkscreen", "Chakra Petch", ui-monospace, monospace;
-  --f-body: "Chakra Petch", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --px: 4px;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --sky-top: #070b24; --sky-bot: #24306a; --deep: #1c1c1c;
-    --panel: #3b3b3b; --panel-hi: #626262; --panel-lo: #161616; --outline: #000000;
-    --slot: #262626; --slot-lo: #0d0d0d; --ink: #ececec; --ink-soft: #b5b5b5;
-    --on-deep: #f3f3f3; --on-deep-soft: #b9b9b9; --cloud: #8a93b8;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --sky-top: #070b24; --sky-bot: #24306a; --deep: #1c1c1c;
-  --panel: #3b3b3b; --panel-hi: #626262; --panel-lo: #161616; --outline: #000000;
-  --slot: #262626; --slot-lo: #0d0d0d; --ink: #ececec; --ink-soft: #b5b5b5;
-  --on-deep: #f3f3f3; --on-deep-soft: #b9b9b9; --cloud: #8a93b8;
-  color-scheme: dark;
-}
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  background: var(--deep);
-  color: var(--ink);
-  font: 400 16px/1.6 var(--f-body);
-  padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
-}
-img, canvas { max-width: 100%; }
-.pix { image-rendering: pixelated; image-rendering: crisp-edges; display: block; }
-a { color: inherit; }
-:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
-.wrap {
-  max-width: 1000px; margin: 0 auto;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-}
-
-/* ---------- beveled UI pieces ---------- */
-.panel {
-  background: var(--panel);
-  border: var(--px) solid;
-  border-color: var(--panel-hi) var(--panel-lo) var(--panel-lo) var(--panel-hi);
-  box-shadow: 0 0 0 var(--px) var(--outline);
-}
-.slot {
-  background: var(--slot);
-  border: var(--px) solid;
-  border-color: var(--slot-lo) var(--panel-hi) var(--panel-hi) var(--slot-lo);
-}
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  font: 700 13px/1 var(--f-pixel); text-transform: uppercase; letter-spacing: .04em;
-  color: #f0f0f0; text-shadow: 2px 2px 0 #3a3a3a; text-decoration: none;
-  background: #727272; padding: 10px 14px; cursor: pointer;
-  border: 3px solid; border-color: #a8a8a8 #444 #444 #a8a8a8;
-  box-shadow: 0 0 0 2px #111;
-}
-.btn:hover { background: #7b88c6; color: #ffffa0; }
-.btn:active { border-color: #444 #a8a8a8 #a8a8a8 #444; }
-
-/* ---------- overworld header ---------- */
-.overworld {
-  position: relative; overflow: hidden;
-  background: linear-gradient(var(--sky-top), var(--sky-bot));
-}
-.orb { position: absolute; top: 28px; right: max(20px, 8vw); width: 56px; height: 56px; }
-.orb .sun { background: #ffe14d; box-shadow: inset -8px -8px 0 #f2b81c, 0 0 0 6px rgba(255, 225, 77, .25); width: 100%; height: 100%; }
-.orb .moon { display: none; background: #e9ecf5; box-shadow: inset -10px -6px 0 #c3c8d8; width: 44px; height: 44px; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .orb .sun { display: none; }
-  :root:not([data-theme="light"]) .orb .moon { display: block; }
-}
-:root[data-theme="dark"] .orb .sun { display: none; }
-:root[data-theme="dark"] .orb .moon { display: block; }
-.cloud {
-  position: absolute; height: 24px; width: 120px; background: var(--cloud); opacity: .9;
-  box-shadow: 24px -16px 0 0 var(--cloud), 56px -16px 0 0 var(--cloud);
-  animation: drift linear infinite;
-}
-.cloud::after { content: ""; position: absolute; left: 24px; top: -16px; width: 56px; height: 16px; background: var(--cloud); }
-.cloud.c1 { top: 70px; animation-duration: 80s; }
-.cloud.c2 { top: 150px; animation-duration: 110s; animation-delay: -60s; transform: scale(.7); }
-.cloud.c3 { top: 40px; animation-duration: 140s; animation-delay: -100s; }
-@keyframes drift { from { left: -200px; } to { left: 110%; } }
-
-.title-block { position: relative; z-index: 2; text-align: center; padding-block: 64px 12px; }
-.title {
-  margin: 0; font: 700 clamp(30px, 8vw, 72px)/1 var(--f-pixel); letter-spacing: .02em;
-  color: #e8e8e8;
-  text-shadow: 0 4px 0 #8a8a8a, 0 8px 0 #4a4a4a, 0 12px 0 #222, 0 16px 18px rgba(0,0,0,.35);
-  -webkit-text-stroke: 2px #2a2a2a;
-  overflow-wrap: anywhere;
-}
-.splash-wrap { position: relative; height: 0; }
-.splash {
-  position: absolute; right: 6%; top: -24px; white-space: nowrap;
-  font: 700 clamp(13px, 2.2vw, 18px)/1 var(--f-body); color: var(--gold);
-  text-shadow: 2px 2px 0 #3f3600; transform: rotate(-14deg);
-  animation: pulse .5s ease-in-out infinite alternate;
-}
-@keyframes pulse { to { transform: rotate(-14deg) scale(1.08); } }
-.subtitle { margin: 26px 0 0; font: 600 16px/1.4 var(--f-body); color: #fff; text-shadow: 2px 2px 0 rgba(0,0,0,.45); }
-.xp { max-width: 420px; margin: 18px auto 0; }
-.xp-level { font: 700 18px/1 var(--f-pixel); color: var(--xp); text-shadow: 2px 2px 0 #1d3a07; margin-bottom: 6px; }
-.xp-bar { height: 14px; background: #1b1b1b; border: 2px solid #000; padding: 2px; }
-.xp-fill { height: 100%; width: 0; background: repeating-linear-gradient(90deg, var(--xp) 0 18px, #5fb425 18px 20px); transition: width 1.2s steps(12); }
-
-.land { position: relative; z-index: 1; margin-top: 32px; height: 168px; }
-.land canvas.terrain { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 96px; }
-.hero-char { position: absolute; bottom: 96px; left: calc(50% - 60px); width: 32px; animation: bob 1s steps(2) infinite; }
-.drone { position: absolute; bottom: 136px; left: 0; width: 52px; animation: fly 16s steps(64) infinite alternate; }
-.tree { position: absolute; bottom: 96px; left: 10%; width: 64px; }
-.tree2 { left: auto; right: 12%; width: 48px; }
-@keyframes bob { 50% { transform: translateY(-4px); } }
-@keyframes fly { from { transform: translateX(8vw); } to { transform: translateX(80vw); } }
-
-/* ---------- underground ---------- */
-main { background-color: var(--deep); background-size: 64px 64px; padding-block: 8px 24px; }
-section { padding-block: 32px 12px; scroll-margin-top: 16px; }
-.sec-label {
-  display: inline-flex; align-items: center; gap: 12px; margin: 0 0 20px;
-  padding: 8px 16px 8px 10px;
-}
-.sec-label img { width: 32px; height: 32px; }
-.sec-label h2 { margin: 0; font: 700 22px/1.1 var(--f-body); }
-.sec-label small { display: block; font: 400 11px/1.2 var(--f-pixel); color: var(--ink-soft); letter-spacing: .08em; text-transform: uppercase; }
-
-.npc { display: flex; gap: 18px; align-items: flex-start; }
-.portrait { flex: none; width: 104px; height: 104px; padding: 4px; }
-.portrait img { width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
-.dialog { flex: 1; min-width: 0; padding: 14px 18px 10px; position: relative; }
-.dialog .name { font: 700 14px/1 var(--f-pixel); color: var(--grass); text-transform: uppercase; letter-spacing: .06em; }
-.dialog p { margin: 8px 0 0; max-width: 62ch; }
-.dialog .more { position: absolute; right: 14px; bottom: 6px; font: 700 14px/1 var(--f-pixel); color: var(--ink-soft); animation: blink 1s steps(1) infinite; }
-@keyframes blink { 50% { opacity: 0; } }
-.signs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 18px; margin-top: 28px; }
-.sign { display: flex; align-items: center; gap: 12px; padding: 12px 14px; text-decoration: none; }
-.sign:hover { filter: brightness(1.08); }
-.sign .slot { padding: 4px; flex: none; }
-.sign .slot img { width: 40px; height: 40px; }
-.sign strong { display: block; font: 700 16px/1.25 var(--f-body); }
-.sign small { display: block; font-size: 13px; color: var(--ink-soft); line-height: 1.4; }
-.sign .arrow { margin-left: auto; font: 700 14px/1 var(--f-pixel); color: var(--ink-soft); }
-
-/* projects */
-.sync { font: 400 12px/1.4 var(--f-pixel); color: var(--on-deep-soft); margin: -8px 0 16px; }
-.sync i { display: inline-block; width: 8px; height: 8px; background: #777; margin-right: 6px; vertical-align: 0; }
-.sync i.on { background: var(--xp); }
-.repos { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); gap: 20px; }
-.repo { display: grid; grid-template-columns: 56px 1fr; gap: 14px; padding: 14px; text-decoration: none; min-width: 0; transition: transform .1s steps(2); }
-.repo:hover { transform: translateY(-3px); }
-.repo .slot { padding: 4px; width: 56px; height: 56px; }
-.repo .slot img { width: 40px; height: 40px; }
-.repo-body { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-.repo-name { font: 700 16px/1.3 var(--f-body); overflow-wrap: anywhere; }
-.repo-desc { margin: 0; font-size: 14px; color: var(--ink-soft); }
-.repo-foot { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 6px; font: 400 11px/1.4 var(--f-pixel); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
-.repo-foot .lang { color: var(--ink); }
-
-.sub-h { margin: 36px 0 14px; font: 700 13px/1 var(--f-pixel); color: var(--on-deep); text-transform: uppercase; letter-spacing: .08em; text-shadow: 2px 2px 0 #000; }
-
-/* featured projects */
-.showcase { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 22px; }
-.show { display: flex; flex-direction: column; min-width: 0; }
-.shot { display: block; padding: 0; margin: 10px 10px 0; cursor: zoom-in; position: relative; aspect-ratio: 16 / 10; max-width: 100%; overflow: hidden; }
-.shot img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s steps(4); }
-.shot:hover img { transform: scale(1.05); }
-.shot .zoom { position: absolute; right: 6px; bottom: 6px; font: 700 10px/1 var(--f-pixel); color: #fff; background: rgba(0,0,0,.65); padding: 5px 6px; }
-.show-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
-.show h3 { margin: 0; font: 700 17px/1.3 var(--f-body); }
-.show p { margin: 0; font-size: 14px; color: var(--ink-soft); flex: 1; }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip { font: 700 10px/1 var(--f-pixel); text-transform: uppercase; letter-spacing: .04em; padding: 5px 7px; background: var(--slot); color: var(--on-deep); border: 2px solid var(--slot-lo); }
-.show .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
-.show .btn { font-size: 11px; padding: 8px 10px; }
-
-/* activities timeline */
-.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
-.filters .btn[aria-pressed="true"] { background: var(--grass); color: #fff; border-color: #8fd36b #2b5a1a #2b5a1a #8fd36b; }
-.timeline { position: relative; padding-left: 34px; }
-.timeline::before {
-  content: ""; position: absolute; left: 10px; top: 4px; bottom: 4px; width: 8px;
-  background: repeating-linear-gradient(#8a6d3b 0 6px, #5e4a26 6px 8px);
-  box-shadow: 0 0 0 2px #000;
-}
-.month { position: relative; margin: 26px 0 12px; font: 700 13px/1 var(--f-pixel); color: var(--gold); text-transform: uppercase; letter-spacing: .06em; text-shadow: 2px 2px 0 #000; }
-.month:first-child { margin-top: 0; }
-.month::before { content: ""; position: absolute; left: -30px; top: -2px; width: 16px; height: 16px; background: var(--gold); box-shadow: 0 0 0 3px #000, inset -4px -4px 0 #b8860b; }
-.act { display: grid; grid-template-columns: 180px 1fr; gap: 0; margin-bottom: 14px; min-width: 0; }
-.act .shot { margin: 8px; aspect-ratio: 4 / 3; }
-.act-body { padding: 12px 14px 12px 6px; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
-.act-top { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.when { font: 700 11px/1 var(--f-pixel); color: var(--ink); background: var(--panel-hi); padding: 5px 7px; border: 2px solid var(--panel-lo); font-variant-numeric: tabular-nums; }
-.type { font: 700 10px/1 var(--f-pixel); padding: 5px 7px; color: #fff; text-transform: uppercase; border: 2px solid #000; }
-.type.work { background: #3b6bd3; }
-.type.train { background: #3c8527; }
-.type.teach { background: #c26a12; }
-.type.event { background: #8e44ad; }
-.act h3 { margin: 0; font: 700 16px/1.3 var(--f-body); overflow-wrap: anywhere; }
-.act p { margin: 0; font-size: 14px; color: var(--ink-soft); }
-.pages { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 92px), 1fr)); gap: 10px; }
-.pages .shot { margin: 0; aspect-ratio: 1131 / 1600; }
-.pages .shot img { object-position: top; }
-
-/* certificates */
-.certs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 22px; }
-.cert { display: flex; flex-direction: column; min-width: 0; }
-.cert .shot { aspect-ratio: 4 / 3; background: #fff; }
-.cert .shot img { object-fit: contain; }
-.cert-body { padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 4px; }
-.cert .kicker { font: 700 10px/1 var(--f-pixel); color: #b8860b; text-transform: uppercase; letter-spacing: .06em; }
-.cert h3 { margin: 2px 0 0; font: 700 15px/1.35 var(--f-body); }
-.cert p { margin: 0; font-size: 13px; color: var(--ink-soft); }
-
-/* lightbox */
-dialog.lb { border: 0; padding: 0; background: transparent; max-width: min(96vw, 1100px); max-height: 94vh; color: var(--ink); }
-dialog.lb::backdrop { background: rgba(0,0,0,.82); }
-.lb-inner { display: flex; flex-direction: column; max-height: 94vh; }
-.lb-img { flex: 1; min-height: 0; display: grid; place-items: center; background: #111; padding: 6px; }
-.lb-img img { max-width: 100%; max-height: calc(94vh - 120px); object-fit: contain; display: block; }
-.lb-bar { display: flex; align-items: center; gap: 10px; padding: 10px 12px; flex-wrap: wrap; }
-.lb-cap { flex: 1; min-width: 160px; font: 600 14px/1.4 var(--f-body); }
-.lb-bar .btn { font-size: 12px; padding: 8px 10px; }
-@media (max-width: 600px) {
-  .act { grid-template-columns: 1fr; }
-  .act-body { padding: 4px 14px 14px; }
-  .timeline { padding-left: 26px; }
-  .timeline::before { left: 6px; width: 6px; }
-  .month::before { left: -25px; width: 12px; height: 12px; }
-}
-
-/* contact inventory */
-.inventory { padding: 18px; }
-.inv-title { margin: 0 0 12px; font: 700 13px/1 var(--f-pixel); color: var(--ink-soft); text-transform: uppercase; letter-spacing: .06em; }
-.inv-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: 12px; }
-.inv { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; padding: 14px 8px 12px; text-decoration: none; height: 100%; }
-a.inv:hover { background: #a3a3d6; }
-.inv img { width: 48px; height: 48px; margin-bottom: 4px; }
-.inv strong { font: 700 13px/1.2 var(--f-pixel); text-transform: uppercase; color: var(--on-deep); text-shadow: 2px 2px 0 #222; }
-.inv small { font: 600 15px/1.3 var(--f-body); color: var(--on-deep); text-shadow: 1px 1px 0 #222; user-select: all; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
-.inv .btn { margin-top: 8px; padding: 7px 10px; font-size: 11px; }
-.inv-hint { margin: 12px 0 0; font-size: 13px; color: var(--ink-soft); }
-
-footer { text-align: center; padding-block: 24px 16px; font: 400 11px/1.6 var(--f-pixel); color: var(--on-deep-soft); }
-
-/* hotbar */
-.hotbar {
-  position: fixed; left: 50%; transform: translateX(-50%); z-index: 20;
-  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
-  display: flex; gap: 0; padding: 3px; background: #1c1c1c; border: 3px solid #000;
-  box-shadow: 0 4px 0 rgba(0,0,0,.4);
-}
-.hotbar a {
-  width: 60px; height: 60px; display: grid; place-items: center; position: relative;
-  background: rgba(140,140,140,.35); border: 3px solid #5b5b5b; text-decoration: none;
-}
-.hotbar a + a { border-left-width: 0; }
-.hotbar a img { width: 36px; height: 36px; }
-.hotbar a.sel { outline: 4px solid #f0f0f0; outline-offset: -1px; z-index: 1; }
-.hotbar a .key { position: absolute; left: 3px; top: 1px; font: 700 10px/1 var(--f-pixel); color: #ddd; text-shadow: 1px 1px 0 #000; }
-.hotbar-label {
-  position: fixed; left: 50%; transform: translateX(-50%); z-index: 20;
-  bottom: calc(84px + env(safe-area-inset-bottom, 0px));
-  font: 600 14px/1 var(--f-body); color: #fff; text-shadow: 2px 2px 0 #000; white-space: nowrap; pointer-events: none;
-  transition: opacity .4s;
-}
-
-@media (max-width: 520px) {
-  .npc { flex-direction: column; align-items: center; }
-  .dialog { width: 100%; }
-  .splash { right: 2%; top: -14px; }
-  .hotbar a { width: 52px; height: 52px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .cloud, .splash, .hero-char, .drone, .dialog .more { animation: none; }
-  .drone { transform: translateX(60vw); }
-  html { scroll-behavior: auto; }
-}
-</style>
+<link rel="stylesheet" href="assets/site.css">
 </head>
-<body>
+<body data-page="home">
+<header id="hero"></header>
 
-<header class="overworld" id="top">
-  <div class="cloud c1" aria-hidden="true"></div>
-  <div class="cloud c2" aria-hidden="true"></div>
-  <div class="cloud c3" aria-hidden="true"></div>
-  <div class="orb" aria-hidden="true"><div class="sun"></div><div class="moon"></div></div>
-
-  <div class="wrap title-block">
-    <h1 class="title">PHANPHISUT</h1>
-    <div class="splash-wrap" aria-hidden="true"><span class="splash" id="splash">บินโดรนด้วย Python!</span></div>
-    <p class="subtitle">พันธุ์พิสุทธิ์ ภูเม็ด · R&amp;D Software / Hardware Engineer · โดรน AI และ IoT</p>
-    <div class="xp" aria-label="จำนวนโปรเจกต์">
-      <div class="xp-level" id="xp-level">LV 5</div>
-      <div class="xp-bar"><div class="xp-fill" id="xp-fill"></div></div>
-    </div>
-  </div>
-
-  <div class="land" aria-hidden="true">
-    <img class="pix tree" data-sprite="tree" alt="">
-    <img class="pix tree tree2" data-sprite="tree" alt="">
-    <img class="pix drone" data-sprite="drone" alt="">
-    <img class="pix hero-char" data-sprite="hero" alt="">
-    <canvas class="terrain pix" id="terrain"></canvas>
-  </div>
-</header>
-
-<main id="main">
+<main id="main" tabindex="-1">
   <section aria-labelledby="npc-name">
     <div class="wrap">
       <div class="npc">
         <div class="portrait slot">
-          <img src="https://github.com/Phanphisut.png?size=160" alt="รูปโปรไฟล์ Phanphisut" width="96" height="96"
-               onerror="this.src=window.__heroFace||'';this.onerror=null">
+          <img id="face" src="https://github.com/Phanphisut.png?size=160" alt="Phanphisut" width="96" height="96">
         </div>
         <div class="dialog panel">
           <span class="name" id="npc-name">Phanphisut</span>
-          <p>สวัสดีครับ ผมพันธุ์พิสุทธิ์ ทำงานด้านโดรน Computer Vision และ IoT ตอนนี้เป็น R&amp;D Engineer ที่ SoT (STEAM of Things) ดูผลงาน กิจกรรม ใบประกาศ และช่องทางติดต่อได้จากป้ายด้านล่างเลยครับ</p>
+          <p data-i18n="bio"></p>
           <span class="more" aria-hidden="true">▼</span>
         </div>
       </div>
-
-      <nav class="signs" aria-label="ไปยังส่วนต่าง ๆ">
-        <a class="sign panel" href="#projects">
-          <span class="slot"><img class="pix" data-sprite="chest" alt=""></span>
-          <span><strong>ดูผลงาน</strong><small>โปรเจกต์ทั้งหมดจาก GitHub</small></span>
-          <span class="arrow" aria-hidden="true">▶</span>
-        </a>
-        <a class="sign panel" href="#activities">
-          <span class="slot"><img class="pix" data-sprite="map" alt=""></span>
-          <span><strong>กิจกรรม</strong><small>งาน อบรม และการสอน</small></span>
-          <span class="arrow" aria-hidden="true">▶</span>
-        </a>
-        <a class="sign panel" href="#certificates">
-          <span class="slot"><img class="pix" data-sprite="medal" alt=""></span>
-          <span><strong>ใบประกาศ</strong><small>ใบรับรอง รางวัล และกิจกรรม</small></span>
-          <span class="arrow" aria-hidden="true">▶</span>
-        </a>
-        <a class="sign panel" href="#contact">
-          <span class="slot"><img class="pix" data-sprite="bubble" alt=""></span>
-          <span><strong>ช่องทางติดต่อ</strong><small>LINE · Facebook · Instagram</small></span>
-          <span class="arrow" aria-hidden="true">▶</span>
-        </a>
-      </nav>
     </div>
   </section>
 
-  <section id="projects" aria-labelledby="projects-h">
-    <div class="wrap">
-      <div class="sec-label panel">
-        <img class="pix" data-sprite="chest" alt="">
-        <div><small>Chest · Projects</small><h2 id="projects-h">ผลงาน</h2></div>
+  <nav aria-labelledby="signs-h">
+    <section>
+      <div class="wrap">
+        <div class="sec-label panel">
+          <img class="pix" data-sprite="tree" alt="">
+          <div><small>Signposts</small><h2 id="signs-h" data-i18n="signs.title"></h2></div>
+        </div>
+        <div class="signs">
+          <a class="sign panel" href="projects.html">
+            <span class="slot"><img class="pix" data-sprite="chest" alt=""></span>
+            <span><strong data-i18n="nav.projects"></strong><small data-i18n="signs.projects"></small><span class="count" data-count="projects"></span></span>
+            <span class="arrow" aria-hidden="true">▶</span>
+          </a>
+          <a class="sign panel" href="activities.html">
+            <span class="slot"><img class="pix" data-sprite="map" alt=""></span>
+            <span><strong data-i18n="nav.activities"></strong><small data-i18n="signs.activities"></small><span class="count" data-count="activities"></span></span>
+            <span class="arrow" aria-hidden="true">▶</span>
+          </a>
+          <a class="sign panel" href="certificates.html">
+            <span class="slot"><img class="pix" data-sprite="medal" alt=""></span>
+            <span><strong data-i18n="nav.certs"></strong><small data-i18n="signs.certs"></small><span class="count" data-count="certificates"></span></span>
+            <span class="arrow" aria-hidden="true">▶</span>
+          </a>
+        </div>
       </div>
-      <div class="showcase" id="showcase"></div>
-      <h3 class="sub-h">Repositories บน GitHub</h3>
-      <p class="sync"><i id="sync-dot"></i><span id="sync-note">กำลังโหลดจาก GitHub…</span></p>
-      <div class="repos" id="repos"></div>
-    </div>
-  </section>
-
-  <section id="activities" aria-labelledby="act-h">
-    <div class="wrap">
-      <div class="sec-label panel">
-        <img class="pix" data-sprite="map" alt="">
-        <div><small>Quest log · Activities</small><h2 id="act-h">กิจกรรมและประสบการณ์</h2></div>
-      </div>
-      <div class="filters" id="filters" role="group" aria-label="กรองกิจกรรม">
-        <button class="btn" type="button" data-f="all" aria-pressed="true">ทั้งหมด</button>
-        <button class="btn" type="button" data-f="work" aria-pressed="false">ทำงาน</button>
-        <button class="btn" type="button" data-f="teach" aria-pressed="false">สอน / สตาฟ</button>
-        <button class="btn" type="button" data-f="train" aria-pressed="false">อบรม</button>
-        <button class="btn" type="button" data-f="event" aria-pressed="false">กิจกรรม</button>
-      </div>
-      <div class="timeline" id="timeline"></div>
-      <h3 class="sub-h">หน้าพอร์ตฉบับเต็ม</h3>
-      <div class="pages" id="pages"></div>
-    </div>
-  </section>
-
-  <section id="certificates" aria-labelledby="certs-h">
-    <div class="wrap">
-      <div class="sec-label panel">
-        <img class="pix" data-sprite="medal" alt="">
-        <div><small>Achievements · <span id="cert-count">8</span> ใบ</small><h2 id="certs-h">ใบประกาศ</h2></div>
-      </div>
-      <div class="certs" id="certs"></div>
-    </div>
-  </section>
+    </section>
+  </nav>
 
   <section id="contact" aria-labelledby="contact-h">
     <div class="wrap">
       <div class="sec-label panel">
         <img class="pix" data-sprite="bubble" alt="">
-        <div><small>Inventory · Contact</small><h2 id="contact-h">ช่องทางติดต่อ</h2></div>
+        <div><small>Inventory · Contact</small><h2 id="contact-h" data-i18n="contact.title"></h2></div>
       </div>
       <div class="inventory panel">
         <p class="inv-title">Inventory</p>
@@ -431,9 +69,9 @@ footer { text-align: center; padding-block: 24px 16px; font: 400 11px/1.6 var(--
           <li><div class="inv slot">
             <img class="pix" data-sprite="line" alt="">
             <strong>LINE</strong><small id="line-val">0653057699</small>
-            <span style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">
-              <button class="btn" type="button" id="copy-line">คัดลอก</button>
-              <a class="btn" href="https://line.me/ti/p/~0653057699" target="_blank" rel="noopener">เปิด</a>
+            <span class="row">
+              <button class="btn" type="button" id="copy-line" data-copy="0653057699" data-i18n="copy"></button>
+              <a class="btn" href="https://line.me/ti/p/~0653057699" target="_blank" rel="noopener" data-i18n="open"></a>
             </span>
           </div></li>
           <li><a class="inv slot" href="https://www.facebook.com/Phaxr" target="_blank" rel="noopener">
@@ -446,386 +84,13 @@ footer { text-align: center; padding-block: 24px 16px; font: 400 11px/1.6 var(--
             <img class="pix" data-sprite="term" alt=""><strong>GitHub</strong><small>Phanphisut</small>
           </a></li>
         </ul>
-        <p class="inv-hint">แตะไอเทมเพื่อเปิดช่องทางติดต่อ</p>
+        <p class="inv-hint" data-i18n="contact.hint"></p>
       </div>
     </div>
   </section>
-
-  <footer>© 2026 PHANPHISUT · BUILT BLOCK BY BLOCK</footer>
 </main>
 
-<div class="hotbar-label" id="hotbar-label" aria-hidden="true">ผลงาน</div>
-<nav class="hotbar" aria-label="เมนูลัด">
-  <a href="#top" data-label="หน้าแรก"><span class="key">1</span><img class="pix" data-sprite="grass" alt="หน้าแรก"></a>
-  <a href="#projects" data-label="ผลงาน"><span class="key">2</span><img class="pix" data-sprite="chest" alt="ผลงาน"></a>
-  <a href="#activities" data-label="กิจกรรม"><span class="key">3</span><img class="pix" data-sprite="map" alt="กิจกรรม"></a>
-  <a href="#certificates" data-label="ใบประกาศ"><span class="key">4</span><img class="pix" data-sprite="medal" alt="ใบประกาศ"></a>
-  <a href="#contact" data-label="ติดต่อ"><span class="key">5</span><img class="pix" data-sprite="bubble" alt="ติดต่อ"></a>
-</nav>
-
-<dialog class="lb panel" id="lb" aria-label="ดูภาพ">
-  <div class="lb-inner">
-    <div class="lb-img"><img id="lb-img" alt=""></div>
-    <div class="lb-bar">
-      <span class="lb-cap" id="lb-cap"></span>
-      <button class="btn" type="button" id="lb-prev" aria-label="ภาพก่อนหน้า">◀</button>
-      <button class="btn" type="button" id="lb-next" aria-label="ภาพถัดไป">▶</button>
-      <button class="btn" type="button" id="lb-close">ปิด</button>
-    </div>
-  </div>
-</dialog>
-
-<script>
-// ===================== ข้อมูลในหน้า แก้ไขได้ที่นี่ =====================
-// รูปอยู่ในโฟลเดอร์ images/  (thumbs = รูปย่อ, projects / activities / certificates = หน้าเต็ม)
-const PROJECTS = [
-  { img: "p-gesture", page: "projects/14", title: "UAV Hand Gesture", tags: ["Python", "Hula SDK", "Computer Vision"],
-    desc: "ระบบสั่งโดรนด้วยท่าทางมือผ่านกล้องของโดรน ชู 2 นิ้วให้ขึ้นบิน ชู 5 นิ้วให้ลงจอด ไม่ต้องใช้รีโมต" },
-  { img: "p-keyboard", page: "projects/15", title: "UAV Keyboard App", tags: ["Python", "YOLO", "QR Code"],
-    desc: "แอปบังคับโดรนด้วยคีย์บอร์ด (W/S, A/D, T, L) ใช้ YOLO ตรวจจับคนและสแกน QR code เพื่อสั่งภารกิจถัดไป ออกแบบเป็นภารกิจค้นหาผู้ประสบภัย" },
-  { img: "p-bicopter", page: "projects/portfolio", title: "UAV Bi-copter", tags: ["Raspberry Pi", "ROS 2", "AI"],
-    desc: "โดรนสองใบพัดที่ใช้ Raspberry Pi และ ROS 2 ควบคุมการบิน ตรวจจับวัตถุด้วย AI อ่านค่าเซนเซอร์ และแสดงผลแบบ real-time" },
-  { img: "p-quad", page: "projects/15", title: "UAV Quadcopter", tags: ["Flight Controller", "PID", "Hardware"],
-    desc: "ประกอบโดรนร่วมกับ SoT ตั้งแต่ flight controller, ESC และมอเตอร์ brushless ไปจนถึงแฟลชเฟิร์มแวร์ คาลิเบรตเซนเซอร์ และจูน PID" },
-  { img: "p-energy", page: "projects/14", title: "Smart Energy Monitor Dashboard", tags: ["JavaScript", "Chart.js", "ESP32"],
-    desc: "เว็บแอปแสดงการผลิตและใช้พลังงานแบบ real-time สลับไปใช้ไฟบ้านอัตโนมัติผ่านรีเลย์เมื่อพลังงานแสงอาทิตย์หรือแบตเตอรี่ต่ำ",
-    github: "https://github.com/Phanphisut/Smart-energy-dashboard" },
-  { img: "p-industrial", page: "projects/14", title: "Industrial Automation & IoT Training Kit", tags: ["PLC", "HMI", "IoT"],
-    desc: "ชุดฝึก ED-IOT-01 เขียน Mitsubishi PLC ด้วย GX Works3 ออกแบบหน้าจอ HMI ด้วย GT Designer คุมความเร็วมอเตอร์ด้วย Inverter และส่งข้อมูลผ่าน IoT" },
-];
-
-// type: work = ทำงาน, teach = สอน/สตาฟ, train = อบรม, event = กิจกรรม   ym = ปี-เดือน ใช้เรียงและจัดกลุ่ม
-const ACTIVITIES = [
-  { ym: "2026-09", when: "22 ก.ย. 2026", type: "teach", img: "a-airschool", page: "activities/10", title: "Staff Air School",
-    desc: "วิทยากร STEM workshop ตามโรงเรียน สอนใช้ Arduino และ micro:bit จำลองวงจรออนไลน์ เขียนโปรแกรมเซนเซอร์แบบบล็อก และทำโปรเจกต์วัดความชื้นดิน ความชื้นอากาศ และอุณหภูมิ" },
-  { ym: "2026-09", when: "2 ก.ย. 2026", type: "event", img: "a-chiba", page: "activities/10", title: "ต้อนรับนักศึกษา Chiba University",
-    desc: "ดูแลนักศึกษาจาก Chiba University ประเทศญี่ปุ่น ที่มาศึกษาดูงาน EGAT Learning Center และแลกเปลี่ยนวัฒนธรรมไทย–ญี่ปุ่น" },
-  { ym: "2026-08", when: "ส.ค. 2026 – ปัจจุบัน", type: "work", img: "a-sot", page: "activities/11", title: "R&D Software / Hardware Engineer · SoT (STEAM of Things)",
-    desc: "สหกิจศึกษา พัฒนาโปรแกรมโดรนด้วย HuLa Drone SDK, Python และ C/C++ งาน Computer Vision ด้วย YOLO ระบบสมองกลฝังตัว ESP32 / Arduino การควบคุม PID และ pipeline AI ตั้งแต่เตรียม dataset จนถึง real-time inference บนกล้องโดรน" },
-  { ym: "2026-08", when: "ส.ค. 2026 – ปัจจุบัน", type: "teach", img: "a-lecturer", page: "activities/9", title: "Lecturer Hula Mission",
-    desc: "สอนผู้เรียนใช้โปรแกรม AI Detection ที่ทีมพัฒนา ติด label เทรนโมเดล และเขียน Python ด้วย Hula SDK ให้โดรนบินอัตโนมัติ หลบสิ่งกีดขวาง ลอดห่วง และอ่าน QR code" },
-  { ym: "2026-08", when: "ส.ค. 2026 – ปัจจุบัน", type: "teach", img: "a-uavstaff", page: "activities/9", title: "UAV Staff",
-    desc: "ทีมสนับสนุนเทคนิค Drone Kit ดูแลการบิน จูน PID (Roll, Pitch, Yaw, Altitude) ซ่อมบำรุง บัดกรีสาย ESC เปลี่ยนมอเตอร์ ใบพัด แบตเตอรี่ และติดตั้งเฟิร์มแวร์" },
-  { ym: "2026-08", when: "ส.ค. 2026 – ปัจจุบัน", type: "train", img: "a-cv", page: "activities/10", title: "Computer Vision",
-    desc: "ฝึก AI Object Detection ด้วย Roboflow, Google Colab, Ultralytics และ YOLO ตั้งแต่เตรียม dataset เทรนโมเดล .pt จนถึงตรวจจับหมวกนิรภัย ยานพาหนะ บุคคล และผู้ประสบภัย" },
-  { ym: "2026-08", when: "10 ส.ค. 2026", type: "teach", img: "a-volunteer", page: "activities/9", title: "Volunteer Lecturer",
-    desc: "ตัวแทนรุ่นกล่าวต้อนรับและจัดเวทีแลกเปลี่ยนความรู้กับรุ่นพี่ เน้นการคิดเป็นระบบ การแก้ปัญหา และการตั้งคำถาม" },
-  { ym: "2026-07", when: "29 ก.ค. 2026", type: "train", img: "a-hls", page: "activities/9", title: "HLS Introduction Training",
-    desc: "เขียน C/C++ สำหรับพัฒนา FPGA ด้วยเครื่องมือ High-Level Synthesis ของ AMD สอนโดยวิศวกรจาก Design Gateway" },
-  { ym: "2026-07", when: "27–31 ก.ค. 2026", type: "train", img: "a-iot", page: "activities/8", title: "IoT for Industry",
-    desc: "เขียน LabVIEW ทำหน้าจอแสดงผล กราฟ และระบบรดน้ำอัตโนมัติเมื่อความชื้นต่ำกว่า 50% ส่งข้อมูลขึ้น ThingSpeak ทุก 10 วินาที" },
-  { ym: "2026-07", when: "13–17 ก.ค. 2026", type: "train", img: "a-genai", page: "activities/8", title: "Generative AI",
-    desc: "ฝึก prompt engineering สร้างภาพและวิดีโอด้วย ChatGPT, Gemini, NotebookLM, Claude, Canva, Google Flow และอื่น ๆ ทำ storyboard และสื่อโฆษณา" },
-  { ym: "2026-07", when: "9 ก.ค. 2026", type: "event", img: "a-aisol", page: "activities/8", title: "AI Solutions",
-    desc: "เรียนรู้ความต้องการของภาคอุตสาหกรรมไทย ดูสาธิตหุ่นยนต์สุนัขที่ใช้ ROS 2 และแนวทางความปลอดภัยไซเบอร์พื้นฐาน" },
-  { ym: "2026-07", when: "8 ก.ค. 2026", type: "train", img: "a-cyber", page: "activities/8", title: "Cyber Security",
-    desc: "พื้นฐานความปลอดภัยไซเบอร์ ทั้ง Network, Cloud, Application, Critical Infrastructure และ IoT Security" },
-  { ym: "2026-07", when: "1 ก.ค. 2026", type: "train", img: "a-hula", page: "activities/7", title: "Training Hula SDK",
-    desc: "ศึกษาการใช้งานโดรน Hula SDK และออกแบบภารกิจสอน Python + YOLO สำหรับงานค้นหาและกู้ภัย สำรวจ และเกษตร" },
-  { ym: "2026-06", when: "28–30 มิ.ย. 2026", type: "train", img: "a-uav", page: "activities/7", title: "UAV Training",
-    desc: "กฎหมายการบินโดรน การขออนุญาต การใช้งานด้านเกษตร สำรวจ และทำแผนที่ รวมถึงบินแบบ grid ค้นหาผู้ประสบภัยน้ำท่วม" },
-  { ym: "2026-06", when: "22–25 มิ.ย. 2026", type: "train", img: "a-plc", page: "activities/7", title: "PLC Level 1",
-    desc: "เขียน Ladder Diagram ออกแบบวงจรควบคุม ใช้ GX Works3 และ GT Designer สร้างหน้าจอ HMI เป็นพื้นฐานระบบ Smart Factory" },
-  { ym: "2026-06", when: "11 มิ.ย. 2026", type: "train", img: "a-3d", page: "activities/7", title: "3D Printer Training",
-    desc: "แปลงไฟล์ SolidWorks เป็นไฟล์พิมพ์ ตั้งค่า slicing สำหรับ PLA / ABS ดูแลเครื่องพิมพ์ และพิมพ์กล่องอุปกรณ์อิเล็กทรอนิกส์และชิ้นส่วนหุ่นยนต์" },
-  { ym: "2026-06", when: "10 มิ.ย. 2026", type: "train", img: "a-splicer", page: "activities/6", title: "Fusion Splicer",
-    desc: "ต่อสายไฟเบอร์ออปติกด้วยเครื่อง fusion splicer ทั้งปอก ตัด ต่อ และหุ้มด้วยท่อหด ตามมาตรฐานอุตสาหกรรม" },
-  { ym: "2026-06", when: "9 มิ.ย. 2026", type: "train", img: "a-otdr", page: "activities/6", title: "EXFO OTDR Training",
-    desc: "ใช้ EXFO MaxTester OTDR อ่านกราฟ trace หาจุดต่อ connector และจุดเสียในสายไฟเบอร์ พร้อมตรวจและทำความสะอาดหัวต่อ" },
-  { ym: "2026-02", when: "14 ก.พ. 2026", type: "event", img: "a-youth", page: "activities/6", title: "Youth Innovation Project",
-    desc: "พัฒนาระบบ AIoT ออกแบบวงจรเซนเซอร์ เขียนไมโครคอนโทรลเลอร์ เชื่อมต่อ server และทำแดชบอร์ดแบบ real-time" },
-  { ym: "2025-05", when: "5–20 พ.ค. 2025", type: "train", img: "a-arduino", page: "activities/6", title: "Arduino Testing",
-    desc: "ทดลองวงจรบน breadboard บัดกรี และทำ mini-project ตรวจจับสิ่งกีดขวางด้วย IR รดน้ำต้นไม้อัตโนมัติ ไฟจราจร ตรวจจับเสียง และวัดอุณหภูมิ" },
-  { ym: "2024-08", when: "ส.ค. – ธ.ค. 2024", type: "work", img: "a-bkc", page: "activities/11", title: "IT Administrator & IT Support · Baan Klong Cake",
-    desc: "สหกิจศึกษา 5 เดือน ดูแลแก้ปัญหาฮาร์ดแวร์และซอฟต์แวร์ให้ 24 สาขาทั่วประเทศ ทำคอนเทนต์ด้าน IT และช่วยตั้งค่าโฆษณาออนไลน์" },
-];
-const PORTFOLIO_PAGES = ["projects/14", "projects/15", "projects/portfolio", "activities/11", "activities/10", "activities/9", "activities/8", "activities/7", "activities/6"];
-
-// เรียงจากใหม่ไปเก่า
-const CERTS = [
-  { img: "cert-1", title: "จัดระเบียบงานและสร้างระบบอัตโนมัติด้วย AI", issuer: "สำนักงานคณะกรรมการดิจิทัลเพื่อเศรษฐกิจและสังคมแห่งชาติ · TH AI Passport × OpenAI", date: "24 ก.ย. 2026" },
-  { img: "cert-2", title: "การตลาดยุค AI เข้าใจลูกค้า วัดผลอย่างมีข้อมูล", issuer: "สำนักงานคณะกรรมการดิจิทัลเพื่อเศรษฐกิจและสังคมแห่งชาติ · TH AI Passport", date: "23 ก.ย. 2026" },
-  { img: "cert-6", title: "Industrial Applications of Internet of Things (IoT) · 30 ชั่วโมง", issuer: "กรมพัฒนาฝีมือแรงงาน กระทรวงแรงงาน", date: "27–31 ก.ค. 2026" },
-  { img: "cert-5", title: "Multimedia Development with Generative AI Technology · 30 ชั่วโมง", issuer: "กรมพัฒนาฝีมือแรงงาน กระทรวงแรงงาน", date: "13–17 ก.ค. 2026" },
-  { img: "cert-3", title: "รู้ทันป้องกันได้: ภัยไซเบอร์ในยุคดิจิทัล (Cyber Aware)", issuer: "สำนักวิทยบริการและเทคโนโลยีสารสนเทศ มหาวิทยาลัยราชภัฏสวนสุนันทา", date: "8 ก.ค. 2026" },
-  { img: "cert-4", title: "PLC Control Technician: PLC Level 1", issuer: "Thai-French Innovation Institute, KMUTNB", date: "26 มิ.ย. 2026" },
-  { img: "cert-8", title: "PLC ระดับ 1 · 30 ชั่วโมง", issuer: "กรมพัฒนาฝีมือแรงงาน กระทรวงแรงงาน", date: "22–25 มิ.ย. 2026" },
-  { img: "cert-7", title: "Certificate of Contribution · Youth Innovation Project #3: AIoT for Future Innovation", issuer: "11th International STEM Education Conference 2026 · มหาวิทยาลัยราชภัฏสวนสุนันทา", date: "14 ก.พ. 2026" },
-];
-const GH_USER = "Phanphisut";
-// ข้อมูลสำรอง ใช้เมื่อเรียก GitHub API ไม่ได้
-const FALLBACK = [
-  { name: "DronePhad_Finished", description: null, language: null, html_url: "https://github.com/Phanphisut/DronePhad_Finished", updated_at: "2026-08-20T20:08:44Z", stargazers_count: 0 },
-  { name: "Dron_hula_phad_finish-1-", description: null, language: "Python", html_url: "https://github.com/Phanphisut/Dron_hula_phad_finish-1-", updated_at: "2026-08-20T19:40:03Z", stargazers_count: 0 },
-  { name: "Hula-by-ton", description: null, language: null, html_url: "https://github.com/Phanphisut/Hula-by-ton", updated_at: "2026-08-11T05:48:55Z", stargazers_count: 0 },
-  { name: "Drone_Project_Phad", description: null, language: "Python", html_url: "https://github.com/Phanphisut/Drone_Project_Phad", updated_at: "2026-08-10T16:10:55Z", stargazers_count: 0 },
-  { name: "Smart-energy-dashboard", description: null, language: "JavaScript", html_url: "https://github.com/Phanphisut/Smart-energy-dashboard", updated_at: "2026-07-01T15:15:00Z", stargazers_count: 0 },
-];
-// ===============================================================
-
-/* ---------- tiny pixel-art engine ---------- */
-function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
-function canvasOf(w, h) { const c = document.createElement("canvas"); c.width = w; c.height = h; return c; }
-function fromRows(rows, pal) {
-  const c = canvasOf(rows[0].length, rows.length), g = c.getContext("2d");
-  rows.forEach((r, y) => [...r].forEach((ch, x) => { if (pal[ch]) { g.fillStyle = pal[ch]; g.fillRect(x, y, 1, 1); } }));
-  return c;
-}
-function noiseTile(colors, seed, size = 16) {
-  const c = canvasOf(size, size), g = c.getContext("2d"), r = rng(seed);
-  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) { g.fillStyle = colors[Math.floor(r() * colors.length)]; g.fillRect(x, y, 1, 1); }
-  return c;
-}
-const DIRT = ["#866043", "#79553a", "#96704f", "#6b4a32", "#866043"];
-const STONE = ["#7f7f7f", "#747474", "#8c8c8c", "#686868", "#7f7f7f"];
-const GRASS = ["#5aa53a", "#4f9330", "#68b546", "#5aa53a"];
-function grassBlock(seed) {
-  const c = noiseTile(DIRT, seed), g = c.getContext("2d"), r = rng(seed + 7);
-  for (let x = 0; x < 16; x++) {
-    const depth = 3 + Math.floor(r() * 3);
-    for (let y = 0; y < depth; y++) { g.fillStyle = GRASS[Math.floor(r() * GRASS.length)]; g.fillRect(x, y, 1, 1); }
-  }
-  return c;
-}
-function oreBlock(color, seed) {
-  const c = noiseTile(STONE, seed), g = c.getContext("2d"), r = rng(seed + 3);
-  for (let i = 0; i < 5; i++) {
-    const x = 1 + Math.floor(r() * 12), y = 1 + Math.floor(r() * 12);
-    g.fillStyle = color; g.fillRect(x, y, 2, 2); g.fillRect(x + 1, y + 1, 1, 1);
-    g.fillStyle = "rgba(255,255,255,.45)"; g.fillRect(x, y, 1, 1);
-  }
-  return c;
-}
-
-const S = {
-  hero: fromRows([
-    "..hhhh..", ".hhhhhh.", ".hssssh.", ".sesses.", ".ssssss.", "..smms..",
-    "oooooooo", "oooddooo", "soooooos", "s.oooo.s",
-    ".pppppp.", ".pp..pp.", ".pp..pp.", ".pp..pp.", ".bb..bb.", ".bb..bb."
-  ], { h: "#2e2018", s: "#e0ac7e", e: "#1d1d1d", m: "#b5795a", o: "#e07a2a", d: "#b85d17", p: "#4a4f5a", b: "#262626" }),
-  drone: fromRows([
-    "ppp.......ppp", ".f.........f.", ".fffbbbbbfff.", "....bblbb....", "....f...f...."
-  ], { p: "#cfd6dc", f: "#2b2b2b", b: "#e9e9e9", l: "#ff3b3b" }),
-  tree: fromRows([
-    "..gggggg..", ".gGgggGgg.", "gggGgggGgg", "gGgggggggG", "ggggGgGggg", ".gggggggg.", "..ggttgg..",
-    "....tt....", "....tt....", "....tt....", "....tt....", "....tt...."
-  ], { g: "#3f8a2a", G: "#2f6e1f", t: "#6b4a2b" }),
-  chest: fromRows([
-    "............", ".dddddddddd.", ".dwwwwwwwwd.", ".dwwwwwwwwd.", ".ddddkkdddd.", ".dwwwkkwwwd.",
-    ".dwwwwwwwwd.", ".dwwwwwwwwd.", ".dwwwwwwwwd.", ".dddddddddd.", "............", "............"
-  ], { w: "#a0652a", d: "#5e3a17", k: "#d8d8d8" }),
-  medal: fromRows([
-    "..rr....bb..", "...rr..bb...", "....rrbb....", ".....rb.....", "....yyyy....", "...yggggy...",
-    "..yggggggy..", "..yggwgggy..", "..yggggggy..", "...yggggy...", "....yyyy....", "............"
-  ], { r: "#d33b3b", b: "#3b6bd3", g: "#f2c230", y: "#a77a0b", w: "#fff6c0" }),
-  bubble: fromRows([
-    "............", ".wwwwwwwwww.", "wwwwwwwwwwww", "wwkkwkkwkkww", "wwkkwkkwkkww", "wwwwwwwwwwww",
-    ".wwwwwwwwww.", "...www......", "..ww........", ".w..........", "............", "............"
-  ], { w: "#f0f0f0", k: "#555" }),
-  line: fromRows([
-    "............", ".gggggggggg.", "gggggggggggg", "ggwwgwwgwwgg", "ggwwgwwgwwgg", "gggggggggggg",
-    ".gggggggggg.", "...ggg......", "..gg........", ".g..........", "............", "............"
-  ], { g: "#06c755", w: "#ffffff" }),
-  fb: fromRows([
-    "bbbbbbbbbbbb", "bbbbbbbwwwbb", "bbbbbbwwbbbb", "bbbbbbwwbbbb", "bbbbwwwwwwbb", "bbbbbbwwbbbb",
-    "bbbbbbwwbbbb", "bbbbbbwwbbbb", "bbbbbbwwbbbb", "bbbbbbwwbbbb", "bbbbbbwwbbbb", "bbbbbbwwbbbb"
-  ], { b: "#1877f2", w: "#ffffff" }),
-  ig: fromRows([
-    ".pppppppppp.", "pppppppppppp", "ppwwwwwwwwpp", "ppwppppppwpp", "ppwppwwppwpp", "ppwpwppwpwpp",
-    "oowowoowowoo", "oowoowwoowoo", "oowoooooowoo", "oowwwwwwwwoo", "oooooooooooo", ".oooooooooo."
-  ], { p: "#c13584", o: "#f56040", w: "#ffffff" }),
-  term: fromRows([
-    "kkkkkkkkkkkk", "kssssssssssk", "kkkkkkkkkkkk", "kgkkkkkkkkkk", "kkgkkkkkkkkk", "kkkgkkkkkkkk",
-    "kkgkkkkkkkkk", "kgkkkggggkkk", "kkkkkkkkkkkk", "kkkkkkkkkkkk", "kkkkkkkkkkkk", "kkkkkkkkkkkk"
-  ], { k: "#1d1d1d", s: "#5a5a5a", g: "#3fd65a" }),
-  map: fromRows([
-    "............", ".dddddddddd.", ".dppgppbbpd.", ".dpgggpbbpd.", ".dppgppppbd.", ".dpppprppbd.",
-    ".dbppprrppd.", ".dbbppprpgd.", ".dbbppppggd.", ".dpbbppgggd.", ".dddddddddd.", "............"
-  ], { p: "#e8d9a8", d: "#8a6d3b", r: "#d33b3b", g: "#4a8f3a", b: "#4b7bd3" }),
-  grass: grassBlock(42),
-};
-const url = c => c.toDataURL();
-document.querySelectorAll("[data-sprite]").forEach(img => {
-  const c = S[img.dataset.sprite]; if (!c) return;
-  img.src = url(c); img.width = c.width * 4; img.height = c.height * 4;
-});
-window.__heroFace = url(fromRows(["..hhhh..", ".hhhhhh.", ".hssssh.", ".sesses.", ".ssssss.", "..smms..", "oooooooo", "oooddooo"],
-  { h: "#2e2018", s: "#e0ac7e", e: "#1d1d1d", m: "#b5795a", o: "#e07a2a", d: "#b85d17" }));
-
-/* underground background */
-(function () {
-  const t = canvasOf(32, 32), g = t.getContext("2d");
-  [[0, 0], [16, 0], [0, 16], [16, 16]].forEach(([x, y], i) => g.drawImage(noiseTile(STONE, 900 + i), x, y));
-  g.fillStyle = "rgba(0,0,0,.55)"; g.fillRect(0, 0, 32, 32);
-  const m = document.getElementById("main");
-  m.style.backgroundImage = `url(${t.toDataURL()})`;
-  m.style.imageRendering = "pixelated";
-})();
-
-/* terrain strip */
-function drawTerrain() {
-  const cv = document.getElementById("terrain"), B = 16;
-  const cols = Math.ceil(cv.clientWidth / 32) + 1;
-  cv.width = cols * B; cv.height = 3 * B;
-  const g = cv.getContext("2d");
-  for (let x = 0; x < cols; x++) {
-    g.drawImage(grassBlock(x * 13 + 1), x * B, 0);
-    g.drawImage(noiseTile(DIRT, x * 7 + 300), x * B, B);
-    g.drawImage(x % 9 === 4 ? oreBlock("#f2c230", x) : noiseTile(STONE, x * 5 + 600), x * B, 2 * B);
-  }
-  cv.style.width = cols * 32 + "px";
-}
-drawTerrain();
-let rT; addEventListener("resize", () => { clearTimeout(rT); rT = setTimeout(drawTerrain, 150); });
-
-/* projects */
-const LANG_ORE = { Python: "#4b8bdf", JavaScript: "#f2d230", TypeScript: "#3178c6", HTML: "#e34c26", CSS: "#9b59d6", "C++": "#f34b7d", C: "#bbbbbb", Java: "#d9822b", "Jupyter Notebook": "#f37726" };
-const TH_M = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
-const fmt = iso => { const d = new Date(iso); return `${d.getDate()} ${TH_M[d.getMonth()]} ${d.getFullYear()}`; };
-const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const pretty = n => n.replace(/[-_]+/g, " ").trim();
-
-function renderRepos(list) {
-  document.getElementById("repos").innerHTML = list.map((r, i) => {
-    const ore = url(r.language ? oreBlock(LANG_ORE[r.language] || "#55e0c8", i * 31 + 5) : grassBlock(i * 31 + 5));
-    return `<a class="repo panel" href="${esc(r.html_url)}" target="_blank" rel="noopener">
-      <span class="slot"><img class="pix" src="${ore}" width="40" height="40" alt=""></span>
-      <span class="repo-body">
-        <span class="repo-name">${esc(pretty(r.name))}</span>
-        <p class="repo-desc">${r.description ? esc(r.description) : "ยังไม่มีคำอธิบาย"}</p>
-        <span class="repo-foot"><span class="lang">${esc(r.language || "—")}</span><span>★ ${r.stargazers_count}</span><span>${fmt(r.updated_at)}</span></span>
-      </span></a>`;
-  }).join("");
-  document.getElementById("xp-level").textContent = "LV " + list.length;
-  requestAnimationFrame(() => document.getElementById("xp-fill").style.width = Math.min(100, 20 + list.length * 8) + "%");
-}
-async function loadRepos() {
-  const note = document.getElementById("sync-note"), dot = document.getElementById("sync-dot");
-  try {
-    const res = await fetch(`https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=updated`);
-    if (!res.ok) throw new Error(res.status);
-    const data = (await res.json()).filter(r => !r.fork && r.name.toLowerCase() !== `${GH_USER}.github.io`.toLowerCase());
-    renderRepos(data.length ? data : FALLBACK);
-    dot.classList.add("on"); note.textContent = `ดึงจาก GitHub แบบสด · ${data.length} โปรเจกต์`;
-  } catch (e) {
-    renderRepos(FALLBACK); note.textContent = "ใช้ข้อมูลที่บันทึกไว้ (เชื่อมต่อ GitHub ไม่ได้)";
-  }
-}
-renderRepos(FALLBACK);
-loadRepos();
-
-/* lightbox */
-const lb = document.getElementById("lb"), lbImg = document.getElementById("lb-img"), lbCap = document.getElementById("lb-cap");
-let lbList = [], lbI = 0;
-function lbShow() { const it = lbList[lbI]; lbImg.src = it.src; lbImg.alt = it.cap; lbCap.textContent = it.cap + (lbList.length > 1 ? `  (${lbI + 1}/${lbList.length})` : ""); }
-function openLb(list, i) {
-  lbList = list; lbI = i; lbShow();
-  document.getElementById("lb-prev").hidden = document.getElementById("lb-next").hidden = list.length < 2;
-  if (lb.showModal) lb.showModal(); else lb.setAttribute("open", "");
-}
-document.getElementById("lb-close").onclick = () => lb.close();
-document.getElementById("lb-prev").onclick = () => { lbI = (lbI - 1 + lbList.length) % lbList.length; lbShow(); };
-document.getElementById("lb-next").onclick = () => { lbI = (lbI + 1) % lbList.length; lbShow(); };
-lb.addEventListener("click", e => { if (e.target === lb) lb.close(); });
-lb.addEventListener("keydown", e => {
-  if (e.key === "ArrowLeft") document.getElementById("lb-prev").click();
-  if (e.key === "ArrowRight") document.getElementById("lb-next").click();
-});
-const IMG = p => `images/${p}.jpg`, TH = n => `images/thumbs/${n}.jpg`;
-function shotBtn(thumb, label, group, i) {
-  return `<button class="shot slot" type="button" data-g="${group}" data-i="${i}" aria-label="ดูภาพ ${esc(label)}">
-    <img src="${thumb}" alt="${esc(label)}" loading="lazy"><span class="zoom">ดูภาพ</span></button>`;
-}
-const groups = {};
-document.addEventListener("click", e => {
-  const b = e.target.closest(".shot[data-g]"); if (!b) return;
-  openLb(groups[b.dataset.g], +b.dataset.i);
-});
-
-/* featured projects */
-groups.proj = PROJECTS.map(p => ({ src: IMG(p.page), cap: p.title }));
-document.getElementById("showcase").innerHTML = PROJECTS.map((p, i) => `
-  <article class="show panel">
-    ${shotBtn(TH(p.img), p.title, "proj", i)}
-    <div class="show-body">
-      <div class="chips">${p.tags.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
-      <h3>${esc(p.title)}</h3>
-      <p>${esc(p.desc)}</p>
-      ${p.github ? `<div class="actions"><a class="btn" href="${esc(p.github)}" target="_blank" rel="noopener">GitHub ↗</a></div>` : ""}
-    </div>
-  </article>`).join("");
-
-/* activities */
-const TYPE_LABEL = { work: "ทำงาน", teach: "สอน / สตาฟ", train: "อบรม", event: "กิจกรรม" };
-const ymLabel = ym => { const [y, m] = ym.split("-"); return `${TH_M[+m - 1]} ${y}`; };
-function renderActs(filter) {
-  const list = ACTIVITIES.filter(a => filter === "all" || a.type === filter);
-  groups.act = list.map(a => ({ src: IMG(a.page), cap: `${a.title} · ${a.when}` }));
-  let last = "", html = "";
-  list.forEach((a, i) => {
-    if (a.ym !== last) { html += `<div class="month">${ymLabel(a.ym)}</div>`; last = a.ym; }
-    html += `<article class="act panel">
-      ${shotBtn(TH(a.img), a.title, "act", i)}
-      <div class="act-body">
-        <div class="act-top"><span class="when">${esc(a.when)}</span><span class="type ${a.type}">${TYPE_LABEL[a.type]}</span></div>
-        <h3>${esc(a.title)}</h3>
-        <p>${esc(a.desc)}</p>
-      </div>
-    </article>`;
-  });
-  document.getElementById("timeline").innerHTML = html;
-}
-document.getElementById("filters").addEventListener("click", e => {
-  const b = e.target.closest("[data-f]"); if (!b) return;
-  document.querySelectorAll("#filters [data-f]").forEach(x => x.setAttribute("aria-pressed", x === b));
-  renderActs(b.dataset.f);
-});
-renderActs("all");
-groups.pages = PORTFOLIO_PAGES.map((p, i) => ({ src: IMG(p), cap: `หน้าพอร์ต ${i + 1}` }));
-document.getElementById("pages").innerHTML = PORTFOLIO_PAGES.map((p, i) => shotBtn(IMG(p), `หน้าพอร์ต ${i + 1}`, "pages", i)).join("");
-
-/* certificates */
-groups.cert = CERTS.map(c => ({ src: `images/certificates/${c.img}.jpg`, cap: c.title }));
-document.getElementById("cert-count").textContent = CERTS.length;
-document.getElementById("certs").innerHTML = CERTS.map((c, i) => `
-  <article class="cert panel">
-    ${shotBtn(`images/certificates/${c.img}.jpg`, c.title, "cert", i)}
-    <div class="cert-body">
-      <span class="kicker">ปลดล็อกความสำเร็จ! · ${esc(c.date)}</span>
-      <h3>${esc(c.title)}</h3>
-      <p>${esc(c.issuer)}</p>
-    </div>
-  </article>`).join("");
-
-/* LINE copy */
-document.getElementById("copy-line").addEventListener("click", async e => {
-  const b = e.currentTarget;
-  try { await navigator.clipboard.writeText("0653057699"); b.textContent = "คัดลอกแล้ว"; }
-  catch { const r = document.createRange(); r.selectNodeContents(document.getElementById("line-val")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = "เลือกแล้ว"; }
-  setTimeout(() => b.textContent = "คัดลอก", 1600);
-});
-
-/* hotbar: highlight current section, number keys 1-4 */
-const slots = [...document.querySelectorAll(".hotbar a")], label = document.getElementById("hotbar-label");
-let hideT;
-function select(i) {
-  slots.forEach((a, j) => a.classList.toggle("sel", i === j));
-  label.textContent = slots[i].dataset.label; label.style.opacity = 1;
-  clearTimeout(hideT); hideT = setTimeout(() => label.style.opacity = 0, 1400);
-}
-const targets = slots.map(a => document.querySelector(a.getAttribute("href")));
-const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) select(targets.indexOf(e.target)); }), { rootMargin: "-45% 0px -50% 0px" });
-targets.forEach(t => io.observe(t));
-addEventListener("keydown", e => {
-  if (e.target.closest("input,textarea") || e.ctrlKey || e.metaKey || e.altKey) return;
-  if (lb.open) return;
-  const n = +e.key; if (n >= 1 && n <= slots.length) { slots[n - 1].click(); }
-});
-select(0);
-
-/* splash lines */
-const SPLASH = ["บินโดรนด้วย Python!", "ประหยัดพลังงาน!", "Hello, World!", "ขุดโค้ดทุกวัน!", "100% handmade blocks!"];
-document.getElementById("splash").textContent = SPLASH[Math.floor(Math.random() * SPLASH.length)];
-</script>
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
 </body>
 </html>

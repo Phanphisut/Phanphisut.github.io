@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>กิจกรรม · Phanphisut</title>
+<meta name="description" content="ไทม์ไลน์งาน อบรม การสอน และกิจกรรมของ Phanphisut">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Chakra+Petch:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="activities">
+<header id="hero"></header>
+
+<main id="main" tabindex="-1">
+  <section aria-labelledby="log-h">
+    <div class="wrap">
+      <div class="sec-label panel">
+        <img class="pix" data-sprite="map" alt="">
+        <div><small>Quest log</small><h2 id="log-h" data-i18n="activities.log"></h2></div>
+      </div>
+      <div class="filters" id="filters" role="group">
+        <button class="btn" type="button" data-f="all" data-i18n="f.all"></button>
+        <button class="btn" type="button" data-f="work" data-i18n="f.work"></button>
+        <button class="btn" type="button" data-f="teach" data-i18n="f.teach"></button>
+        <button class="btn" type="button" data-f="train" data-i18n="f.train"></button>
+        <button class="btn" type="button" data-f="event" data-i18n="f.event"></button>
+      </div>
+      <div class="timeline" id="timeline"></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="pages-h">
+    <div class="wrap">
+      <h3 class="sub-h" id="pages-h" data-i18n="activities.pages"></h3>
+      <div class="pages" id="pages"></div>
+    </div>
+  </section>
+</main>
+
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>
