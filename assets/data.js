@@ -7,6 +7,9 @@
 const GH_USER = "Phanphisut";
 
 const PROJECTS = [
+  { img: "p-warrantyth", page: "projects/warrantyth", title: "WarrantyTH Platform", tags: ["Web App", "JavaScript", "Node.js"],
+    desc: ["แพลตฟอร์มจัดการการรับประกันสินค้า ลงทะเบียนสินค้าครั้งเดียว เช็กสถานะและวันหมดประกัน รับแจ้งเตือนก่อนหมด และยื่นเคลมพร้อมติดตามสถานะได้ในที่เดียว",
+           "Warranty management platform: register products once, check warranty status and expiry, get reminders before coverage ends, and file and track claims in one place."] },
   { img: "p-gesture", page: "projects/14", title: "UAV Hand Gesture", tags: ["Python", "Hula SDK", "Computer Vision"],
     desc: ["ระบบสั่งโดรนด้วยท่าทางมือผ่านกล้องของโดรน ชู 2 นิ้วให้ขึ้นบิน ชู 5 นิ้วให้ลงจอด ไม่ต้องใช้รีโมต",
            "Hand-gesture drone control through the Hula drone camera: two fingers to take off, five to land, no remote needed."] },
@@ -95,7 +98,7 @@ const ACTIVITIES = [
            "5-month co-op: hardware and software support for 24 branches nationwide, IT content, and online ad setup."] },
 ];
 
-const PORTFOLIO_PAGES = ["projects/14", "projects/15", "projects/portfolio", "activities/11", "activities/10", "activities/9", "activities/8", "activities/7", "activities/6"];
+const PORTFOLIO_PAGES = ["projects/14", "projects/15", "projects/portfolio", "projects/warrantyth", "activities/11", "activities/10", "activities/9", "activities/8", "activities/7", "activities/6"];
 
 // เรียงจากใหม่ไปเก่า  img = ชื่อไฟล์ใน images/certificates/
 const CERTS = [
@@ -216,7 +219,7 @@ const SKILLS = [
     note: ["Ladder Diagram ด้วย GX Works3 และหน้าจอ HMI ด้วย GT Designer", "Ladder diagrams in GX Works3, HMI screens in GT Designer"] },
   { id: "iot", name: "IoT", label: "IoT", color: "#7ed83c", stars: 3, projects: ["Smart Energy Monitor Dashboard", "Industrial Automation & IoT Training Kit"],
     note: ["MQTT, LoRaWAN, Wi-Fi, ThingSpeak และแดชบอร์ด", "MQTT, LoRaWAN, Wi-Fi, ThingSpeak and dashboards"] },
-  { id: "web", name: "JavaScript / Web", label: "JS", color: "#f2d230", stars: 3, projects: ["Smart Energy Monitor Dashboard"],
+  { id: "web", name: "JavaScript / Web", label: "JS", color: "#f2d230", stars: 3, projects: ["Smart Energy Monitor Dashboard", "WarrantyTH Platform"],
     note: ["HTML, CSS, JavaScript และ Chart.js", "HTML, CSS, JavaScript and Chart.js"] },
   { id: "cpp", name: "C / C++", label: "C++", color: "#f34b7d", stars: 3, projects: ["UAV Quadcopter"],
     note: ["Embedded C และ HLS สำหรับ FPGA", "Embedded C and HLS for FPGA"] },
