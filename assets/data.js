@@ -288,10 +288,5 @@ Object.assign(I18N, {
   "game.start": ["เริ่มเกม", "Start"], "game.again": ["เล่นอีกครั้ง", "Play again"], "game.home": ["กลับหน้าแรก", "Back home"],
   "game.help": ["เก็บคริสตัลสีฟ้า หลบหินสีแดง · ใช้ ← → หรือแตะซ้าย/ขวา", "Catch blue crystals, dodge red rocks · use ← → or tap left/right"],
   "game.over": ["จบเกม!", "Game over!"],
-  "phad.title": ["เกม PHAD Company", "PHAD Company game"],
-  "phad.desc": ["เกมบริษัท pixel ที่สั่งงานได้จริง ทีม AI 4 คนประชุม หาข้อมูล เขียน และตรวจงาน แล้วเอาผลงานมาส่งที่โต๊ะ CEO มีทั้งเงินเดือน หัวใจความสนิท ร้านค้า และแมวประจำออฟฟิศ",
-                "A pixel company sim where you give real tasks: a 4-person AI team meets, researches, writes and reviews, then delivers to the CEO's desk. With salaries, friendship hearts, a shop and an office cat."],
   "phad.play": ["เข้าเล่นเกม", "Play game"],
-  "phad.note": ["เกมเปิดในหน้า Claude ต้องเข้าสู่ระบบ Claude ก่อน ครั้งแรกที่สั่งงานให้กด \"อนุญาต\" ทีม AI จะใช้บัญชีของคุณเอง",
-                "Opens on Claude. Sign in to Claude first, then press \"Allow\" the first time you give a task. The AI team uses your own account."],
 });
