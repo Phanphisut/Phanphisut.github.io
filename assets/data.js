@@ -8,6 +8,7 @@ const GH_USER = "Phanphisut";
 
 const PROJECTS = [
   { img: "p-warrantyth", page: "projects/warrantyth", title: "WarrantyTH Platform", tags: ["Web App", "JavaScript", "Node.js"],
+    github: "https://github.com/Phanphisut/WarrantyTH_Ver.0.0.2",
     desc: ["แพลตฟอร์มจัดการการรับประกันสินค้า ลงทะเบียนสินค้าครั้งเดียว เช็กสถานะและวันหมดประกัน รับแจ้งเตือนก่อนหมด และยื่นเคลมพร้อมติดตามสถานะได้ในที่เดียว",
            "Warranty management platform: register products once, check warranty status and expiry, get reminders before coverage ends, and file and track claims in one place."] },
   { img: "p-portfolio-web", page: "projects/portfolio-website", title: "Portfolio Website", tags: ["HTML", "CSS", "JavaScript"],
