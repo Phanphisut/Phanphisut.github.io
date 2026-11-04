@@ -31,6 +31,7 @@ const PROJECTS = [
     desc: ["แอปบังคับโดรนด้วยคีย์บอร์ด (W/S, A/D, T, L) ใช้ YOLO ตรวจจับคนและสแกน QR code เพื่อสั่งภารกิจถัดไป ออกแบบเป็นภารกิจค้นหาผู้ประสบภัย",
            "Keyboard drone control (W/S, A/D, T, L) with YOLO person detection and QR-code scanning that triggers the next mission step, built around a disaster-relief search."] },
   { img: "p-bicopter", page: "projects/portfolio", title: "UAV Bi-copter", tags: ["Raspberry Pi", "ROS 2", "AI"],
+    github: "https://github.com/Phanphisut/UAV_Bi-copter_Ver0.1.1",
     desc: ["โดรนสองใบพัดที่ใช้ Raspberry Pi และ ROS 2 ควบคุมการบิน ตรวจจับวัตถุด้วย AI อ่านค่าเซนเซอร์ และแสดงผลแบบ real-time",
            "A two-rotor UAV on Raspberry Pi and ROS 2 with flight control, AI object detection, sensor data acquisition and real-time monitoring."] },
   { img: "p-quad", page: "projects/15", title: "UAV Quadcopter", tags: ["Flight Controller", "PID", "Hardware"],
