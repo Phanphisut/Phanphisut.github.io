@@ -631,6 +631,7 @@
   function renderStats() {
     const el = document.getElementById("stats"); if (!el) return;
     renderRank();
+    renderLog();
     const rows = [
       { id: "projects", key: "nav.projects", sprite: "chest", n: PROJECTS.length, href: "projects.html" },
       { id: "activities", key: "nav.activities", sprite: "map", n: ACTIVITIES.length, href: "activities.html" },
@@ -650,6 +651,37 @@
         </span>
       </a>`;
     }).join("");
+  }
+
+  /* level-up log: assets/log.json is rebuilt from git history by tools/build-log.js */
+  let xpLog = null;
+  const CAT_KEY = { projects: "nav.projects", activities: "nav.activities", certificates: "nav.certs" };
+  function fmtStamp(iso) {
+    const p = {}; new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Bangkok", year: "numeric", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
+      .formatToParts(new Date(iso)).forEach(x => p[x.type] = x.value);
+    return { date: `${+p.day} ${mon(+p.month)} ${p.year}`, time: `${p.hour}:${p.minute} ${T("log.time")}`.trim() };
+  }
+  function renderLog() {
+    const box = document.getElementById("xp-log"); if (!box) return;
+    if (xpLog === null) {
+      xpLog = [];
+      fetch("assets/log.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : []).then(j => { xpLog = Array.isArray(j) ? j : []; renderLog(); }).catch(() => {});
+      return;
+    }
+    if (!xpLog.length) return;
+    const rankColor = Object.fromEntries(RANKS.map(r => [r.name, r.color]));
+    document.getElementById("xp-log-n").textContent = `(${xpLog.length})`;
+    document.getElementById("xp-log-list").innerHTML = xpLog.slice().reverse().map(e => {
+      const s = fmtStamp(e.t);
+      const [title, detail, cls, color] = e.kind === "rank"
+        ? [T("log.rank").replace("{r}", e.rank), T("log.rank.d").replace("{lv}", e.lv).replace("{s}", e.step), "rank", rankColor[e.rank]]
+        : [T("log.tier").replace("{c}", T(CAT_KEY[e.cat])).replace("{k}", e.tier), T("log.tier.d").replace("{need}", e.need).replace("{n}", e.n), e.cat, ""];
+      return `<li class="${cls}"${color ? ` style="--c:${color}"` : ""}>
+        <time datetime="${esc(e.t)}"><b>${esc(s.date)}</b><span>${esc(s.time)}</span></time>
+        <span class="xl-body"><strong>${esc(title)}</strong><small>${esc(detail)}</small></span>
+      </li>`;
+    }).join("");
+    box.hidden = false;
   }
 
   const RENDER = { home: renderHome, projects: renderProjects, activities: renderActivities, certificates: renderCerts };

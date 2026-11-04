@@ -1,0 +1,96 @@
+[
+ {
+  "t": "2026-11-04T01:41:52+07:00",
+  "kind": "rank",
+  "rank": "Junior",
+  "step": 1,
+  "lv": 35
+ },
+ {
+  "t": "2026-11-04T01:41:52+07:00",
+  "kind": "rank",
+  "rank": "Mid Junior",
+  "step": 2,
+  "lv": 35
+ },
+ {
+  "t": "2026-11-04T01:41:52+07:00",
+  "kind": "tier",
+  "cat": "projects",
+  "tier": 1,
+  "need": 3,
+  "n": 6
+ },
+ {
+  "t": "2026-11-04T01:41:52+07:00",
+  "kind": "tier",
+  "cat": "projects",
+  "tier": 2,
+  "need": 5,
+  "n": 6
+ },
+ {
+  "t": "2026-11-04T01:41:52+07:00",
+  "kind": "tier",
+  "cat": "activities",
+  "tier": 1,
+  "need": 3,
+  "n": 21
+ },
+ {
+  "t": "2026-11-04T01:41:52+07:00",
+  "kind": "tier",
+  "cat": "activities",
+  "tier": 2,
+  "need": 5,
+  "n": 21
+ },
+ {
+  "t": "2026-11-04T01:41:52+07:00",
+  "kind": "tier",
+  "cat": "activities",
+  "tier": 3,
+  "need": 10,
+  "n": 21
+ },
+ {
+  "t": "2026-11-04T01:41:52+07:00",
+  "kind": "tier",
+  "cat": "activities",
+  "tier": 4,
+  "need": 15,
+  "n": 21
+ },
+ {
+  "t": "2026-11-04T01:41:52+07:00",
+  "kind": "tier",
+  "cat": "activities",
+  "tier": 5,
+  "need": 20,
+  "n": 21
+ },
+ {
+  "t": "2026-11-04T01:41:52+07:00",
+  "kind": "tier",
+  "cat": "certificates",
+  "tier": 1,
+  "need": 3,
+  "n": 8
+ },
+ {
+  "t": "2026-11-04T01:41:52+07:00",
+  "kind": "tier",
+  "cat": "certificates",
+  "tier": 2,
+  "need": 5,
+  "n": 8
+ },
+ {
+  "t": "2026-11-05T02:48:29+07:00",
+  "kind": "tier",
+  "cat": "projects",
+  "tier": 3,
+  "need": 10,
+  "n": 10
+ }
+]
