@@ -567,7 +567,7 @@
         <div class="act-body">
           <div class="act-top"><span class="when">${esc(fmtD(a.d))}</span><span class="type ${a.type}">${esc(T("f." + a.type))}</span></div>
           <h3>${esc(L(a.title))}</h3>
-          <p>${esc(L(a.desc))}</p>
+          <p>${esc(L(a.desc))}</p>${a.play ? `<div class="actions"><a class="btn btn-play" href="${esc(a.play)}" target="_blank" rel="noopener">${esc(T("phad.play"))} ↗</a></div>` : ""}
         </div>
       </article>`;
     });

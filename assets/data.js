@@ -52,6 +52,10 @@ const PROJECTS = [
 
 // type: work = ทำงาน, teach = สอน/สตาฟ, train = อบรม, event = กิจกรรม  (เรียงจากใหม่ไปเก่า)
 const ACTIVITIES = [
+  { d: "2026-11-05", type: "event", img: "a-phad", page: "activities/phad-company", title: ["เกม PHAD Company", "PHAD Company Game"],
+    play: "https://claude.ai/artifact/84j7tUqQyM2kabm92rguAb",
+    desc: ["เกมบริษัท pixel ที่สั่งงานได้จริง ทีม AI 4 คนประชุม หาข้อมูล เขียน และตรวจงาน แล้วเอาผลงานมาส่งที่โต๊ะ CEO มีทั้งเงินเดือน หัวใจความสนิท ร้านค้า และแมวประจำออฟฟิศ",
+           "A pixel company sim where you give real tasks: a 4-person AI team meets, researches, writes and reviews, then delivers to the CEO's desk. With salaries, friendship hearts, a shop and an office cat."] },
   { d: "2026-09-22", type: "teach", img: "a-airschool", page: "activities/10", title: "Staff Air School",
     desc: ["วิทยากร STEM workshop ตามโรงเรียน สอนใช้ Arduino และ micro:bit จำลองวงจรออนไลน์ เขียนโปรแกรมเซนเซอร์แบบบล็อก และทำโปรเจกต์วัดความชื้นดิน ความชื้นอากาศ และอุณหภูมิ",
            "STEM workshop instructor at schools: Arduino and micro:bit, online circuit simulation, block-based sensor coding, and soil-moisture, humidity and temperature projects."] },
