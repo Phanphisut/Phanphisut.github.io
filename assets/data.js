@@ -23,6 +23,10 @@ const PROJECTS = [
     github: "https://github.com/Phanphisut/MQTT_Ver1.1.0",
     desc: ["เกมแข่งเต่าสำหรับกิจกรรม 8 กลุ่ม แต่ละทีมส่งคำสั่ง F / L / R ผ่าน MQTT เพื่อบังคับเต่า รองรับ broker ใน LAN และบน VPS แบบมี username/password, TLS และต่อใหม่อัตโนมัติ",
            "Classroom turtle race for 8 groups: each team steers its turtle by publishing F / L / R over MQTT. Works with a LAN broker or a VPS broker with username/password, TLS and auto-reconnect."] },
+  { img: "p-microbit", page: "projects/microbit", title: "11 Mini Project micro:bit", tags: ["micro:bit", "Sensors", "Electronics"],
+    drive: "https://drive.google.com/drive/folders/1QWMJO8z_1SNh_VhMRJzWplIKbtGc7rMI?usp=sharing",
+    desc: ["มินิโปรเจกต์ micro:bit 11 ชิ้น ต่อวงจรบน breadboard ร่วมกับเซนเซอร์และอุปกรณ์ต่าง ๆ เช่น จอ LCD เซนเซอร์ความชื้นดิน เซนเซอร์อัลตราโซนิก LED และมอเตอร์ ดูวิดีโอทุกชิ้นได้ใน Google Drive",
+           "Eleven micro:bit mini projects wired on a breadboard with sensors and parts such as an LCD, soil-moisture and ultrasonic sensors, LEDs and a motor. Videos of every build are on Google Drive."] },
   { img: "p-gesture", page: "projects/14", title: "UAV Hand Gesture", tags: ["Python", "Hula SDK", "Computer Vision"],
     desc: ["ระบบสั่งโดรนด้วยท่าทางมือผ่านกล้องของโดรน ชู 2 นิ้วให้ขึ้นบิน ชู 5 นิ้วให้ลงจอด ไม่ต้องใช้รีโมต",
            "Hand-gesture drone control through the Hula drone camera: two fingers to take off, five to land, no remote needed."] },
@@ -113,7 +117,7 @@ const ACTIVITIES = [
            "5-month co-op: hardware and software support for 24 branches nationwide, IT content, and online ad setup."] },
 ];
 
-const PORTFOLIO_PAGES = ["projects/14", "projects/15", "projects/portfolio", "projects/warrantyth", "projects/portfolio-website", "activities/11", "activities/10", "activities/9", "activities/8", "activities/7", "activities/6"];
+const PORTFOLIO_PAGES = ["projects/14", "projects/15", "projects/portfolio", "projects/warrantyth", "projects/portfolio-website", "projects/microbit", "activities/11", "activities/10", "activities/9", "activities/8", "activities/7", "activities/6"];
 
 // เรียงจากใหม่ไปเก่า  img = ชื่อไฟล์ใน images/certificates/
 const CERTS = [

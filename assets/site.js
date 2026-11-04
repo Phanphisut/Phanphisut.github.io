@@ -546,7 +546,7 @@
           <div class="chips">${p.tags.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
           <h3>${esc(p.title)}</h3>
           <p>${esc(L(p.desc))}</p>
-          <div class="actions"><button class="btn" type="button" data-proj="${i}">${esc(T("item.details"))}</button>${p.github ? `<a class="btn" href="${esc(p.github)}" target="_blank" rel="noopener">GitHub ↗</a>` : ""}</div>
+          <div class="actions"><button class="btn" type="button" data-proj="${i}">${esc(T("item.details"))}</button>${p.github ? `<a class="btn" href="${esc(p.github)}" target="_blank" rel="noopener">GitHub ↗</a>` : ""}${p.drive ? `<a class="btn" href="${esc(p.drive)}" target="_blank" rel="noopener">Google Drive ↗</a>` : ""}</div>
         </div>
       </article>`).join("");
     renderRepos();

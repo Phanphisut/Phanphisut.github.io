@@ -182,7 +182,7 @@
       ${used.length ? `<h3>${esc(T("item.skills"))}</h3><div class="sk-links">${used.map(s => `<button class="btn sk-link" type="button" data-skill="${s.id}">${esc(s.name)} ${stars(s.stars)}</button>`).join("")}</div>` : ""}
       <h3>${esc(T("item.images"))}</h3>
       <div class="item-imgs">${S.groups.detail.map((im, k) => `<button class="shot slot" type="button" data-g="detail" data-i="${k}" aria-label="${esc(T("view"))}: ${esc(im.cap)}"><img src="${im.src}" alt="${esc(im.cap)}" loading="lazy"><span class="zoom">${esc(T("view"))}</span></button>`).join("")}</div>
-      ${p.github ? `<div class="item-actions"><a class="btn" href="${esc(p.github)}" target="_blank" rel="noopener">GitHub ↗</a></div>` : ""}`;
+      ${p.github || p.drive ? `<div class="item-actions">${p.github ? `<a class="btn" href="${esc(p.github)}" target="_blank" rel="noopener">GitHub ↗</a>` : ""}${p.drive ? `<a class="btn" href="${esc(p.drive)}" target="_blank" rel="noopener">Google Drive ↗</a>` : ""}</div>` : ""}`;
     S.sfx("open"); show();
   }
   function openSkill(id) {
