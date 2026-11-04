@@ -479,7 +479,15 @@ dialog.item::backdrop { background: rgba(0, 0, 0, .75); }
 }
 #face { image-rendering: auto; }
 
-/* ---------- Play button (PHAD Company project) ---------- */
+/* ---------- PHAD Company game card (home, after Character stats) ---------- */
+.phadcard { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 20px; padding: 18px; align-items: center; }
+.phad-shot { display: block; padding: 4px; }
+.phad-shot img { display: block; width: 100%; height: auto; image-rendering: pixelated; image-rendering: crisp-edges; }
+.phad-shot:hover img { filter: brightness(1.08); }
+.phad-name { display: block; font: 700 18px/1.2 var(--f-pixel); color: var(--gold); text-shadow: 2px 2px 0 #222; letter-spacing: .04em; }
+.phad-info p { margin: 8px 0 16px; }
 .btn-play { font-size: 15px; padding: 12px 22px; background: #2b6b2e; border-color: #5fbf4f #123414 #123414 #5fbf4f; }
 .btn-play:hover { background: #3a8a3c; }
 .btn-play:active { border-color: #123414 #5fbf4f #5fbf4f #123414; }
+.phad-info .phad-note { margin: 12px 0 0; font-size: 13px; color: var(--ink-soft); }
+@media (max-width: 760px) { .phadcard { grid-template-columns: minmax(0, 1fr); } }
