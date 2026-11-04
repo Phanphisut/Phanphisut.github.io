@@ -7,6 +7,10 @@
 const GH_USER = "Phanphisut";
 
 const PROJECTS = [
+  { img: "p-phad", page: "projects/phad-company", title: "PHAD Company Game", tags: ["Game", "Pixel Art", "AI Agents"],
+    play: "https://claude.ai/artifact/84j7tUqQyM2kabm92rguAb",
+    desc: ["เกมบริษัท pixel ที่สั่งงานได้จริง ทีม AI 4 คนประชุม หาข้อมูล เขียน และตรวจงาน แล้วเอาผลงานมาส่งที่โต๊ะ CEO มีทั้งเงินเดือน หัวใจความสนิท ร้านค้า และแมวประจำออฟฟิศ",
+           "A pixel company sim where you give real tasks: a 4-person AI team meets, researches, writes and reviews, then delivers to the CEO's desk. With salaries, friendship hearts, a shop and an office cat."] },
   { img: "p-warrantyth", page: "projects/warrantyth", title: "WarrantyTH Platform", tags: ["Web App", "JavaScript", "Node.js"],
     github: "https://github.com/Phanphisut/WarrantyTH_Ver.0.0.2",
     desc: ["แพลตฟอร์มจัดการการรับประกันสินค้า ลงทะเบียนสินค้าครั้งเดียว เช็กสถานะและวันหมดประกัน รับแจ้งเตือนก่อนหมด และยื่นเคลมพร้อมติดตามสถานะได้ในที่เดียว",
@@ -52,10 +56,6 @@ const PROJECTS = [
 
 // type: work = ทำงาน, teach = สอน/สตาฟ, train = อบรม, event = กิจกรรม  (เรียงจากใหม่ไปเก่า)
 const ACTIVITIES = [
-  { d: "2026-11-05", type: "event", img: "a-phad", page: "activities/phad-company", title: ["เกม PHAD Company", "PHAD Company Game"],
-    play: "https://claude.ai/artifact/84j7tUqQyM2kabm92rguAb",
-    desc: ["เกมบริษัท pixel ที่สั่งงานได้จริง ทีม AI 4 คนประชุม หาข้อมูล เขียน และตรวจงาน แล้วเอาผลงานมาส่งที่โต๊ะ CEO มีทั้งเงินเดือน หัวใจความสนิท ร้านค้า และแมวประจำออฟฟิศ",
-           "A pixel company sim where you give real tasks: a 4-person AI team meets, researches, writes and reviews, then delivers to the CEO's desk. With salaries, friendship hearts, a shop and an office cat."] },
   { d: "2026-09-22", type: "teach", img: "a-airschool", page: "activities/10", title: "Staff Air School",
     desc: ["วิทยากร STEM workshop ตามโรงเรียน สอนใช้ Arduino และ micro:bit จำลองวงจรออนไลน์ เขียนโปรแกรมเซนเซอร์แบบบล็อก และทำโปรเจกต์วัดความชื้นดิน ความชื้นอากาศ และอุณหภูมิ",
            "STEM workshop instructor at schools: Arduino and micro:bit, online circuit simulation, block-based sensor coding, and soil-moisture, humidity and temperature projects."] },
@@ -242,7 +242,7 @@ const SKILLS = [
     note: ["Ladder Diagram ด้วย GX Works3 และหน้าจอ HMI ด้วย GT Designer", "Ladder diagrams in GX Works3, HMI screens in GT Designer"] },
   { id: "iot", name: "IoT", label: "IoT", color: "#7ed83c", stars: 3, projects: ["Smart Energy Monitor Dashboard", "Industrial Automation & IoT Training Kit", "Turtle MQTT Race"],
     note: ["MQTT, LoRaWAN, Wi-Fi, ThingSpeak และแดชบอร์ด", "MQTT, LoRaWAN, Wi-Fi, ThingSpeak and dashboards"] },
-  { id: "web", name: "JavaScript / Web", label: "JS", color: "#f2d230", stars: 3, projects: ["Smart Energy Monitor Dashboard", "WarrantyTH Platform", "Portfolio Website"],
+  { id: "web", name: "JavaScript / Web", label: "JS", color: "#f2d230", stars: 3, projects: ["Smart Energy Monitor Dashboard", "WarrantyTH Platform", "Portfolio Website", "PHAD Company Game"],
     note: ["HTML, CSS, JavaScript และ Chart.js", "HTML, CSS, JavaScript and Chart.js"] },
   { id: "cpp", name: "C / C++", label: "C++", color: "#f34b7d", stars: 3, projects: ["UAV Quadcopter"],
     note: ["Embedded C และ HLS สำหรับ FPGA", "Embedded C and HLS for FPGA"] },

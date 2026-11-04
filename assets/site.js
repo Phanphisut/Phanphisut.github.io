@@ -546,7 +546,7 @@
           <div class="chips">${p.tags.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
           <h3>${esc(p.title)}</h3>
           <p>${esc(L(p.desc))}</p>
-          <div class="actions"><button class="btn" type="button" data-proj="${i}">${esc(T("item.details"))}</button>${p.github ? `<a class="btn" href="${esc(p.github)}" target="_blank" rel="noopener">GitHub ↗</a>` : ""}${p.drive ? `<a class="btn" href="${esc(p.drive)}" target="_blank" rel="noopener">Google Drive ↗</a>` : ""}</div>
+          <div class="actions"><button class="btn" type="button" data-proj="${i}">${esc(T("item.details"))}</button>${p.github ? `<a class="btn" href="${esc(p.github)}" target="_blank" rel="noopener">GitHub ↗</a>` : ""}${p.drive ? `<a class="btn" href="${esc(p.drive)}" target="_blank" rel="noopener">Google Drive ↗</a>` : ""}${p.play ? `<a class="btn btn-play" href="${esc(p.play)}" target="_blank" rel="noopener">${esc(T("phad.play"))} ↗</a>` : ""}</div>
         </div>
       </article>`).join("");
     renderRepos();
@@ -567,7 +567,7 @@
         <div class="act-body">
           <div class="act-top"><span class="when">${esc(fmtD(a.d))}</span><span class="type ${a.type}">${esc(T("f." + a.type))}</span></div>
           <h3>${esc(L(a.title))}</h3>
-          <p>${esc(L(a.desc))}</p>${a.play ? `<div class="actions"><a class="btn btn-play" href="${esc(a.play)}" target="_blank" rel="noopener">${esc(T("phad.play"))} ↗</a></div>` : ""}
+          <p>${esc(L(a.desc))}</p>
         </div>
       </article>`;
     });
