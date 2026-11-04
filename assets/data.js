@@ -27,6 +27,7 @@ const PROJECTS = [
     desc: ["ระบบสั่งโดรนด้วยท่าทางมือผ่านกล้องของโดรน ชู 2 นิ้วให้ขึ้นบิน ชู 5 นิ้วให้ลงจอด ไม่ต้องใช้รีโมต",
            "Hand-gesture drone control through the Hula drone camera: two fingers to take off, five to land, no remote needed."] },
   { img: "p-keyboard", page: "projects/15", title: "UAV Keyboard App", tags: ["Python", "YOLO", "QR Code"],
+    github: "https://github.com/Phanphisut/Dron_hula_phad_finish-1-",
     desc: ["แอปบังคับโดรนด้วยคีย์บอร์ด (W/S, A/D, T, L) ใช้ YOLO ตรวจจับคนและสแกน QR code เพื่อสั่งภารกิจถัดไป ออกแบบเป็นภารกิจค้นหาผู้ประสบภัย",
            "Keyboard drone control (W/S, A/D, T, L) with YOLO person detection and QR-code scanning that triggers the next mission step, built around a disaster-relief search."] },
   { img: "p-bicopter", page: "projects/portfolio", title: "UAV Bi-copter", tags: ["Raspberry Pi", "ROS 2", "AI"],
