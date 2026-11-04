@@ -171,7 +171,7 @@
   }
   function openProject(i) {
     const p = PROJECTS[i]; if (!p) return;
-    S.groups.detail = [{ src: `images/thumbs/${p.img}.jpg`, cap: p.title }, { src: `images/${p.page}.jpg`, cap: `${p.title} · ${T("page")}` }];
+    S.groups.detail = [{ src: `images/thumbs/${p.img}.jpg`, cap: p.title }, ...(p.page ? [{ src: `images/${p.page}.jpg`, cap: `${p.title} · ${T("page")}` }] : [])];
     const used = SKILLS.filter(s => s.projects.includes(p.title));
     $("#item-ico").src = sprite("chest");
     $("#item-kick").textContent = T("nav.projects");

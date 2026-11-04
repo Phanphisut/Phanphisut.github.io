@@ -538,7 +538,7 @@
   }
 
   function renderProjects() {
-    groups.proj = PROJECTS.map(p => ({ src: IMG(p.page), cap: p.title }));
+    groups.proj = PROJECTS.map(p => ({ src: p.page ? IMG(p.page) : TH(p.img), cap: p.title }));
     document.getElementById("showcase").innerHTML = PROJECTS.map((p, i) => `
       <article class="show panel">
         ${shotBtn(TH(p.img), p.title, "proj", i)}
