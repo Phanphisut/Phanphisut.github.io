@@ -47,14 +47,14 @@
   ];
 
   /* ---------- เสียงพูด: ไฟล์เสียงผู้หญิงโทนเด็กการ์ตูนที่สร้างไว้ล่วงหน้าด้วย Gemini TTS (เสียง Leda)
-     เล่นเร็วขึ้น 1.15 เท่าโดยปล่อยให้เสียงสูงขึ้นตาม ให้ใสแบบการ์ตูน
+     เล่นเร็วขึ้น (อังกฤษ 1.15 / ไทย 1.2 เท่า) โดยปล่อยให้เสียงสูงขึ้นตาม ให้ใสแบบการ์ตูน
      ไม่ใช้ Web Speech API เพราะหลายเครื่องมีแต่เสียงผู้ชาย (เช่นภาษาไทยใน Windows มีแค่ Pattara) */
   let voiceOn = ls.get(VOICE) !== "off", audio = null;
   function speak(key) {
     if (audio) { audio.pause(); audio = null; }
     if (!voiceOn || !key) return;
     audio = new Audio(`audio/luna/${en() ? "en" : "th"}-${key}.mp3`);
-    audio.playbackRate = 1.15;
+    audio.playbackRate = en() ? 1.15 : 1.2;        // เสียงไทยต่ำกว่าเล็กน้อย เร่งมากขึ้นให้ใสพอๆ กัน
     if ("preservesPitch" in audio) audio.preservesPitch = false;
     else if ("webkitPreservesPitch" in audio) audio.webkitPreservesPitch = false;
     audio.play().catch(() => {});                 // ยังไม่ได้แตะหน้าจอ: เบราว์เซอร์บล็อก รอแตะครั้งแรก
