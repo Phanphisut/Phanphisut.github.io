@@ -912,7 +912,7 @@ const lsGet = k => { try { return localStorage.getItem(k); } catch { return null
 const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch {} };
 
 // ตัวกลาง Cloudflare Worker (โค้ดอยู่ที่ tools/gemini-proxy-worker.js) เก็บ Gemini key ไว้ฝั่งเซิร์ฟเวอร์
-const AI_PROXY = '';
+const AI_PROXY = 'https://phad-ai.arisaga113322.workers.dev';
 async function initBackend() {
   try { localStorage.removeItem('po_key'); localStorage.removeItem('po_model'); } catch {}   // ล้าง key เก่าที่ผู้เล่นเคยใส่
   if (!AI_PROXY) { backend = { mode:'off' }; setConn('bad', 'ระบบ AI ยังไม่พร้อม กำลังตั้งค่าอยู่'); failQueued('ระบบ AI ยังไม่พร้อม'); return; }
