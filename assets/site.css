@@ -522,7 +522,7 @@ dialog.item::backdrop { background: rgba(0, 0, 0, .75); }
 .btn-dl { background: #1f5f8a; border-color: #7fd6ff #0f3a55 #0f3a55 #7fd6ff; color: #fff; }
 .btn-dl:hover { background: #2a7fb8; color: #ffffa0; }
 
-/* คริสตัลเรืองแสงจางๆ ใต้หน้าจอตัวละคร เติมช่องว่างของคอลัมน์ซ้าย (เฉพาะจอคอม) วาดโดย assets/character.js */
+/* ฉากกลางคืนจางๆ ใต้หน้าจอตัวละคร เติมช่องว่างของคอลัมน์ซ้าย (เฉพาะจอคอม) วาดโดย assets/character.js */
 .charsheet { align-items: stretch; }
 .stats-col { align-self: start; }
 .char-col { align-self: stretch; }

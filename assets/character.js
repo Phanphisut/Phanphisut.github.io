@@ -210,7 +210,7 @@
   (document.fonts ? document.fonts.load('26px "Kanit"').catch(() => {}) : Promise.resolve()).finally(() => requestAnimationFrame(frame));
 })();
 
-/* คริสตัลเรืองแสงพิกเซลจางๆ ใต้หน้าจอตัวละคร เฉพาะจอคอม */
+/* ฉากกลางคืนพิกเซลจางๆ (ดาว พระจันทร์ เมือง คริสตัลเรืองแสง) ใต้หน้าจอตัวละคร เฉพาะจอคอม */
 (function () {
   "use strict";
   const cv = document.getElementById("char-deco"); if (!cv) return;
@@ -234,10 +234,27 @@
   }
 
   function draw(t) {
-    // วาดเฉพาะคริสตัลเรืองแสง (ท้องฟ้า ดาว พระจันทร์ และเมือง เอาออกแล้ว)
-    // build() ยังสุ่มดาว/เมืองไว้ เพื่อให้ตำแหน่งคริสตัลเหมือนรอบก่อน
     ctx.clearRect(0, 0, W, H);
+    const sky = ctx.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0, "rgba(10,14,30,0)"); sky.addColorStop(1, "rgba(18,40,70,.9)");
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+    for (const s of stars) {
+      const on = reduce ? 1 : .35 + .65 * Math.max(0, Math.sin(t * s.sp + s.ph));
+      ctx.fillStyle = `rgba(150,215,255,${on})`; ctx.fillRect(s.x, s.y, 1, 1);
+      if (s.big && on > .7) { ctx.fillStyle = `rgba(150,215,255,${on * .5})`; ctx.fillRect(s.x - 1, s.y, 3, 1); ctx.fillRect(s.x, s.y - 1, 1, 3); }
+    }
+    // พระจันทร์เสี้ยว
+    const mx = W - 14, my = 6;
+    ctx.fillStyle = "#e8f3ff"; ctx.beginPath(); ctx.arc(mx, my + 4, 4, 0, 7); ctx.fill();
+    ctx.globalCompositeOperation = "destination-out"; ctx.beginPath(); ctx.arc(mx + 2, my + 3, 4, 0, 7); ctx.fill(); ctx.globalCompositeOperation = "source-over";
+    // เมืองไกล
     const base = H - 6;
+    for (const b of city) {
+      ctx.fillStyle = "#0d1a2c"; ctx.fillRect(b.x, base - b.h, b.w, b.h);
+      ctx.fillStyle = "rgba(242,193,78,.55)"; for (const [lx, ly] of b.lit) if (ly > 1) ctx.fillRect(b.x + lx, base - b.h + ly, 1, 1);
+    }
+    ctx.fillStyle = "#0a1522"; ctx.fillRect(0, base, W, H - base);
+    // คริสตัลเรืองแสง
     for (const c of crystals) {
       const glow = reduce ? .8 : .6 + .4 * Math.sin(t * 1.2 + c.ph);
       const g = ctx.createRadialGradient(c.x, base - c.h / 2, 0, c.x, base - c.h / 2, c.h);
