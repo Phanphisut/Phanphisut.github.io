@@ -68,7 +68,23 @@ canvas{display:block;width:100%;height:auto;image-rendering:pixelated;image-rend
 .tlstack{position:absolute;top:2%;left:1.6%;max-width:46%;display:grid;gap:4px;justify-items:start}
 .brand{font:400 clamp(8px,2.3cqw,18px)/1.35 var(--font-display);color:var(--parch-light);background:linear-gradient(var(--wood-light),var(--wood-mid));border:3px solid var(--wood-dark);box-shadow:inset 0 2px 0 var(--wood-hi),0 3px 0 rgba(0,0,0,.45);padding:1px 12px 3px;text-shadow:1px 1px 0 var(--wood-dark);white-space:nowrap}
 .rotate{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:16px;right:16px;text-align:center;color:#e9c38a;font-weight:600;font-size:14px;display:none}
-@media (orientation:portrait) and (max-width:760px){.rotate{display:block}}
+@media (orientation:portrait) and (max-width:760px){.rotate{display:grid;justify-items:center;gap:8px;z-index:30}}
+.rotate p{margin:0}
+
+/* หมุนจอในเกม (สำหรับเครื่องที่ล็อกแนวนอนไม่ได้ เช่น iPhone): หมุนทั้งหน้า 90° ให้กว้างเท่าความสูงจอ */
+html.forced .rotate{display:none}
+html.forced body{position:fixed;top:0;left:0;width:100dvh;height:100dvw;transform-origin:top left;transform:rotate(90deg) translateY(-100%);overflow:hidden}
+html.forced .screen{width:min(100%,calc(100dvw * 1.7778))}
+html.forced .mwin{max-height:calc(100dvw - 92px)}
+#unrotBtn{position:fixed;left:8px;bottom:8px;z-index:45;font-size:12px;padding:2px 8px 4px;opacity:.85}
+/* ยกเลิกกฎจอแคบ (max-width:560px) ตอนหมุนในเกม เพราะจอจริงยังเป็นแนวตั้ง แต่พื้นที่ที่ใช้กว้างแล้ว */
+html.forced .dialog{position:absolute;left:2%;right:max(2%,96px);bottom:3%;margin-top:0;font-size:clamp(11px,2cqw,15px)}
+html.forced .dialog canvas{width:clamp(48px,10cqw,84px)}
+html.forced .dialog .more{right:calc(clamp(48px,10cqw,84px) + 34px)}
+html.forced .toasts{bottom:34%}
+html.forced .quest{max-width:100%}
+html.forced .mwin{padding:18px 18px 16px}
+html.forced .xbtn{right:-16px}
 .quest{max-width:100%;background:var(--parch);border:3px solid var(--wood);box-shadow:inset 0 0 0 2px var(--wood-light),0 3px 0 rgba(0,0,0,.45);padding:3px 10px 5px;font-size:clamp(9px,1.9cqw,13px);line-height:1.4}
 .quest b{display:block;font:400 1.05em/1.4 var(--font-display);color:var(--red)}
 .quest span{display:block;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -268,7 +284,8 @@ details pre{white-space:pre-wrap;font:500 13.5px/1.6 var(--font-body);background
 </head>
 <body>
 
-<p class="rotate">หมุนโทรศัพท์เป็นแนวนอน เพื่อให้ออฟฟิศเต็มจอ</p>
+<div class="rotate"><p>หมุนโทรศัพท์เป็นแนวนอน เพื่อให้ออฟฟิศเต็มจอ</p><button type="button" class="btn small" id="rotBtn">หมุนเป็นแนวนอน</button></div>
+<button type="button" class="btn small" id="unrotBtn" hidden>กลับแนวตั้ง</button>
 <div class="stage" id="stage">
   <div class="screen">
     <canvas id="office" width="384" height="216" tabindex="0" aria-label="PHAD Company คลิกตัวละครเพื่อคุยด้วย"></canvas>
@@ -880,7 +897,10 @@ function placeTags() {
 
 /* คลิกตัวละครเพื่อคุย */
 cv.addEventListener('click', e => {
-  const r = cv.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * W, y = (e.clientY - r.top) / r.height * H;
+  const r = cv.getBoundingClientRect(), rot = document.documentElement.classList.contains('forced');
+  // ตอนหมุนจอในเกม (90° ตามเข็ม) แกน x ของภาพชี้ลงจอ แกน y ชี้ไปทางซ้ายจอ
+  const x = rot ? (e.clientY - r.top) / r.height * W : (e.clientX - r.left) / r.width * W;
+  const y = rot ? (r.right - e.clientX) / r.width * H : (e.clientY - r.top) / r.height * H;
   if (x > 189 && x < 266 && y > 6 && y < 40) { openPanel('board'); return; }
   const hit = a => Math.abs(x - a.x) < 9 && y > a.y - 27 && y < a.y + 2;
   const a = AG.find(hit);
@@ -1541,6 +1561,25 @@ fsBtn.onclick = () => {
   else document.documentElement.requestFullscreen().catch(() => { fsBtn.hidden = true; });
 };
 document.addEventListener('fullscreenchange', () => { fsBtn.textContent = document.fullscreenElement ? 'ออกจากเต็มจอ' : 'เต็มจอ'; });
+
+/* ปุ่มหมุนเป็นแนวนอนบนโทรศัพท์
+   Android: เต็มจอแล้วล็อกแนวนอนจริง / เครื่องที่ล็อกไม่ได้ (iPhone): หมุนหน้าเกมด้วย CSS แทน */
+const unrotBtn = document.getElementById('unrotBtn');
+function setForced(on) {
+  document.documentElement.classList.toggle('forced', on);
+  unrotBtn.hidden = !on;
+  fitTabs();
+}
+document.getElementById('rotBtn').onclick = async () => {
+  try {
+    if (!screen.orientation || !screen.orientation.lock) throw 0;
+    if (!document.fullscreenElement && document.fullscreenEnabled) await document.documentElement.requestFullscreen();
+    await screen.orientation.lock('landscape');
+  } catch { setForced(true); }
+};
+unrotBtn.onclick = () => setForced(false);
+// หมุนเครื่องเป็นแนวนอนจริงแล้ว ไม่ต้องหมุนในเกมซ้อนอีก
+matchMedia('(orientation:landscape)').addEventListener('change', e => { if (e.matches) setForced(false); });
 
 /* =========================================================
    12) เศรษฐกิจ: รายรับ หัวใจ ความหิว/กระหาย ร้านค้า เฟอร์นิเจอร์
