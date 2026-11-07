@@ -314,4 +314,9 @@ Object.assign(I18N, {
   "game.help": ["เก็บคริสตัลสีฟ้า หลบหินสีแดง · ใช้ ← → หรือแตะซ้าย/ขวา", "Catch blue crystals, dodge red rocks · use ← → or tap left/right"],
   "game.over": ["จบเกม!", "Game over!"],
   "phad.play": ["เข้าเล่นเกม", "Play game"],
+  "phad.title": ["เกม PHAD Company", "PHAD Company game"],
+  "phad.desc": ["เกมบริษัท pixel ที่สั่งงานได้จริง ทีม AI 4 คนประชุม หาข้อมูล เขียน และตรวจงาน แล้วเอาผลงานมาส่งที่โต๊ะ CEO มีทั้งเงินเดือน หัวใจความสนิท ร้านค้า และแมวประจำออฟฟิศ",
+                "A pixel company sim where you give real tasks: a 4-person AI team meets, researches, writes and reviews, then delivers to the CEO's desk. With salaries, friendship hearts, a shop and an office cat."],
+  "phad.note": ["เล่นได้เลยในเบราว์เซอร์ ไม่ต้องใส่ key แค่พิมพ์ภารกิจแล้วทีม AI จะลงมือทันที หรือเชื่อม Claude Code ในเครื่องคุณที่แท็บ \"เครื่องฉัน\" ให้ทีมค้นเว็บและสร้างไฟล์ได้เองแบบ agentic",
+                "Plays right in your browser with no key needed: post a quest and the AI team gets to work. Or link Claude Code on your own machine in the \"My machine\" tab so the team can search the web and create files as an agent."],
 });
