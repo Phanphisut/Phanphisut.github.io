@@ -521,3 +521,11 @@ dialog.item::backdrop { background: rgba(0, 0, 0, .75); }
 .btn-play:active { border-color: #123414 #5fbf4f #5fbf4f #123414; }
 .btn-dl { background: #1f5f8a; border-color: #7fd6ff #0f3a55 #0f3a55 #7fd6ff; color: #fff; }
 .btn-dl:hover { background: #2a7fb8; color: #ffffa0; }
+
+/* ฉากกลางคืนจางๆ ใต้หน้าจอตัวละคร เติมช่องว่างของคอลัมน์ซ้าย (เฉพาะจอคอม) วาดโดย assets/character.js */
+.charsheet { align-items: stretch; }
+.stats-col { align-self: start; }
+.char-col { align-self: stretch; }
+.char-deco { flex: 1 1 0; min-height: 0; width: 100%; display: block; image-rendering: pixelated; opacity: .5; border-radius: 4px; pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 28%); mask-image: linear-gradient(to bottom, transparent 0, #000 28%); }
+@media (max-width: 760px) { .char-deco { display: none; } }
