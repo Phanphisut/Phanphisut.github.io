@@ -85,6 +85,8 @@
                    { g: "#3f8a2a", G: "#2f6e1f", t: "#6b4a2b" }),
     chest: fromRows(["............", ".dddddddddd.", ".dwwwwwwwwd.", ".dwwwwwwwwd.", ".ddddkkdddd.", ".dwwwkkwwwd.", ".dwwwwwwwwd.", ".dwwwwwwwwd.", ".dwwwwwwwwd.", ".dddddddddd.", "............", "............"],
                     { w: "#a0652a", d: "#5e3a17", k: "#d8d8d8" }),
+    cap: fromRows(["............", ".....kk.....", "...kkwwkk...", ".kkwwwwwwkk.", "kwwwwwwwwwwk", ".kkwwwwwwkky", "..kkkkkkkk.y", "..kddddddk.y", "..kddddddk.y", "...kkkkkk..g", "..........gg", "............"],
+                  { k: "#0b0b14", w: "#5a66b0", d: "#3a4380", y: "#f6d23a", g: "#b8860b" }),
     medal: fromRows(["..rr....bb..", "...rr..bb...", "....rrbb....", ".....rb.....", "....yyyy....", "...yggggy...", "..yggggggy..", "..yggwgggy..", "..yggggggy..", "...yggggy...", "....yyyy....", "............"],
                     { r: "#d33b3b", b: "#3b6bd3", g: "#f2c230", y: "#a77a0b", w: "#fff6c0" }),
     map: fromRows(["............", ".dddddddddd.", ".dppgppbbpd.", ".dpgggpbbpd.", ".dppgppppbd.", ".dpppprppbd.", ".dbppprrppd.", ".dbbppprpgd.", ".dbbppppggd.", ".dpbbppgggd.", ".dddddddddd.", "............"],
@@ -539,7 +541,8 @@
 
   function renderProjects() {
     groups.proj = PROJECTS.map(p => ({ src: p.page ? IMG(p.page) : TH(p.img), cap: p.title }));
-    document.getElementById("showcase").innerHTML = PROJECTS.map((p, i) => `
+    // p.group === "degree" → shown in the bachelor's-degree section above the chest; everything else in the chest
+    const card = (p, i) => `
       <article class="show panel">
         ${shotBtn(TH(p.img), p.title, "proj", i)}
         <div class="show-body">
@@ -548,7 +551,12 @@
           <p>${esc(L(p.desc))}</p>
           <div class="actions"><button class="btn" type="button" data-proj="${i}">${esc(T("item.details"))}</button>${(p.downloads || []).map(d => `<a class="btn btn-dl" href="${esc(d.url)}" rel="noopener">⬇ ${esc(d.os)}</a>`).join("")}${p.github ? `<a class="btn" href="${esc(p.github)}" target="_blank" rel="noopener">GitHub ↗</a>` : ""}${p.drive ? `<a class="btn" href="${esc(p.drive)}" target="_blank" rel="noopener">Google Drive ↗</a>` : ""}${p.play ? `<a class="btn btn-play" href="${esc(p.play)}" target="_blank" rel="noopener">${esc(p.playLabel ? L(p.playLabel) : T("phad.play"))} ↗</a>` : ""}</div>
         </div>
-      </article>`).join("");
+      </article>`;
+    const pick = deg => PROJECTS.map((p, i) => [p, i]).filter(([p]) => (p.group === "degree") === deg)
+      .sort((a, b) => (a[0].groupOrder || 0) - (b[0].groupOrder || 0)).map(([p, i]) => card(p, i)).join("");
+    const degEl = document.getElementById("degree");
+    if (degEl) degEl.innerHTML = pick(true);
+    document.getElementById("showcase").innerHTML = degEl ? pick(false) : PROJECTS.map(card).join("");
     renderRepos();
     if (window.SITE && window.SITE.renderSkills) window.SITE.renderSkills();
   }

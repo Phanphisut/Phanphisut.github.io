@@ -8,6 +8,7 @@ const GH_USER = "Phanphisut";
 
 const PROJECTS = [
   { img: "p-phad", page: "projects/phad-company", title: "PHAD Company Game", tags: ["Game", "Pixel Art", "AI Agents"],
+    group: "degree", groupOrder: 2,
     play: "phad-company.html",
     desc: ["เกมบริษัท pixel ที่สั่งงานได้จริง ทีม AI 4 คนประชุม หาข้อมูล เขียน และตรวจงาน แล้วเอาผลงานมาส่งที่โต๊ะ CEO มีทั้งเงินเดือน หัวใจความสนิท ร้านค้า และแมวประจำออฟฟิศ",
            "A pixel company sim where you give real tasks: a 4-person AI team meets, researches, writes and reviews, then delivers to the CEO's desk. With salaries, friendship hearts, a shop and an office cat."] },
@@ -29,6 +30,7 @@ const PROJECTS = [
     desc: ["แอปสอนและควบคุมฝูงโดรน Hula หลายลำพร้อมกันผ่าน Wi-Fi มีภารกิจ Grid Patrol, Square Formation, บังคับด้วยคีย์บอร์ด และเขียนโค้ดแยกแต่ละลำ ดูกล้องสด ถ่ายรูป อัดวิดีโอ และมีโหมดจำลองให้ลองก่อนบินจริง ดาวน์โหลดตัวติดตั้ง v9.0.0 ได้ทั้ง Windows และ macOS (Apple Silicon)",
            "Desktop app for teaching and flying a swarm of Hula drones over Wi-Fi: grid patrol, square formation, keyboard control and per-drone custom code, with live cameras, photo/video capture and a simulation mode. v9.0.0 installers for Windows and macOS (Apple Silicon)."] },
   { img: "p-dcats", page: "projects/dcats", title: "DCATS Drone Test Station", tags: ["ESP32", "OpenPLC", "Node-RED"],
+    group: "degree", groupOrder: 1,
     github: "https://github.com/Phanphisut/DCATS-Dashboard",
     play: "https://phanphisut.github.io/DCATS-Dashboard/", playLabel: ["เปิดแดชบอร์ด", "Open dashboard"],
     desc: ["แดชบอร์ดสถานีตรวจโดรนปลายสายพาน (End-of-Line) ระบุตัวโดรนด้วย QR + MAC ยืนยันว่าอยู่บนแท่นด้วย Hall sensor แล้วให้โดรนตรวจตัวเองผ่าน ESP-NOW ทดสอบมอเตอร์ทีละตัว ตัดสินผ่าน/ไม่ผ่าน และสั่งสายพานคัดแยกผ่าน OpenPLC มีโหมดจำลองให้ลองได้ทันที",
@@ -219,6 +221,8 @@ const I18N = {
   "contact.hint": ["แตะไอเทมเพื่อเปิดช่องทางติดต่อ", "Tap an item to get in touch"],
   "copy": ["คัดลอก", "Copy"], "copied": ["คัดลอกแล้ว", "Copied"], "selected": ["เลือกแล้ว", "Selected"], "open": ["เปิด", "Open"],
   "projects.sub": ["โปรเจกต์โดรน AI และ IoT ที่ลงมือทำจริง", "Hands-on drone, AI and IoT builds"],
+  "projects.degree": ["โปรเจกต์ ป.ตรี", "Bachelor's projects"],
+  "projects.degree.note": ["DCATS คือโปรเจกต์ปริญญาตรี ส่วน PHAD Company คือทีม AI agent ที่ช่วยทำงานอยู่ตลอด", "DCATS is my bachelor's degree project, and PHAD Company is the AI agent team that helps with my work every day."],
   "projects.featured": ["ผลงานเด่น", "Featured"],
   "projects.repos": ["Repositories บน GitHub", "Repositories on GitHub"],
   "repos.loading": ["กำลังโหลดจาก GitHub…", "Loading from GitHub…"],

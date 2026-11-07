@@ -144,6 +144,7 @@ a { color: inherit; }
 main { background-color: var(--deep); background-size: 64px 64px; padding-block: 8px 24px; min-height: 50vh; }
 section { padding-block: 32px 12px; scroll-margin-top: 64px; }
 .sec-label { display: inline-flex; align-items: center; gap: 12px; margin: 0 0 20px; padding: 8px 16px 8px 10px; }
+.sec-note { margin: -8px 0 16px; font-size: 14px; color: var(--on-deep-soft); text-shadow: 1px 1px 0 #000; }
 .sec-label img { width: 32px; height: 32px; }
 .sec-label h2 { margin: 0; font: 700 22px/1.1 var(--f-body); }
 .sec-label small { display: block; font: 400 11px/1.2 var(--f-pixel); color: var(--ink-soft); letter-spacing: .08em; text-transform: uppercase; }
