@@ -71,6 +71,23 @@
     code <= 82 ? ["ฝนตกเป็นช่วง ๆ", "rain showers"] : ["พายุฝนฟ้าคะนอง", "thunderstorm"];
   S.weather = () => ({ ...W, name: S.L(WX_NAME(W.code)), fest: FEST, festName: GREET[FEST] ? S.L(GREET[FEST]) : "" });
 
+  /* ---------- home: live Bangkok time + weather, set into the dirt below the grass ---------- */
+  const land = document.body.dataset.page === "home" && hero.querySelector(".land");
+  if (land) {
+    const sign = document.createElement("div");
+    sign.className = "ground-info"; sign.setAttribute("aria-live", "off");
+    land.appendChild(sign);
+    const WX_ICO = c => c == null ? "" : c === 0 ? "☀️" : c <= 2 ? "⛅" : c === 3 ? "☁️" : c <= 48 ? "🌫️" : c <= 67 || (c >= 80 && c <= 82) ? "🌧️" : c <= 77 ? "❄️" : "⛈️";
+    const paintSign = () => {
+      let t = "";
+      try { t = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23", timeZone: "Asia/Bangkok" }).format(new Date()); } catch (e) {}
+      const wx = W.ok ? ` · ${WX_ICO(W.code)} ${S.L(WX_NAME(W.code))} · ${Math.round(W.temp)}°C` : "";
+      sign.textContent = `Thailand Bangkok · ${t}${wx}`;
+    };
+    paintSign(); setInterval(paintSign, 1000);
+    document.addEventListener("sitelang", paintSign);
+  }
+
   /* ---------- effects canvas (1/3 resolution) ---------- */
   const cv = document.createElement("canvas");
   cv.className = "fx pix"; cv.setAttribute("aria-hidden", "true");
