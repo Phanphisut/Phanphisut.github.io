@@ -28,23 +28,22 @@
     </div>
   </section>
 
-  <section aria-labelledby="degree-h">
-    <div class="wrap">
-      <div class="sec-label panel">
-        <img class="pix" data-sprite="cap" alt="">
-        <div><small>Quest · Bachelor's degree</small><h2 id="degree-h" data-i18n="projects.degree"></h2></div>
-      </div>
-      <p class="sec-note" data-i18n="projects.degree.note"></p>
-      <div class="showcase" id="degree"></div>
-    </div>
-  </section>
-
   <section aria-labelledby="featured-h">
     <div class="wrap">
       <div class="sec-label panel">
         <img class="pix" data-sprite="chest" alt="">
-        <div><small>Chest · Projects</small><h2 id="featured-h" data-i18n="projects.featured"></h2></div>
+        <div><small>Chest · Projects · <span id="proj-count"></span></small><h2 id="featured-h" data-i18n="projects.all"></h2></div>
       </div>
+      <div class="filters" id="proj-filters" role="group">
+        <button class="btn" type="button" data-pf="all" data-i18n="f.all"></button>
+        <button class="btn" type="button" data-pf="degree" data-i18n="projects.degree"></button>
+        <button class="btn" type="button" data-pf="agentic" data-i18n="pf.agentic"></button>
+        <button class="btn" type="button" data-pf="drone" data-i18n="pf.drone"></button>
+        <button class="btn" type="button" data-pf="embedded" data-i18n="pf.embedded"></button>
+        <button class="btn" type="button" data-pf="plc" data-i18n="pf.plc"></button>
+        <button class="btn" type="button" data-pf="dev" data-i18n="pf.dev"></button>
+      </div>
+      <p class="sec-note" id="degree-note" data-i18n="projects.degree.note" hidden></p>
       <div class="showcase" id="showcase"></div>
     </div>
   </section>

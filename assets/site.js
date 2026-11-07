@@ -541,8 +541,18 @@
   }
 
   function renderProjects() {
+    renderProjectList();
+    renderRepos();
+    if (window.SITE && window.SITE.renderSkills) window.SITE.renderSkills();
+  }
+
+  // หมวดหมู่หน้าผลงาน (ปุ่มแบบหน้ากิจกรรม): all / degree / agentic / drone / embedded / plc / dev ตาม p.cats
+  // "ทั้งหมด" เรียงโปรเจกต์ ป.ตรี (group: "degree" ตาม groupOrder) ขึ้นก่อน แล้วตามด้วยที่เหลือตามลำดับใน data.js
+  let projFilter = "all";
+  function renderProjectList() {
     groups.proj = PROJECTS.map(p => ({ src: p.page ? IMG(p.page) : TH(p.img), cap: p.title }));
-    // p.group === "degree" → shown in the bachelor's-degree section above the chest; everything else in the chest
+    document.querySelectorAll("#proj-filters [data-pf]").forEach(b => b.setAttribute("aria-pressed", b.dataset.pf === projFilter));
+    const note = document.getElementById("degree-note"); if (note) note.hidden = projFilter !== "degree";
     const card = (p, i) => `
       <article class="show panel">
         ${shotBtn(TH(p.img), p.title, "proj", i)}
@@ -553,13 +563,12 @@
           <div class="actions"><button class="btn" type="button" data-proj="${i}">${esc(T("item.details"))}</button>${(p.downloads || []).map(d => `<a class="btn btn-dl" href="${esc(d.url)}" rel="noopener">⬇ ${esc(d.os)}</a>`).join("")}${p.github ? `<a class="btn" href="${esc(p.github)}" target="_blank" rel="noopener">GitHub ↗</a>` : ""}${p.drive ? `<a class="btn" href="${esc(p.drive)}" target="_blank" rel="noopener">Google Drive ↗</a>` : ""}${p.play ? `<a class="btn btn-play" href="${esc(p.play)}" target="_blank" rel="noopener">${esc(p.playLabel ? L(p.playLabel) : T("phad.play"))} ↗</a>` : ""}</div>
         </div>
       </article>`;
-    const pick = deg => PROJECTS.map((p, i) => [p, i]).filter(([p]) => (p.group === "degree") === deg)
-      .sort((a, b) => (a[0].groupOrder || 0) - (b[0].groupOrder || 0)).map(([p, i]) => card(p, i)).join("");
-    const degEl = document.getElementById("degree");
-    if (degEl) degEl.innerHTML = pick(true);
-    document.getElementById("showcase").innerHTML = degEl ? pick(false) : PROJECTS.map(card).join("");
-    renderRepos();
-    if (window.SITE && window.SITE.renderSkills) window.SITE.renderSkills();
+    const deg = p => p.group === "degree";
+    const list = PROJECTS.map((p, i) => [p, i])
+      .filter(([p]) => projFilter === "all" || (p.cats || []).includes(projFilter))
+      .sort((a, b) => (deg(b[0]) - deg(a[0])) || (deg(a[0]) ? (a[0].groupOrder || 0) - (b[0].groupOrder || 0) : a[1] - b[1]));
+    const cnt = document.getElementById("proj-count"); if (cnt) cnt.textContent = list.length;
+    document.getElementById("showcase").innerHTML = list.map(([p, i]) => card(p, i)).join("");
   }
 
   let actFilter = "all";
@@ -739,6 +748,8 @@
   });
   const filters = document.getElementById("filters");
   if (filters) filters.addEventListener("click", e => { const b = e.target.closest("[data-f]"); if (b) { actFilter = b.dataset.f; renderActivities(); } });
+  const projFilters = document.getElementById("proj-filters");
+  if (projFilters) projFilters.addEventListener("click", e => { const b = e.target.closest("[data-pf]"); if (b) { projFilter = b.dataset.pf; renderProjectList(); } });
   const certFilters = document.getElementById("cert-filters");
   if (certFilters) certFilters.addEventListener("click", e => { const b = e.target.closest("[data-cf]"); if (b) { certFilter = b.dataset.cf; renderCerts(); } });
 
