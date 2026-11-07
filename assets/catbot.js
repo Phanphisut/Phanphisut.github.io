@@ -1,4 +1,4 @@
-/* เหมียว: แชตบอต AI แมวดำที่ช่วยแนะนำการใช้เว็บนี้
+/* น้องลูน่าตัวอ้วน (Luna The Fatcat): แชตบอต AI แมวดำที่ช่วยแนะนำการใช้เว็บนี้
    - เข้าเว็บครั้งแรก: แมวตัวใหญ่โผล่มุมขวาล่างพร้อมกล่องแชตทักทาย ปิดแล้วแมวจะย้ายไปอยู่ปุ่มมุมขวาบน
    - เคยเข้าแล้ว: เหลือปุ่มแมวในแถบเดียวกับปุ่มภาษา/เสียง กดเพื่อเปิดแชต
    - AI: Gemini ผ่าน Cloudflare Worker phad-ai (key อยู่ฝั่ง Worker) ความรู้เรื่องเว็บสร้างจาก assets/data.js */
@@ -40,7 +40,7 @@
 
   function prompt(history, q) {
     const pageName = (S.page && S.page.file) || "index.html";
-    return `คุณคือ "เหมียว" แมวดำพิกเซล ผู้ช่วยประจำเว็บพอร์ตโฟลิโอของพันธุ์พิสุทธิ์
+    return `คุณคือ "น้องลูน่าตัวอ้วน" (ภาษาอังกฤษ: Luna The Fatcat) แมวดำพิกเซลตัวอ้วน ผู้ช่วยประจำเว็บพอร์ตโฟลิโอของพันธุ์พิสุทธิ์ ถ้าแทนตัวเองให้ใช้ "ลูน่า" (ภาษาอังกฤษใช้ Luna)
 หน้าที่: แนะนำวิธีใช้เว็บ พาไปหน้าที่ใช่ และตอบคำถามเกี่ยวกับผลงาน กิจกรรม ใบประกาศ ทักษะ และการติดต่อ จากข้อมูลด้านล่างเท่านั้น
 กติกา:
 - ตอบเป็น${lang() === "en" ? "ภาษาอังกฤษ" : "ภาษาไทย"} สั้น กระชับ เป็นกันเอง 1-4 ประโยค ลงท้ายน่ารักแบบแมวได้บ้าง (เช่น เหมียว~) แต่อย่าเยอะ
@@ -54,10 +54,10 @@
 ${knowledge()}
 
 บทสนทนาก่อนหน้า:
-${history.slice(-8).map(m => `${m.r === "u" ? "ผู้ใช้" : "เหมียว"}: ${m.t}`).join("\n") || "(ยังไม่มี)"}
+${history.slice(-8).map(m => `${m.r === "u" ? "ผู้ใช้" : "ลูน่า"}: ${m.t}`).join("\n") || "(ยังไม่มี)"}
 
 ผู้ใช้: ${q}
-เหมียว:`;
+ลูน่า:`;
   }
 
   async function ask(history, q) {
@@ -85,7 +85,7 @@ ${history.slice(-8).map(m => `${m.r === "u" ? "ผู้ใช้" : "เหม�
   }
 
   /* ---------- UI ---------- */
-  const label = () => tx("เหมียว ผู้ช่วยในเว็บ", "Meow, site helper");
+  const label = () => tx("น้องลูน่าตัวอ้วน", "Luna The Fatcat");
   const bar = document.querySelector(".topbar .lang");
   const btn = document.createElement("button");
   btn.className = "btn catbot-btn"; btn.type = "button"; btn.id = "catbot-btn"; btn.hidden = true;
@@ -126,14 +126,14 @@ ${history.slice(-8).map(m => `${m.r === "u" ? "ผู้ใช้" : "เหม�
     tx("ติดต่อเจ้าของเว็บยังไง?", "How can I contact him?"),
   ];
   const greet = () => tx(
-    "สวัสดีเหมียว~ ฉันชื่อ **เหมียว** ผู้ช่วยประจำเว็บนี้ เว็บนี้เป็นพอร์ตโฟลิโอของพันธุ์พิสุทธิ์ มี [ผลงาน](projects.html) [กิจกรรม](activities.html) [ใบประกาศ](certificates.html) และ [เกม PHAD Company](phad-company.html) อยากรู้อะไรกดปุ่มด้านล่าง หรือพิมพ์ถามได้เลย",
-    "Meow~ I'm **Meow**, this site's helper. It's Phanphisut's portfolio with [projects](projects.html), [activities](activities.html), [certificates](certificates.html) and the [PHAD Company game](phad-company.html). Tap a question below or type your own.");
+    "สวัสดีเหมียว~ ลูน่าชื่อ **น้องลูน่าตัวอ้วน** ผู้ช่วยประจำเว็บนี้ เว็บนี้เป็นพอร์ตโฟลิโอของพันธุ์พิสุทธิ์ มี [ผลงาน](projects.html) [กิจกรรม](activities.html) [ใบประกาศ](certificates.html) และ [เกม PHAD Company](phad-company.html) อยากรู้อะไรกดปุ่มด้านล่าง หรือพิมพ์ถามได้เลย",
+    "Meow~ I'm **Luna The Fatcat**, this site's helper. It's Phanphisut's portfolio with [projects](projects.html), [activities](activities.html), [certificates](certificates.html) and the [PHAD Company game](phad-company.html). Tap a question below or type your own.");
 
   function paintStatic() {
     $("catbot-name").textContent = label();
-    $("catbot-sub").textContent = tx("ถามเรื่องเว็บนี้ได้เลย · ตอบโดย AI", "Ask about this site · AI answers");
+    $("catbot-sub").textContent = tx("ผู้ช่วยในเว็บ · ถามได้เลย · ตอบโดย AI", "Site helper · ask away · AI answers");
     $("catbot-x").setAttribute("aria-label", tx("ปิดแชต", "Close chat"));
-    btn.setAttribute("aria-label", tx("เปิดแชตกับเหมียว", "Chat with Meow")); btn.title = label();
+    btn.setAttribute("aria-label", tx("เปิดแชตกับน้องลูน่าตัวอ้วน", "Chat with Luna The Fatcat")); btn.title = label();
     input.placeholder = tx("พิมพ์คำถาม…", "Type a question…");
     $("catbot-send").textContent = tx("ส่ง", "Send");
     chipsEl.innerHTML = CHIPS().map(c => `<button class="btn cb-chip" type="button">${esc(c)}</button>`).join("");
@@ -150,7 +150,7 @@ ${history.slice(-8).map(m => `${m.r === "u" ? "ผู้ใช้" : "เหม�
     history.push({ r: "u", t: q }); busy = true; paintLog();
     let a;
     try { a = await ask(history.slice(0, -1), q); }
-    catch (e) { a = tx("ขอโทษเหมียว ตอนนี้ฉันตอบไม่ได้ ลองใหม่อีกทีนะ หรือติดต่อทาง [LINE](https://line.me/ti/p/~0653057699) ได้เลย", "Sorry, meow, I can't answer right now. Try again, or reach him on [LINE](https://line.me/ti/p/~0653057699)."); }
+    catch (e) { a = tx("ขอโทษเหมียว ตอนนี้ลูน่าตอบไม่ได้ ลองใหม่อีกทีนะ หรือติดต่อทาง [LINE](https://line.me/ti/p/~0653057699) ได้เลย", "Sorry, meow, Luna can't answer right now. Try again, or reach him on [LINE](https://line.me/ti/p/~0653057699)."); }
     history.push({ r: "b", t: a }); history = history.slice(-20); busy = false;
     ss.set(LOG, JSON.stringify(history)); paintLog();
   }

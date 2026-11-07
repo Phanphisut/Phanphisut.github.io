@@ -139,7 +139,7 @@
     if (!err) {
       const n = Math.min(codeW.length, Math.floor(tt * 3.2) + 1);
       for (let i = 0; i < n; i++) { let x = 5; codeW[i].forEach((w, j) => { const ww = (i === n - 1 && j === codeW[i].length - 1) ? Math.max(1, Math.floor(w * ((tt * 3.2) % 1))) : w; R(x, 7 + i * 2, ww, 1, codeC[(i + j) % codeC.length]); x += w + 1; }); }
-      if (Math.floor(tt * 4) % 2) { const l = n - 1; let x = 5; codeW[l].forEach(w => x += w + 1); R(x, 7 + l * 2, 1, 1, "#ffffff"); }
+      if (n > 0 && Math.floor(tt * 4) % 2) { const l = n - 1; let x = 5; codeW[l].forEach(w => x += w + 1); R(x, 7 + l * 2, 1, 1, "#ffffff"); }
     }
   }
   function posePhone(t) {

@@ -541,7 +541,7 @@ dialog.item::backdrop { background: rgba(0, 0, 0, .75); }
 /* ซ่อนบนโทรศัพท์ทุกแนว (จอแคบ หรือจอสัมผัสที่ไม่มีเมาส์ เช่นตะแคงโทรศัพท์แนวนอน) */
 @media (max-width: 760px), (hover: none) and (pointer: coarse) { .char-deco { display: none; } }
 
-/* ---------- เหมียว: แชตบอตแมวดำ (assets/catbot.js) ---------- */
+/* ---------- น้องลูน่าตัวอ้วน (Luna The Fatcat): แชตบอตแมวดำ (assets/catbot.js) ---------- */
 .lang .catbot-btn { padding: 2px 6px; min-width: 0; }
 .catbot-btn img { width: 30px; height: 30px; image-rendering: pixelated; display: block; filter: drop-shadow(0 0 1px #9fd3ff) drop-shadow(0 0 3px rgba(63,182,255,.45)); }
 .catbot-btn[aria-expanded="true"] { background: #1d3047; border-color: #3f6386 #0b1420 #0b1420 #3f6386; }
