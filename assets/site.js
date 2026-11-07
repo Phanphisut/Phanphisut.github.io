@@ -586,18 +586,26 @@
   }
 
   function renderCerts() {
-    groups.cert = CERTS.map(c => ({ src: `images/certificates/${c.img}.jpg`, cap: L(c.title) }));
-    document.getElementById("cert-count").textContent = CERTS.length;
-    document.getElementById("certs").innerHTML = CERTS.map((c, i) => `
+    // ผลสอบ (kind: "score") อยู่หัวข้อ Test score ด้านบน ที่เหลืออยู่หัวข้อใบประกาศ
+    const scores = CERTS.filter(c => c.kind === "score"), certs = CERTS.filter(c => c.kind !== "score");
+    const card = (c, i, grp, kick) => `
       <article class="cert panel">
-        ${shotBtn(`images/certificates/${c.img}.jpg`, L(c.title), "cert", i)}
+        ${shotBtn(`images/certificates/${c.img}.jpg`, L(c.title), grp, i)}
         <div class="cert-body">
-          <span class="kicker">${esc(T("certs.unlocked"))} · ${esc(fmtD(c.d))}</span>
+          <span class="kicker">${esc(kick)} · ${esc(fmtD(c.d))}</span>
           <h3>${esc(L(c.title))}</h3>
           ${c.note ? `<p class="cert-note">${esc(L(c.note))}</p>` : ""}
           <p>${esc(L(c.issuer))}</p>
         </div>
-      </article>`).join("");
+      </article>`;
+    const gallery = list => list.map(c => ({ src: `images/certificates/${c.img}.jpg`, cap: L(c.title) }));
+    groups.score = gallery(scores);
+    groups.cert = gallery(certs);
+    document.getElementById("scores-sec").hidden = !scores.length;
+    document.getElementById("score-count").textContent = scores.length;
+    document.getElementById("scores").innerHTML = scores.map((c, i) => card(c, i, "score", T("scores.kicker"))).join("");
+    document.getElementById("cert-count").textContent = certs.length;
+    document.getElementById("certs").innerHTML = certs.map((c, i) => card(c, i, "cert", T("certs.unlocked"))).join("");
   }
 
   function renderHome() {

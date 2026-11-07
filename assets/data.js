@@ -139,8 +139,9 @@ const ACTIVITIES = [
 const PORTFOLIO_PAGES = ["projects/14", "projects/15", "projects/portfolio", "projects/warrantyth", "projects/portfolio-website", "projects/microbit", "activities/11", "activities/10", "activities/9", "activities/8", "activities/7", "activities/6"];
 
 // เรียงจากใหม่ไปเก่า  img = ชื่อไฟล์ใน images/certificates/
+// kind: "score" = ผลสอบ แสดงในหัวข้อ Test score เหนือใบประกาศ (ยังนับรวมใน LV เหมือนใบประกาศ)
 const CERTS = [
-  { img: "cert-9", d: "2026-10-17",
+  { img: "cert-9", d: "2026-10-17", kind: "score",
     title: "TOEIC Listening & Reading · 450",
     note: ["คะแนนรวม 450 · Listening 295 · Reading 155", "Total 450 · Listening 295 · Reading 155"],
     issuer: ["ETS · Center for Professional Assessment (Thailand)", "ETS · Center for Professional Assessment (Thailand)"] },
@@ -238,6 +239,7 @@ const I18N = {
   "f.all": ["ทั้งหมด", "All"], "f.work": ["ทำงาน", "Work"], "f.teach": ["สอน / สตาฟ", "Teaching / Staff"], "f.train": ["อบรม", "Training"], "f.event": ["กิจกรรม", "Events"],
   "certs.sub": ["ใบรับรองจากหลักสูตรและการอบรม", "Certificates from courses and training"],
   "certs.unlocked": ["ปลดล็อกความสำเร็จ!", "Achievement unlocked!"],
+  "scores.title": ["Test score", "Test score"], "scores.kicker": ["ผลสอบ", "Test result"],
   "view": ["ดูภาพ", "View"], "close": ["ปิด", "Close"], "page": ["หน้าพอร์ต", "Portfolio page"],
   "now": ["ปัจจุบัน", "Present"],
   "footer": ["© 2026 PHANPHISUT · สร้างทีละบล็อก", "© 2026 PHANPHISUT · BUILT BLOCK BY BLOCK"],
