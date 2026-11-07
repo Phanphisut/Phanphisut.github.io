@@ -576,6 +576,9 @@ dialog.item::backdrop { background: rgba(0, 0, 0, .75); }
 .cb-form .btn { min-width: 0; padding: 8px 12px; }
 @media (max-width: 560px) {
   .catbot { right: 12px; width: calc(100vw - 24px); }
+  /* มือถือ: ปุ่มแมวสูงเท่าปุ่มเสียง (36px) */
+  .lang .catbot-btn { padding: 2px 8px; }
+  .catbot-btn img { width: 26px; height: 26px; }
   .catbot-hero { width: 84px; height: 84px; right: 12px; bottom: 90px; }
   .catbot.first { bottom: 180px; max-height: calc(100dvh - 200px); }
 }
