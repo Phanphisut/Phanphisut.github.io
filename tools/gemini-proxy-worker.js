@@ -3,7 +3,9 @@
 // รับ POST { prompt: string, json: boolean } แล้วส่งคำตอบของ Gemini กลับไปตรงๆ
 
 const ALLOWED_ORIGINS = ['https://phanphisut.github.io'];
-const MODEL = 'gemini-flash-latest';
+// ตัวแรกเร็วสุด (~1-3 วิ) ถ้าใช้ไม่ได้ (404/429/5xx) ค่อยลองตัวถัดไป
+// gemini-flash-latest ไม่ใช้ เพราะตอบช้าเกิน 100 วิ จน Cloudflare ตัดการเชื่อมต่อ (524)
+const MODELS = ['gemini-flash-lite-latest', 'gemini-3-flash-preview'];
 const MAX_PROMPT = 60000;                       // กันคนส่งข้อความยาวมากๆ มาเผาโควตา
 
 export default {
@@ -27,14 +29,19 @@ export default {
     const prompt = typeof body.prompt === 'string' ? body.prompt : '';
     if (!prompt || prompt.length > MAX_PROMPT) return reply(400, { error: { message: 'prompt missing or too long' } });
 
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-goog-api-key': env.GEMINI_KEY },
-      body: JSON.stringify({
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: Object.assign({ maxOutputTokens: 8192 }, body.json ? { responseMimeType: 'application/json' } : {}),
-      }),
+    const payload = JSON.stringify({
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: Object.assign({ maxOutputTokens: 8192 }, body.json ? { responseMimeType: 'application/json' } : {}),
     });
+    let r;
+    for (const model of MODELS) {
+      r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-goog-api-key': env.GEMINI_KEY },
+        body: payload,
+      });
+      if (r.ok || !(r.status === 404 || r.status === 429 || r.status >= 500)) break;
+    }
     return new Response(await r.text(), { status: r.status, headers: { ...cors, 'content-type': 'application/json' } });
   },
 };
