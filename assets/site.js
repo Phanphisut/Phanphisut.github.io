@@ -533,7 +533,8 @@
     try {
       const res = await fetch(`https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=updated`);
       if (!res.ok) throw new Error(res.status);
-      const data = (await res.json()).filter(r => !r.fork && r.name.toLowerCase() !== `${GH_USER}.github.io`.toLowerCase());
+      const hide = (typeof HIDE_REPOS !== "undefined" ? HIDE_REPOS : []).map(n => n.toLowerCase());
+      const data = (await res.json()).filter(r => !r.fork && r.name.toLowerCase() !== `${GH_USER}.github.io`.toLowerCase() && !hide.includes(r.name.toLowerCase()));
       repos = data.length ? data : null; reposLive = true;
     } catch (e) { reposLive = false; }
     renderRepos();

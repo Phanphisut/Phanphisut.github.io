@@ -5,6 +5,8 @@
 //  วันที่ (d): "2026-09-22" | "2026-07-27/31" (ช่วงวันในเดือนเดียว) | "2026-08/now" | "2024-08/2024-12"
 // =====================================================================
 const GH_USER = "Phanphisut";
+// รีโปที่ไม่ต้องการให้โชว์ในรายการ Repositories หน้าผลงาน (ชื่อตรงกับบน GitHub)
+const HIDE_REPOS = ["AI-Detection-Lab"];
 
 const PROJECTS = [
   { img: "p-phad", page: "projects/phad-company", title: "PHAD Company Game", tags: ["Game", "Pixel Art", "AI Agents"],
@@ -32,6 +34,7 @@ const PROJECTS = [
   { img: "p-dcats", page: "projects/dcats", title: "DCATS Drone Test Station", tags: ["ESP32", "OpenPLC", "Node-RED"],
     group: "degree", groupOrder: 1,
     github: "https://github.com/Phanphisut/DCATS-Dashboard",
+    extraImgs: [{ src: "projects/dcats-system", cap: ["แผนผังระบบ", "System map"] }],
     play: "https://phanphisut.github.io/DCATS-Dashboard/", playLabel: ["เปิดแดชบอร์ด", "Open dashboard"],
     desc: ["แดชบอร์ดสถานีตรวจโดรนปลายสายพาน (End-of-Line) ระบุตัวโดรนด้วย QR + MAC ยืนยันว่าอยู่บนแท่นด้วย Hall sensor แล้วให้โดรนตรวจตัวเองผ่าน ESP-NOW ทดสอบมอเตอร์ทีละตัว ตัดสินผ่าน/ไม่ผ่าน และสั่งสายพานคัดแยกผ่าน OpenPLC มีโหมดจำลองให้ลองได้ทันที",
            "End-of-line drone test station dashboard: identifies each drone by QR + MAC, confirms it is on the jig with a Hall sensor, runs an ESP-NOW self-test and per-motor tests, judges pass/fail and drives the sorting conveyor through OpenPLC. Includes a simulation mode you can try right away."] },
