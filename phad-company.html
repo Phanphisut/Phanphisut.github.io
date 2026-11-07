@@ -222,6 +222,13 @@ details pre{white-space:pre-wrap;font:500 13.5px/1.6 var(--font-body);background
 .need.warn,.need.warn b{color:var(--red)}
 .seg{display:flex;flex-wrap:wrap;gap:4px}
 .seg button{font:400 14px/1.3 var(--font-display);padding:4px 12px 6px;background:var(--parch-dark);border:3px solid var(--wood-mid);color:var(--ink);cursor:pointer}
+.steps{margin:0;padding-left:22px;display:grid;gap:4px;font-size:14px}
+.pane code{font:600 13px/1.4 var(--font-num);background:var(--parch-dark);padding:0 5px;overflow-wrap:anywhere}
+.pane a{color:#7a3e05;font-weight:700}
+.files{margin:0;padding:8px 10px 8px 28px;font:500 13.5px/1.6 var(--font-num);background:var(--parch);border:2px solid var(--parch-dark);overflow-wrap:anywhere}
+.badge.local{background:#9cc4ec}
+.tab .tl{white-space:nowrap}
+@media (max-width:1360px){.tab .tl{display:none}.tab{padding:2px 8px 4px}}
 .seg button[aria-pressed="true"]{background:var(--wood-hi);border-color:var(--wood-dark);box-shadow:inset 0 -3px 0 #c07a34}
 .pick:disabled{opacity:.5;cursor:not-allowed}
 .pick small{display:block;font:600 11px/1.3 var(--font-body);color:var(--ink-soft)}
@@ -287,6 +294,7 @@ details pre{white-space:pre-wrap;font:500 13.5px/1.6 var(--font-body);background
     <button type="button" class="mi" data-pane="journal"><span data-icon="journal"></span>สมุดภารกิจ<b class="dot" data-badge hidden></b></button>
     <button type="button" class="mi" data-pane="pet"><span data-icon="pet"></span>สัตว์เลี้ยง<b class="dot" data-petbadge hidden>!</b></button>
     <button type="button" class="mi" data-pane="shop"><span data-icon="shop"></span>ร้านค้า</button>
+    <button type="button" class="mi" data-pane="local"><span data-icon="local"></span>เครื่องฉัน (Claude)</button>
   </div>
   <button type="button" class="fab" id="fab" aria-expanded="false" aria-controls="submenu" aria-label="เปิดเมนู">
     <span class="burger"><i></i><i></i><i></i></span><span>เมนู</span><b class="dot" data-badge hidden></b><b class="dot" data-petbadge hidden>!</b>
@@ -304,6 +312,7 @@ details pre{white-space:pre-wrap;font:500 13.5px/1.6 var(--font-body);background
       <button type="button" class="tab" role="tab" data-pane="journal"><span data-icon="journal"></span><span class="tl">ภารกิจ</span><b class="dot" data-badge hidden></b></button>
       <button type="button" class="tab" role="tab" data-pane="pet"><span data-icon="pet"></span><span class="tl">สัตว์เลี้ยง</span><b class="dot" data-petbadge hidden>!</b></button>
       <button type="button" class="tab" role="tab" data-pane="shop"><span data-icon="shop"></span><span class="tl">ร้านค้า</span></button>
+      <button type="button" class="tab" role="tab" data-pane="local"><span data-icon="local"></span><span class="tl">เครื่องฉัน</span></button>
     </div>
     <button type="button" class="xbtn" data-close aria-label="ปิดเมนู">✕</button>
     <h2 class="mtitle" id="mTitle">กระดานสั่งงาน</h2>
@@ -314,7 +323,7 @@ details pre{white-space:pre-wrap;font:500 13.5px/1.6 var(--font-body);background
           <label for="taskInput">อยากให้ทีมทำอะไร</label>
           <textarea id="taskInput"></textarea>
           <p class="note">รางวัลตามความยาวภารกิจ: น้อยกว่า 5 บรรทัด 50g · 5 บรรทัด 100g · 6-9 บรรทัด 200g · 10 บรรทัด 500g · มากกว่า 10 บรรทัด 1,000g</p>
-          <p class="note">ต้น (นักวิจัย) ค้นเว็บไม่ได้ ข้อมูลมาจากความรู้ของโมเดล ควรตรวจตัวเลขหรือราคาสำคัญก่อนนำไปใช้</p>
+          <p class="note" id="aiNote">ต้น (นักวิจัย) ค้นเว็บไม่ได้ ข้อมูลมาจากความรู้ของโมเดล ควรตรวจตัวเลขหรือราคาสำคัญก่อนนำไปใช้</p>
           <p class="err" id="formErr" hidden></p>
           <div class="sendrow"><button class="btn green" id="sendBtn" type="submit">ประกาศภารกิจ</button><span class="note" id="queueNote"></span></div>
         </form>
@@ -348,6 +357,25 @@ details pre{white-space:pre-wrap;font:500 13.5px/1.6 var(--font-body);background
         </div>
         <div class="foods" id="foods"></div>
         <p class="shopmsg" id="shopMsg" aria-live="polite"></p>
+      </section>
+      <section class="pane" data-pane="local" hidden>
+        <div class="col">
+          <div class="conn"><span class="gem" id="lcDot"></span><span id="lcText">ยังไม่ได้เชื่อมต่อเครื่องของคุณ</span></div>
+          <p style="margin:0">ให้ทีมใช้ <b>Claude Code บนเครื่องของคุณ</b> ทำงานแบบ agentic: ค้นเว็บจริง อ่าน เขียน และแก้ไฟล์ได้เอง จนภารกิจเสร็จ ผลงานเป็นไฟล์จะอยู่ในโฟลเดอร์ <code>PHAD-Workspace</code> บนเครื่องคุณ ใช้โควตาบัญชี Claude ของคุณ ไม่ใช้ Gemini</p>
+          <h3 class="sub" style="margin:4px 0 0">เริ่มใช้ครั้งแรก</h3>
+          <ol class="steps">
+            <li>ติดตั้ง <a href="https://nodejs.org" target="_blank" rel="noopener">Node.js</a> และ <a href="https://claude.com/claude-code" target="_blank" rel="noopener">Claude Code</a> แล้วล็อกอิน (พิมพ์ <code>claude</code> ใน terminal ได้)</li>
+            <li>ดาวน์โหลด <a href="tools/phad-bridge.js" download>phad-bridge.js</a></li>
+            <li>เปิด terminal ในโฟลเดอร์ที่ดาวน์โหลด แล้วรัน <code>node phad-bridge.js</code></li>
+            <li>นำ <b>รหัสจับคู่</b> ที่ขึ้นใน terminal มาใส่ด้านล่าง แล้วกด "เชื่อมต่อ" (ถ้าเบราว์เซอร์ถามสิทธิ์เข้าถึงเครือข่ายภายใน ให้กดอนุญาต)</li>
+          </ol>
+          <label for="lcToken">รหัสจับคู่</label>
+          <input type="text" id="lcToken" placeholder="XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" maxlength="14">
+          <label for="lcPort">พอร์ต</label>
+          <input type="text" id="lcPort" value="8787" inputmode="numeric" maxlength="5" style="max-width:120px">
+          <div class="row"><button type="button" class="btn small green" id="lcConnect">เชื่อมต่อ</button><button type="button" class="btn small" id="lcOff">เลิกใช้ กลับไปใช้ Gemini</button></div>
+          <p class="note">ทีมรันคำสั่ง shell ไม่ได้ (ค่าเริ่มต้น) ถ้าต้องการ ให้รันด้วย <code>node phad-bridge.js --allow-bash</code> · bridge รับงานเฉพาะจากหน้านี้และต้องมีรหัสจับคู่ · ปิด bridge ได้ด้วย Ctrl+C</p>
+        </div>
       </section>
       <section class="pane" data-pane="journal" hidden>
         <div class="row" style="justify-content:flex-end;margin-bottom:12px"><button class="btn small" id="clearBtn" type="button">ล้างภารกิจเก่า</button></div>
@@ -917,8 +945,8 @@ async function initBackend() {
   try { localStorage.removeItem('po_key'); localStorage.removeItem('po_model'); } catch {}   // ล้าง key เก่าที่ผู้เล่นเคยใส่
   if (!AI_PROXY) { backend = { mode:'off' }; setConn('bad', 'ระบบ AI ยังไม่พร้อม กำลังตั้งค่าอยู่'); failQueued('ระบบ AI ยังไม่พร้อม'); return; }
   backend = { mode:'api', key:'proxy' };
-  setConn('ok', 'ทีมพร้อมรับงานแล้ว');
-  startQueued();
+  if (local.on) checkLocal();                    // ถ้าเคยเชื่อมเครื่องตัวเองไว้ ลองต่อใหม่ (ต่อไม่ได้จะเตือน ไม่สลับไป Gemini เอง)
+  else { refreshConn(); startQueued(); }
 }
 async function callApi(prompt, json) {
   for (let i = 0; ; i++) {                       // เซิร์ฟเวอร์ Gemini ยุ่ง (500/503) ลองซ้ำสูงสุด 3 รอบ
@@ -944,6 +972,116 @@ async function callApiOnce(prompt, json) {
   if (!c || !c.content) throw { code:'refused', message:'AI ไม่รับงานนี้ ลองเปลี่ยนคำสั่ง' };
   return (c.content.parts || []).filter(p => p.text && !p.thought).map(p => p.text).join('');
 }
+/* 7b) Claude Code บนเครื่องผู้เล่น ผ่าน tools/phad-bridge.js (ทำงานแบบ agentic: ค้นเว็บ อ่าน/เขียนไฟล์ได้เอง) */
+const local = { on: lsGet('po_local') === '1', token: lsGet('po_ltoken') || '', port: Number(lsGet('po_lport')) || 8787, ok: false };
+const localUrl = p => `http://127.0.0.1:${local.port}${p}`;
+const lcDot = document.getElementById('lcDot'), lcText = document.getElementById('lcText');
+const useLocal = () => local.on && local.ok;
+function setLocal(level, text) { lcDot.className = 'gem ' + level; lcText.textContent = text; }
+function refreshConn() {
+  const note = document.getElementById('aiNote');
+  if (useLocal()) {
+    setConn('ok', 'ทีมใช้ Claude Code บนเครื่องของคุณ (agentic)');
+    note.textContent = 'ทีมค้นเว็บจริงและสร้างไฟล์ได้เอง ไฟล์ผลงานอยู่ในโฟลเดอร์ PHAD-Workspace บนเครื่องคุณ งานใหญ่อาจใช้เวลาหลายนาที';
+  } else {
+    if (local.on) setConn('warn', 'ต่อเครื่องของคุณไม่ได้ เปิด phad-bridge.js ไว้หรือยัง (ดูแท็บ "เครื่องฉัน")');
+    else if (backend.mode === 'api') setConn('ok', 'ทีมพร้อมรับงานแล้ว');
+    else if (backend.mode === 'off') setConn('bad', 'ระบบ AI ยังไม่พร้อม กำลังตั้งค่าอยู่');
+    note.textContent = 'ต้น (นักวิจัย) ค้นเว็บไม่ได้ ข้อมูลมาจากความรู้ของโมเดล ควรตรวจตัวเลขหรือราคาสำคัญก่อนนำไปใช้';
+  }
+}
+async function checkLocal() {
+  if (!local.on) { local.ok = false; setLocal('', 'ยังไม่ได้เชื่อมต่อเครื่องของคุณ'); refreshConn(); return; }
+  setLocal('warn', 'กำลังเชื่อมต่อเครื่องของคุณ…');
+  try {
+    const r = await fetch(localUrl('/status'), { headers: { 'x-phad-token': local.token } });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(r.status === 401 ? 'รหัสจับคู่ไม่ถูกต้อง ดูรหัสใน terminal ที่รัน bridge อีกครั้ง' : r.status === 403 ? 'bridge ไม่รับคำขอจากหน้านี้' : (j.error || 'bridge ตอบกลับ ' + r.status));
+    if (!j.claude) throw new Error('bridge ทำงานอยู่ แต่หาคำสั่ง claude ไม่เจอ ติดตั้งและล็อกอิน Claude Code ก่อน');
+    local.ok = true;
+    setLocal('ok', `เชื่อมต่อแล้ว · ${j.claude} · ไฟล์งานอยู่ที่ ${j.workspace}${j.bash ? ' · รันคำสั่ง shell ได้' : ''}`);
+  } catch (e) {
+    local.ok = false;
+    setLocal('bad', e instanceof TypeError ? `ต่อ bridge ที่พอร์ต ${local.port} ไม่ได้ เปิด terminal แล้วรัน node phad-bridge.js ไว้หรือยัง` : e.message);
+  }
+  refreshConn();
+  if (local.ok) startQueued();
+}
+document.getElementById('lcToken').value = local.token;
+document.getElementById('lcPort').value = local.port;
+document.getElementById('lcConnect').onclick = () => {
+  local.token = document.getElementById('lcToken').value.trim().toUpperCase();
+  local.port = Number(document.getElementById('lcPort').value) || 8787;
+  if (!local.token) { setLocal('warn', 'ใส่รหัสจับคู่จาก terminal ก่อน'); return; }
+  local.on = true; lsSet('po_local', '1'); lsSet('po_ltoken', local.token); lsSet('po_lport', String(local.port));
+  checkLocal();
+};
+document.getElementById('lcOff').onclick = () => {
+  local.on = false; local.ok = false; lsSet('po_local', '0');
+  setLocal('', 'เลิกใช้เครื่องของคุณแล้ว ทีมกลับไปใช้ Gemini');
+  refreshConn();
+};
+
+const TOOL_LABEL = { Read:'อ่านไฟล์', Glob:'ค้นหาไฟล์', Grep:'ค้นในไฟล์', WebSearch:'ค้นเว็บ', WebFetch:'เปิดอ่านเว็บ', Write:'เขียนไฟล์', Edit:'แก้ไฟล์', Bash:'รันคำสั่ง', TodoWrite:'วางแผนงาน', ToolSearch:'เตรียมเครื่องมือ' };
+async function localFlow(task) {
+  const [pm, res, wri, qa] = AG;
+  const who = n => /^(Read|Glob|Grep|WebSearch|WebFetch)$/.test(n) ? res : /^(Write|Edit)$/.test(n) ? wri : n === 'Bash' ? qa : pm;
+  task.local = true; task.title = short(task.prompt.split('\n')[0], 40); task.output = ''; task.steps = [];
+  save(); hudQuest(); stage(task, 'ยูส่งภารกิจให้ Claude ในเครื่องคุณ');
+  say(pm, 'รับทราบค่ะ! ภารกิจนี้ทีมจะใช้ Claude บนเครื่องคุณทำจนเสร็จนะคะ');
+  setS(pm, 'คุมงาน', 'think', false, 'work');
+
+  let r;
+  try {
+    r = await fetch(localUrl('/task'), { method:'POST', headers:{ 'content-type':'application/json', 'x-phad-token':local.token }, body: JSON.stringify({ prompt:task.prompt, title:task.title }) });
+  } catch { local.ok = false; refreshConn(); throw { code:'local', message:'ต่อ bridge ในเครื่องไม่ได้ เปิด node phad-bridge.js ไว้หรือยัง' }; }
+  if (!r.ok) {
+    const j = await r.json().catch(() => ({}));
+    throw { code:'local', message: r.status === 401 ? 'รหัสจับคู่ไม่ถูกต้อง' : r.status === 409 ? 'เครื่องของคุณกำลังทำภารกิจอื่นอยู่' : r.status === 503 ? 'bridge หาคำสั่ง claude ไม่เจอ' : (j.error || 'bridge ตอบกลับ ' + r.status) };
+  }
+  const rd = r.body.getReader(), dec = new TextDecoder(), texts = [];
+  let buf = '', fin = null, last = null;
+  for (;;) {
+    let chunk;
+    try { chunk = await rd.read(); } catch { break; }
+    if (chunk.done) break;
+    buf += dec.decode(chunk.value, { stream:true });
+    let i;
+    while ((i = buf.indexOf('\n')) >= 0) {
+      const line = buf.slice(0, i); buf = buf.slice(i + 1);
+      let ev; try { ev = JSON.parse(line); } catch { continue; }
+      if (ev.type === 'tool') {
+        const a = who(ev.name), lab = TOOL_LABEL[ev.name] || ev.name;
+        if (last && last !== a && last !== pm) setS(last, 'รอ', null, false, 'idle');
+        setS(a, lab, /^Web/.test(ev.name) ? 'search' : a === wri ? 'type' : 'think', true); last = a;
+        stage(task, `${a.name}: ${lab}${ev.detail ? ' ' + short(ev.detail, 36) : ''}`);
+        task.steps.push(`${a.name} ${lab}${ev.detail ? ': ' + ev.detail : ''}`);
+      } else if (ev.type === 'text') {
+        texts.push(ev.text); task.output = texts.join('\n\n'); liveOut(task);
+      } else if (ev.type === 'done') fin = ev;
+      else if (ev.type === 'error') throw { code:'local', message:'Claude หยุดทำงาน: ' + short(String(ev.message), 200) };
+    }
+  }
+  if (!fin) throw { code:'local', message:'การเชื่อมต่อกับเครื่องของคุณหลุดก่อนงานเสร็จ' };
+  task.output = fin.result || task.output;
+  task.files = (fin.files || []).map(f => f.path); task.dir = fin.dir || '';
+  task.notes = task.steps.length ? '- ' + task.steps.slice(0, 80).join('\n- ') : '';
+  if (last && last !== qa) setS(last, 'ส่งงานแล้ว', 'done', false, 'done');
+
+  stage(task, 'ภูมิเอางานไปส่งที่โต๊ะคุณ');
+  qa.bubble = 'paper'; await walk(qa, DELIVER, 'เอางานไปส่ง CEO', 'up');
+  task.status = fin.ok ? 'done' : 'flag'; task.doneAt = Date.now();
+  task.reward = rewardFor(task.prompt);
+  gold += task.reward; saveEco(); hudGold();
+  save(); renderQuests(); renderTeam();
+  toast(`+${task.reward}g ภารกิจสำเร็จ ดูได้ในสมุดภารกิจ`, true);
+  unseen++; updateBadges();
+  CEO.bubble = 'heart'; setTimeout(() => { CEO.bubble = null; }, 2600);
+  say(qa, task.files.length ? `เสร็จแล้วครับ! สร้างไฟล์ไว้ ${task.files.length} ไฟล์ในเครื่องคุณ ดูรายชื่อได้ในสมุดภารกิจ` : 'เสร็จแล้วครับ! วางผลงานไว้บนโต๊ะคุณแล้ว');
+  setS(qa, 'ส่งงานแล้ว', 'done', false, 'done');
+  await wait(900); await goHome(qa);
+}
+
 function parseJSON(t) {
   try { return JSON.parse(t); } catch {}
   const f = t.match(/```(?:json)?\s*([\s\S]*?)```/); if (f) { try { return JSON.parse(f[1]); } catch {} }
@@ -1047,6 +1185,11 @@ async function runTask(task) {
   const [pm, res, wri, qa] = AG;
   busy = true; currentTask = task; task.status = 'working'; stage(task, 'ยูเรียกประชุม');
   try {
+    if (local.on) {                              // เลือกใช้เครื่องตัวเองไว้: ไม่แอบสลับไป Gemini ถ้าต่อไม่ได้
+      if (!local.ok) await checkLocal();
+      if (!local.ok) throw { code:'local', message:'ต่อเครื่องของคุณไม่ได้ เปิด node phad-bridge.js ไว้ หรือกด "เลิกใช้" ในแท็บเครื่องฉัน' };
+      await localFlow(task); return;
+    }
     say(pm, 'รับทราบค่ะ! เดี๋ยวยูเรียกทุกคนมาประชุมก่อนนะคะ');
     pm.bubble = 'talk';
     await Promise.all(AG.map((a, i) => walk(a, MEET[i], 'ไปห้องประชุม', 'down')));
@@ -1216,7 +1359,7 @@ function save() {
   const keep = tasks.slice(0, 20).map(t => {
     const live = t.status === 'working' || t.status === 'queued';
     return { id:t.id, prompt:t.prompt, title:t.title, status: live ? 'error' : t.status, error: live ? 'ปิดหน้าไปก่อนงานเสร็จ' : t.error,
-      plan:t.plan, notes:t.notes, output:t.output, review:t.review, reward:t.reward, createdAt:t.createdAt, doneAt:t.doneAt };
+      plan:t.plan, notes:t.notes, output:t.output, review:t.review, reward:t.reward, createdAt:t.createdAt, doneAt:t.doneAt, local:t.local, files:t.files, dir:t.dir };
   });
   lsSet('po_tasks', JSON.stringify(keep));
 }
@@ -1241,7 +1384,7 @@ function renderQuests() {
     const head = document.createElement('div'); head.className = 'qhead';
     const ttl = document.createElement('div');
     const h = document.createElement('h3'); h.textContent = t.title || short(t.prompt, 50);
-    const [lab, cls] = STATUS[t.status] || STATUS.queued;
+    const [lab, cls] = t.local && t.status === 'done' ? ['สำเร็จ · เครื่องฉัน', 'local'] : STATUS[t.status] || STATUS.queued;
     const bd = document.createElement('span'); bd.className = 'badge ' + cls; bd.textContent = t.status === 'working' && t.stage ? t.stage : lab;
     ttl.append(h, bd);
     const rw = document.createElement('div'); rw.className = 'reward';
@@ -1253,6 +1396,13 @@ function renderQuests() {
     else { out.classList.add('empty'); out.textContent = t.status === 'error' ? t.error : t.status === 'queued' ? 'รอทีมว่าง แล้วจะเริ่มทันที' : 'ทีมกำลังทำงาน จดหมายผลงานจะขึ้นตรงนี้ระหว่างที่บีมเขียน'; }
     outEls.set(t.id, out);
     card.append(head, cmd, out);
+    if (t.files && t.files.length) {
+      const fp = document.createElement('p'); fp.className = 'note';
+      fp.textContent = `ไฟล์ที่ทีมสร้างบนเครื่องคุณ (${t.files.length}) ในโฟลเดอร์ ${t.dir}`;
+      const ul = document.createElement('ul'); ul.className = 'files';
+      for (const f of t.files.slice(0, 30)) { const li = document.createElement('li'); li.textContent = f; ul.appendChild(li); }
+      card.append(fp, ul);
+    }
     if (t.status === 'error' && t.output) { const er = document.createElement('p'); er.className = 'err'; er.textContent = t.error; card.appendChild(er); }
     if (t.review) {
       const q = document.createElement('p'); q.className = 'qa';
@@ -1273,9 +1423,9 @@ function renderQuests() {
     if (t.plan || t.notes) {
       const det = document.createElement('details'); det.open = !!t.open;
       det.addEventListener('toggle', () => { t.open = det.open; });
-      const sm = document.createElement('summary'); sm.textContent = 'ดูแผนของยูและข้อมูลของต้น';
+      const sm = document.createElement('summary'); sm.textContent = t.local ? 'ดูขั้นตอนที่ทีมทำบนเครื่องคุณ' : 'ดูแผนของยูและข้อมูลของต้น';
       const pre = document.createElement('pre');
-      pre.textContent = (t.plan ? `แผนงาน\n- หาข้อมูล: ${t.plan.research}\n- เขียน: ${t.plan.write}\n- เกณฑ์ตรวจ: ${t.plan.check}\n\n` : '') + (t.notes ? `ข้อมูลจากต้น\n${t.notes}` : '');
+      pre.textContent = t.local ? t.notes : (t.plan ? `แผนงาน\n- หาข้อมูล: ${t.plan.research}\n- เขียน: ${t.plan.write}\n- เกณฑ์ตรวจ: ${t.plan.check}\n\n` : '') + (t.notes ? `ข้อมูลจากต้น\n${t.notes}` : '');
       det.append(sm, pre); card.appendChild(det);
     }
     questsEl.appendChild(card);
@@ -1299,7 +1449,7 @@ document.getElementById('taskForm').addEventListener('submit', e => {
   formErr.hidden = true;
   const fail = m => { formErr.textContent = m; formErr.hidden = false; formErr.scrollIntoView({ block:'nearest' }); say(AG[0], m + ' ค่ะ', false); toast(m); };
   if (!text) return fail('เขียนงานที่อยากให้ทีมทำก่อน');
-  if (backend.mode === 'off') return fail('ยังเชื่อมต่อ AI ไม่ได้');
+  if (backend.mode === 'off' && !local.on) return fail('ยังเชื่อมต่อ AI ไม่ได้');
   const task = { id: Date.now().toString(36), prompt:text, status:'queued', createdAt:Date.now() };
   tasks.unshift(task); input.value = '';
   CEO.bubble = 'talk'; setTimeout(() => { if (CEO.bubble === 'talk') CEO.bubble = null; }, 1800);
@@ -1317,7 +1467,7 @@ document.getElementById('clearBtn').onclick = () => {
 /* =========================================================
    11) ปุ่มเมนูมุมขวาล่าง เมนูย่อย และหน้าต่างแท็บ
    ========================================================= */
-const PANES = { board:'กระดานสั่งงาน', team:'ทีมงาน', diary:'บันทึกวันนี้', journal:'สมุดภารกิจ', pet:'สัตว์เลี้ยง', shop:'ร้านค้า' };
+const PANES = { board:'กระดานสั่งงาน', team:'ทีมงาน', diary:'บันทึกวันนี้', journal:'สมุดภารกิจ', pet:'สัตว์เลี้ยง', shop:'ร้านค้า', local:'เชื่อมเครื่องของฉัน (Claude)' };
 const fab = document.getElementById('fab'), submenu = document.getElementById('submenu'), modal = document.getElementById('modal');
 let unseen = 0;
 function icon(kind) {                            // ไอคอน pixel ของแต่ละเมนู
@@ -1327,6 +1477,7 @@ function icon(kind) {                            // ไอคอน pixel ขอ
   if (kind === 'diary') { p(1,0,11,14,'#5d9b4a'); p(3,1,8,12,'#6fae5a'); p(1,0,2,14,'#3f7a32'); p(5,3,5,3,'#fff1cf'); p(12,2,1,3,'#d9534f'); }
   if (kind === 'pet') { p(1,4,12,9,'#e08a3c'); p(1,1,3,4,'#e08a3c'); p(10,1,3,4,'#e08a3c'); p(2,2,1,2,'#f6c08a'); p(11,2,1,2,'#f6c08a'); p(4,7,1,2,'#3b1d0e'); p(9,7,1,2,'#3b1d0e'); p(6,10,2,1,'#c0504d'); p(4,5,6,1,'#b8662a'); p(3,10,8,3,'#f6c08a'); }
   if (kind === 'shop') { p(0,5,14,9,'#c98a4b'); p(1,6,12,7,'#f6e3b4'); p(0,2,14,4,'#d9534f'); p(0,2,3,4,'#fff'); p(6,2,3,4,'#fff'); p(12,2,2,4,'#fff'); p(5,8,4,6,'#7a3e1e'); p(2,8,2,2,'#7fc8f8'); p(10,8,2,2,'#7fc8f8'); }
+  if (kind === 'local') { p(0,1,14,9,'#3a2a20'); p(1,2,12,7,'#4a7bb5'); p(2,3,4,1,'#cfe6ff'); p(2,5,7,1,'#9cc4ec'); p(2,7,5,1,'#9cc4ec'); p(5,10,4,2,'#3a2a20'); p(2,12,10,2,'#8f4a24'); p(11,3,1,1,'#f2c14e'); }
   if (kind === 'journal') { p(0,1,13,12,'#a0622f'); p(1,2,11,10,'#fff1cf'); p(6,2,1,10,'#c9a072'); p(2,4,3,1,'#b9a985'); p(2,6,3,1,'#b9a985'); p(8,4,3,1,'#b9a985'); p(8,6,2,1,'#b9a985'); p(9,0,2,4,'#d9534f'); }
   return outline(c);
 }
@@ -1356,6 +1507,8 @@ document.addEventListener('keydown', e => {
   if (!modal.hidden) closePanel(); else if (!submenu.hidden) { setMenu(false); fab.focus(); }
 });
 document.querySelectorAll('[data-icon]').forEach(el => el.replaceWith(icon(el.dataset.icon)));
+// จอแคบชื่อแท็บถูกซ่อน: ใส่ชื่อไว้ให้ tooltip และ screen reader
+document.querySelectorAll('.tab').forEach(t => { const l = t.querySelector('.tl'); if (l) { t.title = l.textContent; t.setAttribute('aria-label', l.textContent); } });
 
 /* ปุ่มเต็มจอ (ซ่อนอัตโนมัติถ้าเบราว์เซอร์ไม่รองรับ) */
 const fsBtn = document.getElementById('fsBtn');
