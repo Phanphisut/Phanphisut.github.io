@@ -218,7 +218,7 @@ const I18N = {
   "char.off": ["เลิกงานแล้ว!", "Off work!"],
   "char.next": ["สุ่มท่าใหม่ใน {n} วิ", "New pose in {n}s"],
   "signs.title": ["ป้ายบอกทาง", "Where to next?"],
-  "signs.projects": ["โดรน AI, IoT และ repo บน GitHub", "Drones, AI, IoT and GitHub repos"],
+  "signs.projects": ["โดรน AI, IoT, PLC และ Agentic AI", "Drones, AI, IoT, PLC and agentic AI"],
   "signs.activities": ["งาน อบรม และการสอน", "Work, training and teaching"],
   "signs.certs": ["ใบรับรองและหลักสูตรที่ผ่าน", "Courses and certifications"],
   "unit.items": ["รายการ", "items"],

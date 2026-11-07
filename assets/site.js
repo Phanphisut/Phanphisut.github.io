@@ -509,40 +509,8 @@
       <img src="${src}" alt="${esc(label)}" loading="lazy"><span class="zoom">${esc(T("view"))}</span></button>`;
 
   /* ---------- page renderers ---------- */
-  let repos = null, reposLive = null;
-  const LANG_ORE = { Python: "#4b8bdf", JavaScript: "#f2d230", TypeScript: "#3178c6", HTML: "#e34c26", CSS: "#9b59d6", "C++": "#f34b7d", C: "#bbbbbb", Java: "#d9822b", "Jupyter Notebook": "#f37726" };
-  const pretty = n => n.replace(/[-_]+/g, " ").trim();
-  function renderRepos() {
-    const el = document.getElementById("repos"); if (!el) return;
-    const list = repos || FALLBACK_REPOS;
-    el.innerHTML = list.map((r, i) => {
-      const ore = (r.language ? oreBlock(LANG_ORE[r.language] || "#55e0c8", i * 31 + 5) : grassBlock(i * 31 + 5)).toDataURL();
-      return `<a class="repo panel" href="${esc(r.html_url)}" target="_blank" rel="noopener">
-        <span class="slot"><img class="pix" src="${ore}" width="40" height="40" alt=""></span>
-        <span class="repo-body">
-          <span class="repo-name">${esc(pretty(r.name))}</span>
-          <p class="repo-desc">${r.description ? esc(r.description) : esc(T("repos.nodesc"))}</p>
-          <span class="repo-foot"><span class="lang-name">${esc(r.language || "—")}</span><span>★ ${r.stargazers_count}</span><span>${fmtIso(r.updated_at)}</span></span>
-        </span></a>`;
-    }).join("");
-    const note = document.getElementById("sync-note");
-    note.textContent = reposLive === null ? T("repos.loading") : reposLive ? `${T("repos.live")} · ${list.length}` : T("repos.offline");
-    document.getElementById("sync-dot").classList.toggle("on", !!reposLive);
-  }
-  async function loadRepos() {
-    try {
-      const res = await fetch(`https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=updated`);
-      if (!res.ok) throw new Error(res.status);
-      const hide = (typeof HIDE_REPOS !== "undefined" ? HIDE_REPOS : []).map(n => n.toLowerCase());
-      const data = (await res.json()).filter(r => !r.fork && r.name.toLowerCase() !== `${GH_USER}.github.io`.toLowerCase() && !hide.includes(r.name.toLowerCase()));
-      repos = data.length ? data : null; reposLive = true;
-    } catch (e) { reposLive = false; }
-    renderRepos();
-  }
-
   function renderProjects() {
     renderProjectList();
-    renderRepos();
     if (window.SITE && window.SITE.renderSkills) window.SITE.renderSkills();
   }
 
@@ -774,5 +742,4 @@
   });
 
   applyLang();
-  if (page.id === "projects") loadRepos();
 })();
