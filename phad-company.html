@@ -311,16 +311,9 @@ details pre{white-space:pre-wrap;font:500 13.5px/1.6 var(--font-body);background
       <section class="pane" data-pane="board">
         <form class="col" id="taskForm">
           <div class="conn"><span class="gem" id="connDot"></span><span id="connText">กำลังเชื่อมต่อ AI…</span></div>
-          <div id="keyBox" class="col" hidden>
-            <label for="apiKey">Anthropic API key</label>
-            <input type="password" id="apiKey" placeholder="sk-ant-..." autocomplete="off">
-            <label for="apiModel">โมเดล</label>
-            <input type="text" id="apiModel" value="claude-sonnet-5-5">
-            <div class="row"><button type="button" class="btn small" id="saveKey">บันทึก key</button><button type="button" class="btn small" id="clearKey">ลบ key</button></div>
-            <p class="note">key เก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น ไม่ถูกส่งไปที่อื่นนอกจาก Anthropic · สร้าง key ได้ที่ platform.claude.com/settings/keys</p>
-          </div>
           <label for="taskInput">อยากให้ทีมทำอะไร</label>
-          <textarea id="taskInput" placeholder="เช่น เขียนโพสต์ Facebook เปิดตัวร้านกาแฟใหม่ย่านอารีย์ น้ำเสียงอบอุ่น"></textarea>
+          <textarea id="taskInput"></textarea>
+          <p class="note">รางวัลตามความยาวภารกิจ: น้อยกว่า 5 บรรทัด 50g · 5 บรรทัด 100g · 6-9 บรรทัด 200g · 10 บรรทัด 500g · มากกว่า 10 บรรทัด 1,000g</p>
           <p class="note">ต้น (นักวิจัย) ค้นเว็บไม่ได้ ข้อมูลมาจากความรู้ของโมเดล ควรตรวจตัวเลขหรือราคาสำคัญก่อนนำไปใช้</p>
           <p class="err" id="formErr" hidden></p>
           <div class="sendrow"><button class="btn green" id="sendBtn" type="submit">ประกาศภารกิจ</button><span class="note" id="queueNote"></span></div>
@@ -918,48 +911,38 @@ let backend = { mode:'pending' };
 const lsGet = k => { try { return localStorage.getItem(k); } catch { return null; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch {} };
 
+const GEMINI_KEY = 'AQ.Ab8RN6KTBpZpQnsbfwAfGMCtSfdtp-H7CYhHqcKlZ_0MeETWAw';
+const GEMINI_MODEL = 'gemini-flash-latest';
 async function initBackend() {
-  if (window.claude && typeof window.claude.use === 'function') {     // เปิดอยู่ในหน้า Claude
-    setConn('warn', 'กำลังเชื่อมต่อ Claude…');
-    const sm = await window.claude.use('sample').catch(() => null);
-    if (sm) { backend = { mode:'claude', sample:sm }; setConn('ok', 'ทีมใช้ Claude ผ่านบัญชีของคุณ ครั้งแรกจะมีหน้าต่างขออนุญาต'); startQueued(); return; }
-  }
-  // เปิดเป็นเว็บในเบราว์เซอร์: ใช้ API key ของผู้เล่น
-  backend = { mode:'api', key: lsGet('po_key') || '', model: lsGet('po_model') || 'claude-sonnet-5-5' };
-  document.getElementById('keyBox').hidden = false;
-  document.getElementById('apiModel').value = backend.model;
-  if (backend.key) { document.getElementById('apiKey').value = backend.key; setConn('ok', 'ใช้ API key ที่บันทึกไว้ พร้อมรับงาน'); startQueued(); }
-  else setConn('warn', 'ใส่ Anthropic API key แล้วกด "บันทึก key" ก่อนสั่งงาน');
-}
-document.getElementById('saveKey').onclick = () => {
-  const k = document.getElementById('apiKey').value.trim();
-  if (!k) { setConn('warn', 'ช่อง API key ยังว่างอยู่'); return; }
-  backend.key = k;
-  backend.model = document.getElementById('apiModel').value.trim() || 'claude-sonnet-5-5';
-  lsSet('po_key', backend.key); lsSet('po_model', backend.model);
-  setConn('ok', 'บันทึก key แล้ว พร้อมรับงาน');
+  try { localStorage.removeItem('po_key'); localStorage.removeItem('po_model'); } catch {}   // ล้าง key เก่าที่ผู้เล่นเคยใส่
+  backend = { mode:'api', key:GEMINI_KEY, model:GEMINI_MODEL };
+  setConn('ok', 'ทีมพร้อมรับงานแล้ว');
   startQueued();
-};
-document.getElementById('clearKey').onclick = () => {
-  backend.key = ''; document.getElementById('apiKey').value = '';
-  try { localStorage.removeItem('po_key'); } catch {}
-  setConn('warn', 'ลบ key แล้ว ใส่ key ใหม่ก่อนสั่งงาน');
-};
-async function callApi(prompt) {
+}
+async function callApi(prompt, json) {
+  for (let i = 0; ; i++) {                       // เซิร์ฟเวอร์ Gemini ยุ่ง (500/503) ลองซ้ำสูงสุด 3 รอบ
+    try { return await callApiOnce(prompt, json); }
+    catch (e) { if (i >= 3 || !/^api_50[03]$/.test(e.code)) throw e; await new Promise(r => setTimeout(r, 2000 * (i + 1))); }
+  }
+}
+async function callApiOnce(prompt, json) {
   let r;
   try {
-    r = await fetch('https://api.anthropic.com/v1/messages', {
+    r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${backend.model}:generateContent`, {
       method:'POST',
-      headers:{ 'content-type':'application/json', 'x-api-key':backend.key, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true' },
-      body: JSON.stringify({ model:backend.model, max_tokens:2048, messages:[{ role:'user', content:prompt }] })
+      headers:{ 'content-type':'application/json', 'x-goog-api-key':backend.key },
+      body: JSON.stringify({ contents:[{ role:'user', parts:[{ text:prompt }] }],
+        generationConfig: Object.assign({ maxOutputTokens:8192 }, json ? { responseMimeType:'application/json' } : {}) })
     });
   } catch { throw { code:'network', message:'ต่อ API ไม่ได้ ตรวจอินเทอร์เน็ตแล้วลองใหม่' }; }
   const j = await r.json().catch(() => ({}));
   if (!r.ok) {
-    const msg = r.status === 401 ? 'API key ไม่ถูกต้อง' : r.status === 429 ? 'ใช้งานถี่เกินไป รอสักครู่แล้วลองใหม่' : r.status === 400 && /credit/i.test(JSON.stringify(j)) ? 'เครดิต API ไม่พอ เติมได้ที่หน้า Billing ของ Claude Console' : r.status === 404 ? 'ไม่พบโมเดลนี้ ตรวจชื่อโมเดลอีกครั้ง' : (j.error && j.error.message) || ('API ตอบกลับ ' + r.status);
+    const msg = r.status === 400 && /API key/i.test(JSON.stringify(j)) ? 'API key ไม่ถูกต้อง' : r.status === 401 || r.status === 403 ? 'API key ใช้ไม่ได้หรือถูกปิดไปแล้ว' : r.status === 429 ? 'ใช้งานถี่เกินไปหรือโควตาหมด รอสักครู่แล้วลองใหม่' : r.status === 404 ? 'ไม่พบโมเดลนี้' : (j.error && j.error.message) || ('API ตอบกลับ ' + r.status);
     throw { code:'api_' + r.status, message: msg };
   }
-  return (j.content || []).filter(c => c.type === 'text').map(c => c.text).join('');
+  const c = (j.candidates || [])[0];
+  if (!c || !c.content) throw { code:'refused', message:'AI ไม่รับงานนี้ ลองเปลี่ยนคำสั่ง' };
+  return (c.content.parts || []).filter(p => p.text && !p.thought).map(p => p.text).join('');
 }
 function parseJSON(t) {
   try { return JSON.parse(t); } catch {}
@@ -997,7 +980,7 @@ async function askRaw(prompt, { json = false, tier = 'default', onText } = {}) {
   }
   if (backend.mode === 'api') {
     if (!backend.key) throw { code:'nokey', message:'ยังไม่ได้ใส่ API key' };
-    const t = await callApi(prompt);
+    const t = await callApi(prompt, json);
     if (json) { const v = parseJSON(t); if (!v) throw { code:'invalid_json', message:'คำตอบอ่านไม่ออก ลองสั่งใหม่' }; return v; }
     if (onText) onText(t);
     return t;
@@ -1008,7 +991,7 @@ function errText(e) {
   const m = {
     not_granted:'ยังไม่ได้อนุญาตให้หน้านี้ใช้ Claude', sampling_disabled:'บัญชีนี้ใช้ Claude ในหน้านี้ไม่ได้',
     rate_limited:'สั่งงานถี่เกินไป รอสักครู่แล้วสั่งใหม่', session_expired:'ต้องเข้าสู่ระบบ Claude ใหม่',
-    refused:'Claude ไม่รับงานนี้ ลองเปลี่ยนคำสั่ง', invalid_json:'แผนงานจาก PM อ่านไม่ออก ลองสั่งใหม่',
+    refused:'AI ไม่รับงานนี้ ลองเปลี่ยนคำสั่ง', invalid_json:'แผนงานจาก PM อ่านไม่ออก ลองสั่งใหม่',
     empty_completion:'ไม่ได้คำตอบกลับมา ลองสั่งให้สั้นลง', upstream_error:'ระบบขัดข้องชั่วคราว ลองใหม่อีกครั้ง'
   };
   return m[e && e.code] || (e && e.message) || 'เกิดข้อผิดพลาด';
@@ -1119,7 +1102,7 @@ async function runTask(task) {
     stage(task, 'ภูมิเอางานไปส่งที่โต๊ะคุณ');
     qa.bubble = 'paper'; await walk(qa, DELIVER, 'เอางานไปส่ง CEO', 'up');
     task.status = task.review.pass ? 'done' : 'flag'; task.doneAt = Date.now();
-    task.reward = task.review.pass ? task.review.score * 50 : 100;
+    task.reward = rewardFor(task.prompt);
     gold += task.reward; saveEco(); hudGold();
     save(); renderQuests(); renderTeam();
     toast(`+${task.reward}g ภารกิจสำเร็จ ดูได้ในสมุดภารกิจ`, true);
@@ -1233,9 +1216,14 @@ function save() {
   const keep = tasks.slice(0, 20).map(t => {
     const live = t.status === 'working' || t.status === 'queued';
     return { id:t.id, prompt:t.prompt, title:t.title, status: live ? 'error' : t.status, error: live ? 'ปิดหน้าไปก่อนงานเสร็จ' : t.error,
-      plan:t.plan, notes:t.notes, output:t.output, review:t.review, reward:t.reward, createdAt:t.createdAt, doneAt:t.doneAt, example:t.example };
+      plan:t.plan, notes:t.notes, output:t.output, review:t.review, reward:t.reward, createdAt:t.createdAt, doneAt:t.doneAt };
   });
   lsSet('po_tasks', JSON.stringify(keep));
+}
+// เงินรางวัลตามจำนวนบรรทัดของข้อความภารกิจ (ไม่นับบรรทัดว่าง)
+function rewardFor(prompt) {
+  const n = String(prompt || '').split(/\r?\n/).filter(s => s.trim()).length;
+  return n < 5 ? 50 : n === 5 ? 100 : n < 10 ? 200 : n === 10 ? 500 : 1000;
 }
 function load(k, fallback) { try { const v = JSON.parse(lsGet(k) || 'null'); return v ?? fallback; } catch { return fallback; } }
 const STATUS = { queued:['รอคิว','queued'], working:['กำลังทำ','working'], done:['สำเร็จ','done'], flag:['ส่งพร้อมหมายเหตุ','flag'], error:['หยุดกลางทาง','error'] };
@@ -1253,7 +1241,7 @@ function renderQuests() {
     const head = document.createElement('div'); head.className = 'qhead';
     const ttl = document.createElement('div');
     const h = document.createElement('h3'); h.textContent = t.title || short(t.prompt, 50);
-    const [lab, cls] = t.example ? ['ตัวอย่าง', 'example'] : STATUS[t.status] || STATUS.queued;
+    const [lab, cls] = STATUS[t.status] || STATUS.queued;
     const bd = document.createElement('span'); bd.className = 'badge ' + cls; bd.textContent = t.status === 'working' && t.stage ? t.stage : lab;
     ttl.append(h, bd);
     const rw = document.createElement('div'); rw.className = 'reward';
@@ -1311,9 +1299,7 @@ document.getElementById('taskForm').addEventListener('submit', e => {
   formErr.hidden = true;
   const fail = m => { formErr.textContent = m; formErr.hidden = false; formErr.scrollIntoView({ block:'nearest' }); say(AG[0], m + ' ค่ะ', false); toast(m); };
   if (!text) return fail('เขียนงานที่อยากให้ทีมทำก่อน');
-  if (backend.mode === 'api' && !backend.key) return fail('ใส่ API key แล้วกด "บันทึก key" ก่อน');
   if (backend.mode === 'off') return fail('ยังเชื่อมต่อ AI ไม่ได้');
-  tasks = tasks.filter(t => !t.example);
   const task = { id: Date.now().toString(36), prompt:text, status:'queued', createdAt:Date.now() };
   tasks.unshift(task); input.value = '';
   CEO.bubble = 'talk'; setTimeout(() => { if (CEO.bubble === 'talk') CEO.bubble = null; }, 1800);
@@ -1864,13 +1850,6 @@ function renderCatShop(fe) {
 /* =========================================================
    13) เริ่มเกม
    ========================================================= */
-const EXAMPLE = {
-  id:'example', example:true, status:'done', reward:400, prompt:'เขียนโพสต์ Facebook เปิดตัวร้านกาแฟใหม่ น้ำเสียงอบอุ่น', title:'โพสต์เปิดตัวร้านกาแฟ',
-  output:'เปิดแล้วจ้า ร้านกาแฟเล็กๆ ของเรา\n\nมุมนั่งสบาย แสงแดดเช้าส่องถึงโต๊ะริมหน้าต่าง กลิ่นกาแฟคั่วใหม่ทุกสัปดาห์ รอทุกคนแวะมานั่งพักใจ\n\n- เปิดทุกวัน 7:00-17:00\n- สัปดาห์แรก ซื้อเครื่องดื่ม 1 แก้ว รับคุกกี้โฮมเมดฟรี 1 ชิ้น\n- มีปลั๊กและ Wi-Fi สำหรับคนทำงาน\n\nแวะมาทักทายกันนะคะ แล้วเจอกันที่ร้าน',
-  review:{ pass:true, score:8, feedback:'ตรงโจทย์ น้ำเสียงอบอุ่น โปรโมชันชัด ควรเติมที่ตั้งร้านก่อนโพสต์จริง' },
-  plan:{ research:'จุดขายร้านกาแฟเปิดใหม่ โปรโมชันที่นิยม', write:'โพสต์ 80-120 คำ อบอุ่น มีโปรเปิดร้าน', check:'น้ำเสียง ความยาว มีข้อมูลเวลาเปิดและโปร' },
-  notes:'- คนชอบร้านที่มีมุมนั่งสบายและปลั๊ก\n- โปรเปิดร้านแบบแถมของเล็กๆ ดึงคนได้ดี\n- ควรบอกเวลาเปิดปิดชัดเจน'
-};
 gold = Number(lsGet('po_gold')) || 500;
 staff = load('po_staff', {});
 income = load('po_income', []); if (!Array.isArray(income)) income = [];
@@ -1885,7 +1864,7 @@ pet.toys = pet.toys || {};
 if (!Array.isArray(pet.petted)) pet.petted = [false, false, false];
 if (!Array.isArray(office.fridge)) office.fridge = [];
 tasks = load('po_tasks', []);
-if (!Array.isArray(tasks) || !tasks.length) tasks = [EXAMPLE];
+tasks = Array.isArray(tasks) ? tasks.filter(t => t && !t.example) : [];   // ล้างภารกิจตัวอย่างที่เคยบันทึกไว้
 buildBackground();
 buildTeam();
 buildShop();
