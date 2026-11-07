@@ -546,7 +546,7 @@
           <div class="chips">${p.tags.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>
           <h3>${esc(p.title)}</h3>
           <p>${esc(L(p.desc))}</p>
-          <div class="actions"><button class="btn" type="button" data-proj="${i}">${esc(T("item.details"))}</button>${(p.downloads || []).map(d => `<a class="btn btn-dl" href="${esc(d.url)}" rel="noopener">⬇ ${esc(d.os)}</a>`).join("")}${p.github ? `<a class="btn" href="${esc(p.github)}" target="_blank" rel="noopener">GitHub ↗</a>` : ""}${p.drive ? `<a class="btn" href="${esc(p.drive)}" target="_blank" rel="noopener">Google Drive ↗</a>` : ""}${p.play ? `<a class="btn btn-play" href="${esc(p.play)}" target="_blank" rel="noopener">${esc(T("phad.play"))} ↗</a>` : ""}</div>
+          <div class="actions"><button class="btn" type="button" data-proj="${i}">${esc(T("item.details"))}</button>${(p.downloads || []).map(d => `<a class="btn btn-dl" href="${esc(d.url)}" rel="noopener">⬇ ${esc(d.os)}</a>`).join("")}${p.github ? `<a class="btn" href="${esc(p.github)}" target="_blank" rel="noopener">GitHub ↗</a>` : ""}${p.drive ? `<a class="btn" href="${esc(p.drive)}" target="_blank" rel="noopener">Google Drive ↗</a>` : ""}${p.play ? `<a class="btn btn-play" href="${esc(p.play)}" target="_blank" rel="noopener">${esc(p.playLabel ? L(p.playLabel) : T("phad.play"))} ↗</a>` : ""}</div>
         </div>
       </article>`).join("");
     renderRepos();
