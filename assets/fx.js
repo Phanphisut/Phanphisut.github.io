@@ -71,8 +71,8 @@
     code <= 82 ? ["ฝนตกเป็นช่วง ๆ", "rain showers"] : ["พายุฝนฟ้าคะนอง", "thunderstorm"];
   S.weather = () => ({ ...W, name: S.L(WX_NAME(W.code)), fest: FEST, festName: GREET[FEST] ? S.L(GREET[FEST]) : "" });
 
-  /* ---------- home: live Bangkok time + weather, set into the dirt below the grass ---------- */
-  const land = document.body.dataset.page === "home" && hero.querySelector(".land");
+  /* ---------- every page: live Bangkok time + weather, set into the dirt below the grass ---------- */
+  const land = hero.querySelector(".land");
   if (land) {
     const sign = document.createElement("div");
     sign.className = "ground-info"; sign.setAttribute("aria-live", "off");
