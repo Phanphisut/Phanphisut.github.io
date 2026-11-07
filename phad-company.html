@@ -911,11 +911,12 @@ let backend = { mode:'pending' };
 const lsGet = k => { try { return localStorage.getItem(k); } catch { return null; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch {} };
 
-const GEMINI_KEY = 'AQ.Ab8RN6KTBpZpQnsbfwAfGMCtSfdtp-H7CYhHqcKlZ_0MeETWAw';
-const GEMINI_MODEL = 'gemini-flash-latest';
+// ตัวกลาง Cloudflare Worker (โค้ดอยู่ที่ tools/gemini-proxy-worker.js) เก็บ Gemini key ไว้ฝั่งเซิร์ฟเวอร์
+const AI_PROXY = '';
 async function initBackend() {
   try { localStorage.removeItem('po_key'); localStorage.removeItem('po_model'); } catch {}   // ล้าง key เก่าที่ผู้เล่นเคยใส่
-  backend = { mode:'api', key:GEMINI_KEY, model:GEMINI_MODEL };
+  if (!AI_PROXY) { backend = { mode:'off' }; setConn('bad', 'ระบบ AI ยังไม่พร้อม กำลังตั้งค่าอยู่'); failQueued('ระบบ AI ยังไม่พร้อม'); return; }
+  backend = { mode:'api', key:'proxy' };
   setConn('ok', 'ทีมพร้อมรับงานแล้ว');
   startQueued();
 }
@@ -928,11 +929,10 @@ async function callApi(prompt, json) {
 async function callApiOnce(prompt, json) {
   let r;
   try {
-    r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${backend.model}:generateContent`, {
+    r = await fetch(AI_PROXY, {
       method:'POST',
-      headers:{ 'content-type':'application/json', 'x-goog-api-key':backend.key },
-      body: JSON.stringify({ contents:[{ role:'user', parts:[{ text:prompt }] }],
-        generationConfig: Object.assign({ maxOutputTokens:8192 }, json ? { responseMimeType:'application/json' } : {}) })
+      headers:{ 'content-type':'application/json' },
+      body: JSON.stringify({ prompt, json: !!json })
     });
   } catch { throw { code:'network', message:'ต่อ API ไม่ได้ ตรวจอินเทอร์เน็ตแล้วลองใหม่' }; }
   const j = await r.json().catch(() => ({}));
