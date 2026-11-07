@@ -216,7 +216,9 @@
   const cv = document.getElementById("char-deco"); if (!cv) return;
   const ctx = cv.getContext("2d");
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const desk = matchMedia("(min-width: 761px)");
+  // คอมเท่านั้น (ตรงกับกฎซ่อนใน site.css): จอกว้างกว่า 760px และไม่ใช่จอสัมผัสที่ไม่มีเมาส์
+  const wide = matchMedia("(min-width: 761px)"), touch = matchMedia("(hover: none) and (pointer: coarse)");
+  const desk = { get matches() { return wide.matches && !touch.matches; } };
   const PX = 4;                                   // 1 พิกเซลของฉาก = 4px บนจอ
   let W = 0, H = 0, stars = [], crystals = [], city = [], seed = 7;
   const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
@@ -277,5 +279,5 @@
     if (reduce) draw(0); else raf = requestAnimationFrame(loop);
   }
   new ResizeObserver(start).observe(cv);
-  desk.addEventListener("change", start);
+  wide.addEventListener("change", start); touch.addEventListener("change", start);
 })();
