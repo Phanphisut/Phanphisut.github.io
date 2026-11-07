@@ -21,8 +21,21 @@ const PROJECTS = [
            "Personal pixel-game themed portfolio site that gathers projects, activities and a certificate gallery in one place, as a companion to resumes and internship or job applications."] },
   { img: "p-swarm", title: "Swarm Lab · Hula Drone Swarm", tags: ["Python", "Hula SDK", "Swarm"],
     github: "https://github.com/Phanphisut/Swarm_Hula_Ver2.1.1",
-    desc: ["แอปสอนและควบคุมฝูงโดรน Hula หลายลำพร้อมกันผ่าน Wi-Fi มีภารกิจ Grid Patrol, Square Formation, บังคับด้วยคีย์บอร์ด และเขียนโค้ดแยกแต่ละลำ ดูกล้องสด ถ่ายรูป อัดวิดีโอ และมีโหมดจำลองให้ลองก่อนบินจริง",
-           "Desktop app for teaching and flying a swarm of Hula drones over Wi-Fi: grid patrol, square formation, keyboard control and per-drone custom code, with live cameras, photo/video capture and a simulation mode."] },
+    // ตัวติดตั้ง: ไฟล์อยู่ใน GitHub Releases (v9.0.0)
+    downloads: [
+      { os: "Windows", url: "https://github.com/Phanphisut/Swarm_Hula_Ver2.1.1/releases/download/v9.0.0/Swarm.Lab.V9.0.0.exe" },
+      { os: "macOS", url: "https://github.com/Phanphisut/Swarm_Hula_Ver2.1.1/releases/download/v9.0.0/SwarmLab-v9.0.0-AppleSilicon.dmg" },
+    ],
+    desc: ["แอปสอนและควบคุมฝูงโดรน Hula หลายลำพร้อมกันผ่าน Wi-Fi มีภารกิจ Grid Patrol, Square Formation, บังคับด้วยคีย์บอร์ด และเขียนโค้ดแยกแต่ละลำ ดูกล้องสด ถ่ายรูป อัดวิดีโอ และมีโหมดจำลองให้ลองก่อนบินจริง ดาวน์โหลดตัวติดตั้ง v9.0.0 ได้ทั้ง Windows และ macOS (Apple Silicon)",
+           "Desktop app for teaching and flying a swarm of Hula drones over Wi-Fi: grid patrol, square formation, keyboard control and per-drone custom code, with live cameras, photo/video capture and a simulation mode. v9.0.0 installers for Windows and macOS (Apple Silicon)."] },
+  { img: "p-aidetect", title: "AI Detection Lab", tags: ["AI", "YOLO", "Object Detection"],
+    github: "https://github.com/Phanphisut/AI-Detection-Lab",
+    downloads: [
+      { os: "Windows", url: "https://github.com/Phanphisut/AI-Detection-Lab/releases/download/v9.0.0/AI.Detection.Lab.Setup.v9.0.0.exe" },
+      { os: "macOS", url: "https://github.com/Phanphisut/AI-Detection-Lab/releases/download/v9.0.0/AI.Detection.Lab.v9.0.0.dmg" },
+    ],
+    desc: ["แอปเดสก์ท็อปสำหรับตรวจจับวัตถุด้วย YOLO ตีกรอบและบอกชนิดวัตถุที่เจอในภาพ ใช้ทดลองและสอนเรื่อง AI ตรวจจับวัตถุ ดาวน์โหลดตัวติดตั้ง v9.0.0 ได้ทั้ง Windows และ macOS",
+           "Desktop app for object detection with YOLO: it draws boxes around objects it finds in an image and labels what they are. Built for trying out and teaching AI object detection. v9.0.0 installers for Windows and macOS."] },
   { img: "p-mqtt", title: "Turtle MQTT Race", tags: ["Python", "MQTT", "Tkinter"],
     github: "https://github.com/Phanphisut/MQTT_Ver1.1.0",
     desc: ["เกมแข่งเต่าสำหรับกิจกรรม 8 กลุ่ม แต่ละทีมส่งคำสั่ง F / L / R ผ่าน MQTT เพื่อบังคับเต่า รองรับ broker ใน LAN และบน VPS แบบมี username/password, TLS และต่อใหม่อัตโนมัติ",

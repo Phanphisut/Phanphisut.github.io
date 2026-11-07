@@ -512,3 +512,5 @@ dialog.item::backdrop { background: rgba(0, 0, 0, .75); }
 .btn-play { font-size: 15px; padding: 12px 22px; background: #2b6b2e; border-color: #5fbf4f #123414 #123414 #5fbf4f; }
 .btn-play:hover { background: #3a8a3c; }
 .btn-play:active { border-color: #123414 #5fbf4f #5fbf4f #123414; }
+.btn-dl { background: #1f5f8a; border-color: #7fd6ff #0f3a55 #0f3a55 #7fd6ff; color: #fff; }
+.btn-dl:hover { background: #2a7fb8; color: #ffffa0; }
