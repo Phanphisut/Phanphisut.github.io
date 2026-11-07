@@ -127,11 +127,17 @@ a { color: inherit; }
 /* live Bangkok time + weather, centred in the dirt row under the grass (all pages) */
 .ground-info {
   position: absolute; z-index: 2; left: 50%; bottom: calc(var(--ground) / 2); transform: translate(-50%, 50%);
-  max-width: calc(100% - 32px); text-align: center; pointer-events: none;
-  font: 700 12px/1.3 var(--f-body); color: #eef6fb; letter-spacing: .03em; font-variant-numeric: tabular-nums;
-  text-shadow: 1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
+  max-width: calc(100% - 32px); width: max-content; text-align: center; pointer-events: none;
+  padding: 5px 12px; background: rgba(2, 8, 14, .72); border: 2px solid #2d6a8a; box-shadow: 0 0 0 2px #000;
+  font: 600 13px/1.35 var(--f-body); color: #fff; letter-spacing: .02em; font-variant-numeric: tabular-nums;
+  text-shadow: 1px 1px 0 #000;
 }
-@media (max-width: 480px) { .ground-info { font-size: 10.5px; } }
+.ground-info b { color: var(--gold); font-weight: 700; }
+@media (max-width: 600px) {
+  .ground-info { font-size: 14px; line-height: 1.3; padding: 4px 10px; }
+  .ground-info .gi-row { display: block; white-space: nowrap; }
+  .ground-info .gi-sep { display: none; }
+}
 @keyframes fly { from { transform: translateX(8vw); } to { transform: translateX(80vw); } }
 
 /* ---------- underground ---------- */

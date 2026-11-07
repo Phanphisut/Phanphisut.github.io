@@ -81,8 +81,9 @@
     const paintSign = () => {
       let t = "";
       try { t = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23", timeZone: "Asia/Bangkok" }).format(new Date()); } catch (e) {}
-      const wx = W.ok ? ` · ${WX_ICO(W.code)} ${S.L(WX_NAME(W.code))} · ${Math.round(W.temp)}°C` : "";
-      sign.textContent = `Thailand Bangkok · ${t}${wx}`;
+      const wx = W.ok ? `${WX_ICO(W.code)} ${S.L(WX_NAME(W.code))} · ${Math.round(W.temp)}°C` : "";
+      // place + time / weather: CSS shows them on one line (desktop) or two lines (phone)
+      sign.innerHTML = `<span class="gi-row">Thailand Bangkok · <b>${t}</b></span>` + (wx ? `<span class="gi-sep"> · </span><span class="gi-row">${wx}</span>` : "");
     };
     paintSign(); setInterval(paintSign, 1000);
     document.addEventListener("sitelang", paintSign);
