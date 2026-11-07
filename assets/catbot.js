@@ -1,13 +1,13 @@
 /* น้องลูน่าตัวอ้วน (Luna The Fatcat): แชตบอต AI แมวดำที่ช่วยแนะนำการใช้เว็บนี้
-   - เข้าเว็บครั้งแรก: แมวตัวใหญ่โผล่มุมขวาล่างพร้อมกล่องแชตทักทาย ปิดแล้วแมวจะย้ายไปอยู่ปุ่มมุมขวาบน
-   - เคยเข้าแล้ว: เหลือปุ่มแมวในแถบเดียวกับปุ่มภาษา/เสียง กดเพื่อเปิดแชต
+   - ปุ่มแมวอยู่ในแถบเดียวกับปุ่มภาษา/เสียง กดเพื่อเปิดแชต
+   - การแนะนำปุ่มด้านล่างตอนเข้าเว็บอยู่ใน assets/luna-tour.js
    - AI: Gemini ผ่าน Cloudflare Worker phad-ai (key อยู่ฝั่ง Worker) ความรู้เรื่องเว็บสร้างจาก assets/data.js */
 (function () {
   "use strict";
   const S = window.SITE; if (!S) return;
   const AI = "https://phad-ai.arisaga113322.workers.dev";
   const GIF = "images/black_cat_dance.gif";
-  const SEEN = "catbot_seen", LOG = "catbot_log";
+  const LOG = "catbot_log";
   const lang = () => S.lang();
   const tx = (th, en) => (lang() === "en" ? en : th);
   const esc = S.esc;
@@ -93,9 +93,6 @@ ${history.slice(-8).map(m => `${m.r === "u" ? "ผู้ใช้" : "ลูน�
   btn.innerHTML = `<img src="${GIF}" alt="">`;
   if (bar) bar.appendChild(btn);
 
-  const hero = document.createElement("img");
-  hero.className = "catbot-hero"; hero.src = GIF; hero.alt = ""; hero.hidden = true;
-
   const box = document.createElement("section");
   box.className = "catbot panel"; box.id = "catbot"; box.hidden = true;
   box.setAttribute("role", "dialog"); box.setAttribute("aria-labelledby", "catbot-name");
@@ -111,7 +108,7 @@ ${history.slice(-8).map(m => `${m.r === "u" ? "ผู้ใช้" : "ลูน�
       <input id="catbot-in" type="text" maxlength="400" spellcheck="false">
       <button class="btn" type="submit" id="catbot-send"></button>
     </form>`;
-  document.body.append(hero, box);
+  document.body.append(box);
 
   const $ = id => document.getElementById(id);
   const logEl = $("catbot-log"), chipsEl = $("catbot-chips"), input = $("catbot-in");
@@ -155,30 +152,18 @@ ${history.slice(-8).map(m => `${m.r === "u" ? "ผู้ใช้" : "ลูน�
     ss.set(LOG, JSON.stringify(history)); paintLog();
   }
 
-  function open(first) {
-    box.classList.toggle("first", !!first);
+  function open() {
     box.hidden = false; btn.setAttribute("aria-expanded", "true");
     paintLog();
-    if (!first) setTimeout(() => input.focus(), 50);
+    setTimeout(() => input.focus(), 50);
   }
   function close() {
     if (box.hidden) return;
     box.hidden = true; btn.setAttribute("aria-expanded", "false");
-    if (!hero.hidden) flyHome(); else btn.focus();
-  }
-  // ครั้งแรก: ปิดแชตแล้วแมวตัวใหญ่บินไปเป็นปุ่มมุมขวาบน
-  function flyHome() {
-    ls.set(SEEN, "1");
-    btn.hidden = false;
-    const a = hero.getBoundingClientRect(), b = btn.getBoundingClientRect();
-    const dx = b.left + b.width / 2 - (a.left + a.width / 2), dy = b.top + b.height / 2 - (a.top + a.height / 2), k = b.height / a.height;
-    const done = () => { hero.hidden = true; btn.classList.add("cb-pop"); setTimeout(() => btn.classList.remove("cb-pop"), 600); };
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches || !hero.animate) return done();
-    hero.animate([{ transform: "none" }, { transform: `translate(${dx}px, ${dy}px) scale(${k})` }], { duration: 650, easing: "cubic-bezier(.5,-0.3,.6,1)" }).finished.then(done, done);
+    btn.focus();
   }
 
-  btn.addEventListener("click", () => (box.hidden ? open(false) : close()));
-  hero.addEventListener("click", () => (box.hidden ? open(true) : close()));
+  btn.addEventListener("click", () => (box.hidden ? open() : close()));
   $("catbot-x").addEventListener("click", close);
   chipsEl.addEventListener("click", e => { const c = e.target.closest(".cb-chip"); if (c) send(c.textContent); });
   $("catbot-form").addEventListener("submit", e => { e.preventDefault(); const q = input.value; input.value = ""; send(q); });
@@ -186,9 +171,6 @@ ${history.slice(-8).map(m => `${m.r === "u" ? "ผู้ใช้" : "ลูน�
   document.addEventListener("sitelang", () => { paintStatic(); paintLog(); });
 
   paintStatic();
-  if (ls.get(SEEN)) btn.hidden = false;
-  else {                                           // เข้าเว็บครั้งแรก: จำไว้ทันที เปลี่ยนหน้าแล้วจะเหลือแค่ปุ่มมุมขวาบน
-    ls.set(SEEN, "1");
-    setTimeout(() => { hero.hidden = false; open(true); }, 900);
-  }
+  btn.hidden = false;                              // การแนะนำตอนเข้าเว็บอยู่ใน assets/luna-tour.js
+  window.LUNA = { open, GIF };
 })();

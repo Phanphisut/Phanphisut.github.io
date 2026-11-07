@@ -547,12 +547,9 @@ dialog.item::backdrop { background: rgba(0, 0, 0, .75); }
 .catbot-btn[aria-expanded="true"] { background: #1d3047; border-color: #3f6386 #0b1420 #0b1420 #3f6386; }
 .catbot-btn.cb-pop { animation: cbPop .55s ease-out; }
 @keyframes cbPop { 0% { transform: scale(1.5); } 60% { transform: scale(.9); } 100% { transform: none; } }
-.catbot-hero { position: fixed; right: 18px; bottom: 96px; z-index: 31; width: 112px; height: 112px; image-rendering: pixelated; cursor: pointer;
-  filter: drop-shadow(0 0 2px #9fd3ff) drop-shadow(0 0 8px rgba(63,182,255,.55)); animation: cbIn .5s ease-out; }
 @keyframes cbIn { from { transform: translateY(30px); opacity: 0; } }
 .catbot { position: fixed; z-index: 32; right: 16px; top: 64px; width: min(360px, calc(100vw - 32px)); max-height: min(560px, calc(100dvh - 90px));
   display: flex; flex-direction: column; padding: 0; animation: cbIn .25s ease-out; }
-.catbot.first { top: auto; bottom: 214px; max-height: min(480px, calc(100dvh - 240px)); }
 .cb-head { display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 12px; border-bottom: 3px solid var(--panel-lo); }
 .cb-face { width: 40px; height: 40px; image-rendering: pixelated; flex: 0 0 40px; filter: drop-shadow(0 0 1px #9fd3ff); }
 .cb-who { display: grid; min-width: 0; flex: 1; }
@@ -579,7 +576,47 @@ dialog.item::backdrop { background: rgba(0, 0, 0, .75); }
   /* มือถือ: ปุ่มแมวสูงเท่าปุ่มเสียง (36px) */
   .lang .catbot-btn { padding: 2px 8px; }
   .catbot-btn img { width: 26px; height: 26px; }
-  .catbot-hero { width: 84px; height: 84px; right: 12px; bottom: 90px; }
-  .catbot.first { bottom: 180px; max-height: calc(100dvh - 200px); }
 }
-@media (prefers-reduced-motion: reduce) { .catbot, .catbot-hero, .catbot-btn.cb-pop, .cb-typing i { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .catbot, .catbot-btn.cb-pop, .cb-typing i { animation: none; } }
+
+/* ---------- น้องลูน่าแนะนำปุ่ม hotbar ตอนเข้าเว็บ (assets/luna-tour.js) ---------- */
+.lt { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 16px 16px calc(110px + env(safe-area-inset-bottom, 0px));
+  background: rgba(3, 6, 12, .72); opacity: 0; transition: opacity .3s; }
+.lt.lt-in { opacity: 1; }
+.lt.lt-out { opacity: 0; transition: opacity .5s .3s; pointer-events: none; }
+.lt-stage { display: flex; flex-direction: column; align-items: center; gap: 4px; width: min(560px, 100%); }
+.lt-cat { width: min(300px, 62vw, 38dvh); height: auto; aspect-ratio: 1; image-rendering: pixelated;
+  filter: drop-shadow(0 0 3px #9fd3ff) drop-shadow(0 0 18px rgba(63,182,255,.5)); animation: ltFloat 2.4s ease-in-out infinite; }
+@keyframes ltFloat { 50% { transform: translateY(-8px); } }
+.lt-box { width: 100%; padding: 14px 16px 12px; background: rgba(20, 32, 48, .68); border: 3px solid rgba(63, 182, 255, .45);
+  box-shadow: 0 6px 0 rgba(0,0,0,.4); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.lt-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 6px; }
+.lt-top b { font: 700 15px/1.3 var(--f-body); color: var(--gold); }
+.lt-dots { display: flex; gap: 5px; }
+.lt-dots i { width: 8px; height: 8px; background: rgba(255,255,255,.25); }
+.lt-dots i.on { background: var(--cyan); }
+.lt-text { margin: 0 0 12px; min-height: 3em; font: 500 17px/1.6 var(--f-body); color: #fff; text-shadow: 1px 1px 0 #000; }
+.lt-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.lt-row .btn { min-width: 0; padding: 7px 11px; font-size: 12px; }
+.lt-lang { display: flex; gap: 4px; }
+.lt-nav { display: flex; gap: 6px; margin-left: auto; }
+.lt-next { background: #2b6b2e; border-color: #5fbf4f #123414 #123414 #5fbf4f; }
+.lt-voice { font-size: 15px !important; line-height: 1; }
+.lt-skip { position: fixed; top: calc(14px + env(safe-area-inset-top, 0px)); right: 16px; z-index: 62; font: 700 13px/1 var(--f-body); color: #fff;
+  background: rgba(0,0,0,.55); border: 2px solid rgba(255,255,255,.5); padding: 9px 14px; cursor: pointer; }
+.lt-skip:hover, .lt-skip:focus-visible { background: rgba(0,0,0,.8); border-color: #fff; }
+.lt-arrow { position: fixed; z-index: 62; transform: translate(-50%, -100%); font-size: 30px; line-height: 1; color: var(--gold);
+  text-shadow: 2px 2px 0 #000; pointer-events: none; animation: ltArrow .8s ease-in-out infinite; }
+@keyframes ltArrow { 50% { margin-top: -8px; } }
+.hotbar.lt-up { z-index: 61; }
+.hotbar a.lt-on { z-index: 2; transform: translateY(-6px) scale(1.12); outline: 4px solid var(--gold); outline-offset: -1px; box-shadow: 0 0 22px rgba(246,210,58,.75);
+  transition: transform .25s, opacity .25s; }
+.hotbar a.lt-dim { opacity: .35; transition: opacity .25s; }
+@media (max-width: 560px) {
+  .lt { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+  .lt-text { font-size: 15px; }
+  .lt-nav { margin-left: 0; width: 100%; justify-content: space-between; }
+  .lt-nav .btn { flex: 1; }
+}
+@media (max-height: 520px) { .lt-cat { width: min(150px, 30dvh); } .lt-text { min-height: 0; } }
+@media (prefers-reduced-motion: reduce) { .lt-cat, .lt-arrow { animation: none; } .lt, .lt.lt-out { transition: none; } }
