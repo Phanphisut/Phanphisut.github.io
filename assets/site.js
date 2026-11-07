@@ -585,27 +585,23 @@
     document.getElementById("pages").innerHTML = PORTFOLIO_PAGES.map((p, i) => shotBtn(IMG(p), `${T("page")} ${i + 1}`, "pages", i)).join("");
   }
 
+  // หมวดหมู่หน้าใบประกาศ: ทั้งหมด / ใบประกาศ / Test score (ผลสอบคือรายการที่มี kind: "score")
+  let certFilter = "all";
   function renderCerts() {
-    // ผลสอบ (kind: "score") อยู่หัวข้อ Test score ด้านบน ที่เหลืออยู่หัวข้อใบประกาศ
-    const scores = CERTS.filter(c => c.kind === "score"), certs = CERTS.filter(c => c.kind !== "score");
-    const card = (c, i, grp, kick) => `
+    document.querySelectorAll("#cert-filters [data-cf]").forEach(b => b.setAttribute("aria-pressed", b.dataset.cf === certFilter));
+    const list = CERTS.filter(c => certFilter === "all" || (c.kind === "score" ? "score" : "cert") === certFilter);
+    groups.cert = list.map(c => ({ src: `images/certificates/${c.img}.jpg`, cap: L(c.title) }));
+    document.getElementById("cert-count").textContent = list.length;
+    document.getElementById("certs").innerHTML = list.map((c, i) => `
       <article class="cert panel">
-        ${shotBtn(`images/certificates/${c.img}.jpg`, L(c.title), grp, i)}
+        ${shotBtn(`images/certificates/${c.img}.jpg`, L(c.title), "cert", i)}
         <div class="cert-body">
-          <span class="kicker">${esc(kick)} · ${esc(fmtD(c.d))}</span>
+          <span class="kicker">${esc(T(c.kind === "score" ? "scores.kicker" : "certs.unlocked"))} · ${esc(fmtD(c.d))}</span>
           <h3>${esc(L(c.title))}</h3>
           ${c.note ? `<p class="cert-note">${esc(L(c.note))}</p>` : ""}
           <p>${esc(L(c.issuer))}</p>
         </div>
-      </article>`;
-    const gallery = list => list.map(c => ({ src: `images/certificates/${c.img}.jpg`, cap: L(c.title) }));
-    groups.score = gallery(scores);
-    groups.cert = gallery(certs);
-    document.getElementById("scores-sec").hidden = !scores.length;
-    document.getElementById("score-count").textContent = scores.length;
-    document.getElementById("scores").innerHTML = scores.map((c, i) => card(c, i, "score", T("scores.kicker"))).join("");
-    document.getElementById("cert-count").textContent = certs.length;
-    document.getElementById("certs").innerHTML = certs.map((c, i) => card(c, i, "cert", T("certs.unlocked"))).join("");
+      </article>`).join("");
   }
 
   function renderHome() {
@@ -743,6 +739,8 @@
   });
   const filters = document.getElementById("filters");
   if (filters) filters.addEventListener("click", e => { const b = e.target.closest("[data-f]"); if (b) { actFilter = b.dataset.f; renderActivities(); } });
+  const certFilters = document.getElementById("cert-filters");
+  if (certFilters) certFilters.addEventListener("click", e => { const b = e.target.closest("[data-cf]"); if (b) { certFilter = b.dataset.cf; renderCerts(); } });
 
   const copyBtn = document.getElementById("copy-line");
   if (copyBtn) copyBtn.addEventListener("click", async () => {

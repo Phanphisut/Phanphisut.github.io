@@ -15,21 +15,16 @@
 <header id="hero"></header>
 
 <main id="main" tabindex="-1">
-  <section aria-labelledby="scores-h" id="scores-sec">
-    <div class="wrap">
-      <div class="sec-label panel">
-        <img class="pix" data-sprite="crystal" alt="">
-        <div><small>Results · <span id="score-count"></span></small><h2 id="scores-h" data-i18n="scores.title"></h2></div>
-      </div>
-      <div class="certs" id="scores"></div>
-    </div>
-  </section>
-
   <section aria-labelledby="certs-h">
     <div class="wrap">
       <div class="sec-label panel">
         <img class="pix" data-sprite="medal" alt="">
         <div><small>Achievements · <span id="cert-count"></span></small><h2 id="certs-h" data-i18n="nav.certs"></h2></div>
+      </div>
+      <div class="filters" id="cert-filters" role="group">
+        <button class="btn" type="button" data-cf="all" data-i18n="f.all"></button>
+        <button class="btn" type="button" data-cf="cert" data-i18n="nav.certs"></button>
+        <button class="btn" type="button" data-cf="score" data-i18n="scores.title"></button>
       </div>
       <div class="certs" id="certs"></div>
     </div>
