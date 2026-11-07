@@ -26,6 +26,7 @@ export default {
 
     let body;
     try { body = await req.json(); } catch { return reply(400, { error: { message: 'bad JSON' } }); }
+    if (new URL(req.url).pathname === '/tts') return tts(body, env, cors, reply);
     const prompt = typeof body.prompt === 'string' ? body.prompt : '';
     if (!prompt || prompt.length > MAX_PROMPT) return reply(400, { error: { message: 'prompt missing or too long' } });
 
@@ -45,3 +46,48 @@ export default {
     return new Response(await r.text(), { status: r.status, headers: { ...cors, 'content-type': 'application/json' } });
   },
 };
+
+/* ---------- POST /tts { text, lang: "th" | "en" } → audio/wav ----------
+   เสียงน้องลูน่าในแชต: Gemini TTS เสียง Leda สไตล์เด็กผู้หญิงการ์ตูน (เสียงเดียวกับไฟล์แนะนำปุ่ม audio/luna/)
+   โควตาฟรีได้ราว 10 ครั้ง/วันต่อโมเดล จึงไล่ใช้หลายโมเดลที่มีเสียง Leda เหมือนกัน หมดทุกตัวตอบ 429 */
+const TTS_MODELS = ['gemini-3.8-flash-tts', 'gemini-3.1-flash-tts-preview', 'gemini-3.8-flash-lite-tts', 'gemini-2.5-flash-preview-tts', 'gemini-2.5-pro-preview-tts'];
+const TTS_STYLE = {
+  th: 'Say quickly in Thai, at a brisk, lively pace, in a cute, cheerful little cartoon girl voice:',
+  en: 'Say quickly, at a brisk, lively pace, in a cute, cheerful little cartoon girl voice:',
+};
+const MAX_TTS = 700;
+
+async function tts(body, env, cors, reply) {
+  const lang = body.lang === 'en' ? 'en' : 'th';
+  const text = typeof body.text === 'string' ? body.text.trim().slice(0, MAX_TTS) : '';
+  if (!text) return reply(400, { error: { message: 'text missing' } });
+  const payload = JSON.stringify({
+    contents: [{ parts: [{ text: `${TTS_STYLE[lang]} ${text}` }] }],
+    generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Leda' } } } },
+  });
+  let last = 0;
+  for (const model of TTS_MODELS) {
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+      method: 'POST', headers: { 'content-type': 'application/json', 'x-goog-api-key': env.GEMINI_KEY }, body: payload,
+    });
+    last = r.status;
+    if (!r.ok) { if (r.status === 404 || r.status === 429 || r.status >= 500) continue; break; }
+    const j = await r.json().catch(() => null);
+    const part = j && j.candidates && j.candidates[0] && j.candidates[0].content && (j.candidates[0].content.parts || []).find(p => p.inlineData);
+    if (!part) continue;
+    const raw = Uint8Array.from(atob(part.inlineData.data), c => c.charCodeAt(0));
+    const isWav = raw[0] === 0x52 && raw[1] === 0x49 && raw[2] === 0x46 && raw[3] === 0x46;   // "RIFF"
+    const rate = Number((/rate=(\d+)/.exec(part.inlineData.mimeType || '') || [])[1]) || 24000;
+    const wav = isWav ? raw : pcmToWav(raw, rate);
+    return new Response(wav, { status: 200, headers: { ...cors, 'content-type': 'audio/wav', 'x-tts-model': model, 'Access-Control-Expose-Headers': 'x-tts-model' } });
+  }
+  return reply(last === 429 ? 429 : 502, { error: { message: last === 429 ? 'tts quota used up for today' : 'tts failed' } });
+}
+
+function pcmToWav(pcm, rate) {
+  const h = new DataView(new ArrayBuffer(44)), w = (o, s) => [...s].forEach((c, i) => h.setUint8(o + i, c.charCodeAt(0)));
+  w(0, 'RIFF'); h.setUint32(4, 36 + pcm.length, true); w(8, 'WAVE'); w(12, 'fmt ');
+  h.setUint32(16, 16, true); h.setUint16(20, 1, true); h.setUint16(22, 1, true); h.setUint32(24, rate, true);
+  h.setUint32(28, rate * 2, true); h.setUint16(32, 2, true); h.setUint16(34, 16, true); w(36, 'data'); h.setUint32(40, pcm.length, true);
+  const out = new Uint8Array(44 + pcm.length); out.set(new Uint8Array(h.buffer), 0); out.set(pcm, 44); return out;
+}

@@ -100,6 +100,7 @@ ${history.slice(-8).map(m => `${m.r === "u" ? "ผู้ใช้" : "ลูน�
     <header class="cb-head">
       <img class="cb-face" src="${GIF}" alt="">
       <div class="cb-who"><b id="catbot-name"></b><small id="catbot-sub"></small></div>
+      <button class="btn cb-x cb-voice" type="button" id="catbot-voice"></button>
       <button class="btn cb-x" type="button" id="catbot-x">✕</button>
     </header>
     <div class="cb-log" id="catbot-log" aria-live="polite"></div>
@@ -130,6 +131,7 @@ ${history.slice(-8).map(m => `${m.r === "u" ? "ผู้ใช้" : "ลูน�
     $("catbot-name").textContent = label();
     $("catbot-sub").textContent = tx("ผู้ช่วยในเว็บ · ถามได้เลย · ตอบโดย AI", "Site helper · ask away · AI answers");
     $("catbot-x").setAttribute("aria-label", tx("ปิดแชต", "Close chat"));
+    paintVoice();
     btn.setAttribute("aria-label", tx("เปิดแชตกับน้องลูน่าตัวอ้วน", "Chat with Luna The Fatcat")); btn.title = label();
     input.placeholder = tx("พิมพ์คำถาม…", "Type a question…");
     $("catbot-send").textContent = tx("ส่ง", "Send");
@@ -142,14 +144,52 @@ ${history.slice(-8).map(m => `${m.r === "u" ? "ผู้ใช้" : "ลูน�
     logEl.scrollTop = logEl.scrollHeight;
   }
 
+  /* ---------- เสียงพูดคำตอบ: เสียงเดียวกับตอนแนะนำปุ่ม (Gemini TTS เสียง Leda ผ่าน Worker /tts)
+     ข้อความขึ้นก่อน เสียงตามมาไม่กี่วินาที · ปุ่ม 🔊 ใช้ค่าเดียวกับในหน้าแนะนำ (localStorage luna_voice)
+     โควตาเสียงฟรีมีจำกัดต่อวัน ถ้าหมดจะตอบเป็นข้อความอย่างเดียว */
+  let voiceOn = ls.get("luna_voice") !== "off", audio = null, sayId = 0, subTimer = 0;
+  function paintVoice() {
+    const v = $("catbot-voice"); v.textContent = voiceOn ? "🔊" : "🔇";
+    v.setAttribute("aria-pressed", String(voiceOn));
+    v.setAttribute("aria-label", voiceOn ? tx("ปิดเสียงพูด", "Mute voice") : tx("เปิดเสียงพูด", "Turn voice on")); v.title = v.getAttribute("aria-label");
+  }
+  function setSub(text, ms) {
+    clearTimeout(subTimer);
+    $("catbot-sub").textContent = text || tx("ผู้ช่วยในเว็บ · ถามได้เลย · ตอบโดย AI", "Site helper · ask away · AI answers");
+    if (text && ms) subTimer = setTimeout(() => setSub(""), ms);
+  }
+  function stopVoice() { sayId++; if (audio) { audio.pause(); audio = null; } setSub(""); }
+  async function sayReply(text) {
+    stopVoice(); if (!voiceOn) return;
+    const id = sayId, lang = S.lang() === "en" ? "en" : "th";
+    // อ่านเฉพาะข้อความ: ลิงก์ [ชื่อ](url) เหลือแค่ชื่อ, ตัด ** และ URL ออก
+    const plain = text.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/\*\*/g, "").replace(/https?:\/\/\S+/g, "").replace(/\s+/g, " ").trim();
+    setSub(tx("🔊 ลูน่ากำลังเตรียมเสียง…", "🔊 Luna is getting ready to speak…"));
+    try {
+      const r = await fetch(AI + "/tts", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ text: plain, lang }) });
+      if (id !== sayId) return;
+      if (!r.ok) { setSub(r.status === 429 ? tx("วันนี้ลูน่าพูดจนเสียงหมดโควตาแล้ว ตอบเป็นข้อความนะคะ", "Luna's voice quota is used up for today, text only") : "", 6000); return; }
+      const url = URL.createObjectURL(await r.blob());
+      if (id !== sayId) { URL.revokeObjectURL(url); return; }
+      audio = new Audio(url);
+      audio.playbackRate = lang === "en" ? 1.15 : 1.2;            // เท่ากับในหน้าแนะนำ ให้ใสแบบการ์ตูน
+      if ("preservesPitch" in audio) audio.preservesPitch = false; else if ("webkitPreservesPitch" in audio) audio.webkitPreservesPitch = false;
+      audio.onended = () => { URL.revokeObjectURL(url); if (id === sayId) setSub(""); };
+      setSub(tx("🔊 ลูน่ากำลังพูด…", "🔊 Luna is speaking…"));
+      await audio.play();
+    } catch (e) { if (id === sayId) setSub(""); }
+  }
+
   async function send(q) {
     q = String(q || "").trim(); if (!q || busy) return;
+    stopVoice();
     history.push({ r: "u", t: q }); busy = true; paintLog();
-    let a;
+    let a, ok = true;
     try { a = await ask(history.slice(0, -1), q); }
-    catch (e) { a = tx("ขอโทษเหมียว ตอนนี้ลูน่าตอบไม่ได้ ลองใหม่อีกทีนะ หรือติดต่อทาง [LINE](https://line.me/ti/p/~0653057699) ได้เลย", "Sorry, meow, Luna can't answer right now. Try again, or reach him on [LINE](https://line.me/ti/p/~0653057699)."); }
+    catch (e) { ok = false; a = tx("ขอโทษเหมียว ตอนนี้ลูน่าตอบไม่ได้ ลองใหม่อีกทีนะ หรือติดต่อทาง [LINE](https://line.me/ti/p/~0653057699) ได้เลย", "Sorry, meow, Luna can't answer right now. Try again, or reach him on [LINE](https://line.me/ti/p/~0653057699)."); }
     history.push({ r: "b", t: a }); history = history.slice(-20); busy = false;
     ss.set(LOG, JSON.stringify(history)); paintLog();
+    if (ok) sayReply(a);
   }
 
   function open() {
@@ -160,11 +200,13 @@ ${history.slice(-8).map(m => `${m.r === "u" ? "ผู้ใช้" : "ลูน�
   function close() {
     if (box.hidden) return;
     box.hidden = true; btn.setAttribute("aria-expanded", "false");
+    stopVoice();
     btn.focus();
   }
 
   btn.addEventListener("click", () => (box.hidden ? open() : close()));
   $("catbot-x").addEventListener("click", close);
+  $("catbot-voice").addEventListener("click", () => { voiceOn = !voiceOn; ls.set("luna_voice", voiceOn ? "on" : "off"); if (!voiceOn) stopVoice(); paintVoice(); });
   chipsEl.addEventListener("click", e => { const c = e.target.closest(".cb-chip"); if (c) send(c.textContent); });
   $("catbot-form").addEventListener("submit", e => { e.preventDefault(); const q = input.value; input.value = ""; send(q); });
   box.addEventListener("keydown", e => { if (e.key === "Escape") { e.stopPropagation(); close(); } });
