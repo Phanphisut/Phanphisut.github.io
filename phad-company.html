@@ -179,7 +179,16 @@ details pre{white-space:pre-wrap;font:500 13.5px/1.6 var(--font-body);background
 .modal{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding-block:16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .backdrop{position:absolute;inset:0;background:rgba(24,12,4,.66)}
 .mwin{width:min(800px,100%);max-height:calc(100dvh - 92px);display:flex;flex-direction:column;margin-top:44px;padding:18px 18px 16px;animation:pop .15s ease-out}
-.tabs{position:absolute;left:12px;top:-46px;display:flex;gap:4px}
+/* แถบแท็บกว้างไม่เกินกรอบหน้าต่าง (เว้นที่ให้ปุ่มปิด) ถ้าชื่อแท็บล้น fitTabs() จะเหลือแค่ไอคอน */
+.tabs{position:absolute;left:12px;right:34px;top:-46px;display:flex;gap:4px}
+.tabs .tab{flex:0 0 auto}
+.tabs.compact .tl{display:none}
+.tabs.compact .tab{padding:2px 8px 4px}
+.tabs.tiny{gap:2px}
+.tabs.tiny .tab{padding:2px 3px 4px}
+.tabs.tiny .tab canvas{width:22px;height:22px;flex-basis:22px}
+.tabs.scroll{overflow-x:auto;overflow-y:hidden;top:-58px;padding-top:12px;scrollbar-width:none}
+.tabs.scroll::-webkit-scrollbar{display:none}
 .tab{position:relative;display:flex;align-items:center;gap:6px;height:40px;margin-top:8px;padding:2px 12px 4px;background:var(--parch-dark);border:4px solid var(--wood);border-bottom:0;
   font:400 14px/1 var(--font-display);color:var(--ink);cursor:pointer}
 .tab:hover{background:var(--wood-hi)}
@@ -228,7 +237,6 @@ details pre{white-space:pre-wrap;font:500 13.5px/1.6 var(--font-body);background
 .files{margin:0;padding:8px 10px 8px 28px;font:500 13.5px/1.6 var(--font-num);background:var(--parch);border:2px solid var(--parch-dark);overflow-wrap:anywhere}
 .badge.local{background:#9cc4ec}
 .tab .tl{white-space:nowrap}
-@media (max-width:1360px){.tab .tl{display:none}.tab{padding:2px 8px 4px}}
 .seg button[aria-pressed="true"]{background:var(--wood-hi);border-color:var(--wood-dark);box-shadow:inset 0 -3px 0 #c07a34}
 .pick:disabled{opacity:.5;cursor:not-allowed}
 .pick small{display:block;font:600 11px/1.3 var(--font-body);color:var(--ink-soft)}
@@ -1489,10 +1497,25 @@ function openPanel(name) {
   modal.querySelectorAll('.pane').forEach(p => { p.hidden = p.dataset.pane !== name; });
   modal.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.pane === name)));
   modal.querySelector('.mbody').scrollTop = 0;
+  fitTabs();
   if (name === 'journal') { unseen = 0; updateBadges(); }
   if (name === 'pet') renderPet();
   modal.querySelector('.tab[aria-selected="true"]').focus();
 }
+// แสดงชื่อแท็บเมื่อพอดีกรอบ ถ้าล้น (จอแคบหรือมีแท็บเพิ่ม) เหลือแค่ไอคอน
+function fitTabs() {
+  const bar = modal.querySelector('.tabs');
+  if (modal.hidden || !bar) return;
+  bar.classList.remove('compact', 'tiny', 'scroll');
+  for (const step of ['compact', 'tiny', 'scroll']) {   // ไล่ย่อทีละขั้นจนพอดี ขั้นสุดท้ายเลื่อนซ้ายขวาได้
+    if (bar.scrollWidth <= bar.clientWidth + 1) break;
+    bar.classList.add(step);
+  }
+  const sel = bar.querySelector('[aria-selected="true"]');
+  if (sel && bar.classList.contains('scroll')) sel.scrollIntoView({ block:'nearest', inline:'nearest' });
+}
+addEventListener('resize', fitTabs);
+if (document.fonts) document.fonts.ready.then(fitTabs);   // ฟอนต์โหลดเสร็จ ความกว้างชื่อแท็บเปลี่ยน
 function closePanel() { if (modal.hidden) return; modal.hidden = true; fab.focus(); }
 function updateBadges() { document.querySelectorAll('[data-badge]').forEach(b => { b.hidden = !unseen; b.textContent = unseen; }); }
 fab.addEventListener('click', e => { e.stopPropagation(); setMenu(submenu.hidden); });
