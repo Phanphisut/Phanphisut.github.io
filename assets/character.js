@@ -209,3 +209,56 @@
   }
   (document.fonts ? document.fonts.load('26px "Kanit"').catch(() => {}) : Promise.resolve()).finally(() => requestAnimationFrame(frame));
 })();
+
+/* คริสตัลเรืองแสงพิกเซลจางๆ ใต้หน้าจอตัวละคร เฉพาะจอคอม */
+(function () {
+  "use strict";
+  const cv = document.getElementById("char-deco"); if (!cv) return;
+  const ctx = cv.getContext("2d");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const desk = matchMedia("(min-width: 761px)");
+  const PX = 4;                                   // 1 พิกเซลของฉาก = 4px บนจอ
+  let W = 0, H = 0, stars = [], crystals = [], city = [], seed = 7;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+  function build() {
+    const r = cv.getBoundingClientRect();
+    W = Math.max(1, Math.round(r.width / PX)); H = Math.max(1, Math.round(r.height / PX));
+    cv.width = W; cv.height = H; seed = 7;
+    stars = Array.from({ length: Math.round(W * H / 60) }, () => ({ x: rnd() * W | 0, y: rnd() * H * .7 | 0, ph: rnd() * 6, sp: .6 + rnd() * 1.4, big: rnd() < .12 }));
+    city = []; for (let x = 0; x < W;) { const w = 3 + (rnd() * 6 | 0), h = 3 + (rnd() * Math.min(14, H * .3) | 0); city.push({ x, w, h, lit: Array.from({ length: 3 }, () => [rnd() * w | 0, rnd() * h | 0]) }); x += w + (rnd() * 2 | 0); }
+    // กลุ่มคริสตัล: กลุ่มใหญ่มุมซ้ายล่าง กลุ่มเล็กกระจายไปทางขวา
+    crystals = [];
+    const cluster = (cx, n, scale) => { for (let i = 0; i < n; i++) crystals.push({ x: cx + ((rnd() - .5) * 10 * scale | 0), h: (5 + rnd() * 9) * scale | 0, w: 2 + (rnd() * 2 * scale | 0), lean: (rnd() - .5) * .5, ph: rnd() * 6 }); };
+    cluster(Math.round(W * .12), 6, 1.3); cluster(Math.round(W * .45), 3, .8); cluster(Math.round(W * .82), 4, 1);
+  }
+
+  function draw(t) {
+    // วาดเฉพาะคริสตัลเรืองแสง (ท้องฟ้า ดาว พระจันทร์ และเมือง เอาออกแล้ว)
+    // build() ยังสุ่มดาว/เมืองไว้ เพื่อให้ตำแหน่งคริสตัลเหมือนรอบก่อน
+    ctx.clearRect(0, 0, W, H);
+    const base = H - 6;
+    for (const c of crystals) {
+      const glow = reduce ? .8 : .6 + .4 * Math.sin(t * 1.2 + c.ph);
+      const g = ctx.createRadialGradient(c.x, base - c.h / 2, 0, c.x, base - c.h / 2, c.h);
+      g.addColorStop(0, `rgba(79,179,255,${.22 * glow})`); g.addColorStop(1, "rgba(79,179,255,0)");
+      ctx.fillStyle = g; ctx.fillRect(c.x - c.h, base - c.h * 1.6, c.h * 2, c.h * 2);
+      for (let y = 0; y < c.h; y++) {
+        const k = y / c.h, w = Math.max(1, Math.round(c.w * (y < 2 ? (y + 1) / 3 : 1))), x = Math.round(c.x + c.lean * (c.h - y) - w / 2);
+        ctx.fillStyle = k < .25 ? "#c9f1ff" : k < .6 ? "#5fc4ff" : "#2c7fd0"; ctx.fillRect(x, base - c.h + y, w, 1);
+        if (w > 1) { ctx.fillStyle = "rgba(255,255,255,.55)"; ctx.fillRect(x, base - c.h + y, 1, 1); }
+      }
+    }
+  }
+
+  let raf = 0, last = 0;
+  function loop(ts) { raf = requestAnimationFrame(loop); if (ts - last < 120) return; last = ts; draw(ts / 1000); }
+  function start() {
+    cancelAnimationFrame(raf);
+    if (!desk.matches) return;                     // โทรศัพท์: ไม่แสดง ไม่วาด
+    build();
+    if (reduce) draw(0); else raf = requestAnimationFrame(loop);
+  }
+  new ResizeObserver(start).observe(cv);
+  desk.addEventListener("change", start);
+})();
