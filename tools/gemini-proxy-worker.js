@@ -51,7 +51,7 @@ export default {
    เสียงน้องลูน่าในแชต: Gemini TTS เสียง Leda สไตล์เด็กผู้หญิงการ์ตูน (เสียงเดียวกับไฟล์แนะนำปุ่ม audio/luna/)
    โควตาฟรีได้ราว 10 ครั้ง/วันต่อโมเดล จึงไล่ใช้หลายโมเดลที่มีเสียง Leda เหมือนกัน หมดทุกตัวตอบ 429 */
 const TTS_MODELS = ['gemini-3.8-flash-tts', 'gemini-3.1-flash-tts-preview', 'gemini-3.8-flash-lite-tts', 'gemini-2.5-flash-preview-tts', 'gemini-2.5-pro-preview-tts'];
-// ภาษาไทย: รุ่น 3.8 มักพูดไม่เป็นภาษาไทย และอ่านคำสั่ง "Say quickly…" ออกเสียงด้วย จึงลองรุ่นที่พูดไทยถูกก่อน (3.8 ไว้ท้ายสุด)
+// (deploy แล้ว 2026-11-08 ด้วย wrangler) ภาษาไทย: รุ่น 3.8 มักพูดไม่เป็นภาษาไทย และอ่านคำสั่ง "Say quickly…" ออกเสียงด้วย จึงลองรุ่นที่พูดไทยถูกก่อน (3.8 ไว้ท้ายสุด)
 const TTS_MODELS_TH = ['gemini-3.1-flash-tts-preview', 'gemini-2.5-flash-preview-tts', 'gemini-2.5-pro-preview-tts', 'gemini-3.8-flash-tts', 'gemini-3.8-flash-lite-tts'];
 const TTS_STYLE = {
   th: 'Say quickly in Thai, at a brisk, lively pace, in a cute, cheerful little cartoon girl voice:',
