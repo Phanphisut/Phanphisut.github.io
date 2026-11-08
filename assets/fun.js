@@ -166,8 +166,7 @@
   const show = () => { if (!dlg.open) { dlg.showModal ? dlg.showModal() : dlg.setAttribute("open", ""); } dlg.scrollTop = 0; $("#item-body").scrollTop = 0; };
   const stars = n => `<span class="stars" aria-label="${n}/5">${"★".repeat(n)}<i>${"★".repeat(5 - n)}</i></span>`;
   function skillIcon(s, size = 40) {
-    const c = S.oreBlock(s.color, s.id.length * 97 + s.name.length);
-    return `<span class="sk-ico" style="width:${size}px;height:${size}px"><img class="pix" src="${c.toDataURL()}" width="${size}" height="${size}" alt=""><b>${esc(s.label)}</b></span>`;
+    return `<span class="sk-ico" style="width:${size}px;height:${size}px"><img class="pix" src="${s.img}" width="${size}" height="${size}" alt=""></span>`;
   }
   function openProject(i) {
     const p = PROJECTS[i]; if (!p) return;
@@ -189,8 +188,7 @@
   function openSkill(id) {
     const s = SKILLS.find(x => x.id === id); if (!s) return;
     const projs = s.projects.map(t => PROJECTS.findIndex(p => p.title === t)).filter(i => i >= 0);
-    const c = S.oreBlock(s.color, s.id.length * 97 + s.name.length);
-    $("#item-ico").src = c.toDataURL();
+    $("#item-ico").src = s.img;
     $("#item-kick").textContent = `${T("skills.title")} · ${T("item.level")} ${s.stars}/5`;
     $("#item-h").textContent = s.name;
     $("#item-body").innerHTML = `
