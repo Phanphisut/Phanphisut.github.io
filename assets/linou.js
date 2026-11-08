@@ -122,3 +122,49 @@
   if (document.getElementById("lt-ov")) document.addEventListener("lunadone", () => setTimeout(start, 350), { once: true });
   else start();
 })();
+
+/* น้องลินูนั่งบนหัวข้อ "ผลงานทั้งหมด" พร้อมกล่องข้อความอธิบายเมนูย่อย (ปุ่มหมวด #proj-filters)
+   ชี้/โฟกัสปุ่มไหน = อธิบายหมวดนั้น, ปล่อยเมาส์ = กลับไปอธิบายหมวดที่เลือกอยู่ (จำนวนผลงานนับจาก PROJECTS) */
+(function () {
+  "use strict";
+  const S = window.SITE, box = document.getElementById("linou-guide"), bar = document.getElementById("proj-filters");
+  if (!S || !box || !bar) return;
+  const text = document.getElementById("lg-text"), name = document.getElementById("lg-name");
+  const INFO = {
+    all: ["ผลงานทั้งหมด {n} ชิ้นค่ะ! กดปุ่มหมวดด้านล่างเพื่อเลือกดูได้เลย: โปรเจกต์ ป.ตรี, Agentic AI, Drone, Embedded, PLC และ Dev",
+      "All {n} projects! Tap a category below to narrow it down: Bachelor's projects, Agentic AI, Drone, Embedded, PLC and Dev."],
+    degree: ["โปรเจกต์ ป.ตรี ({n} ชิ้น): งานหลักตอนเรียนปริญญาตรี อย่างสถานีทดสอบโดรน DCATS และเกมทีม AI agent PHAD Company ค่ะ",
+      "Bachelor's projects ({n}): the main work from my degree, like the DCATS drone test station and the PHAD Company AI agent game."],
+    agentic: ["Agentic AI ({n} ชิ้น): งานที่มีทีม AI agent ช่วยคิดและลงมือทำงานเองได้ อย่าง PHAD Company ค่ะ",
+      "Agentic AI ({n}): work where a team of AI agents plans and gets things done on its own, like PHAD Company."],
+    drone: ["Drone ({n} ชิ้น): โดรนและ UAV ทั้งบินด้วยท่ามือ สั่งด้วยคีย์บอร์ด ฝูงโดรน ไปจนถึงสร้างโดรนเองค่ะ",
+      "Drone ({n}): drones and UAVs, from hand-gesture and keyboard control to drone swarms and home-built airframes."],
+    embedded: ["Embedded ({n} ชิ้น): งานบอร์ดและเซนเซอร์ เช่น ESP32, Raspberry Pi, micro:bit และ flight controller ค่ะ",
+      "Embedded ({n}): boards and sensors such as ESP32, Raspberry Pi, micro:bit and flight controllers."],
+    plc: ["PLC ({n} ชิ้น): ระบบอัตโนมัติแบบโรงงาน ทั้ง PLC, HMI และชุดฝึก IoT อุตสาหกรรมค่ะ",
+      "PLC ({n}): factory-style automation with PLCs, HMIs and an industrial IoT training kit."],
+    dev: ["Dev ({n} ชิ้น): เว็บและซอฟต์แวร์ เช่น WarrantyTH, เว็บพอร์ตนี้, แดชบอร์ดพลังงาน และเกม MQTT ค่ะ",
+      "Dev ({n}): web apps and software like WarrantyTH, this portfolio, an energy dashboard and an MQTT game."],
+  };
+  const list = typeof PROJECTS !== "undefined" ? PROJECTS : [];
+  const count = k => k === "all" ? list.length : list.filter(p => (p.cats || []).includes(k)).length;
+  const current = () => { const b = bar.querySelector('[aria-pressed="true"]'); return b ? b.dataset.pf : "all"; };
+  let shown = null;
+  function say(k) {
+    if (!INFO[k]) k = "all";
+    const s = INFO[k][S.lang() === "en" ? 1 : 0].replace("{n}", count(k));
+    name.textContent = S.lang() === "en" ? "Linou The Fatcat" : "น้องลินูตัวอ้วน";
+    if (text.textContent === s) return;
+    text.textContent = s;
+    if (shown !== null) { box.classList.remove("lg-pop"); void box.offsetWidth; box.classList.add("lg-pop"); }
+    shown = k;
+  }
+  const btnKey = e => { const b = e.target.closest("[data-pf]"); return b && b.dataset.pf; };
+  bar.addEventListener("pointerover", e => { const k = btnKey(e); if (k) say(k); });
+  bar.addEventListener("pointerleave", () => say(current()));
+  bar.addEventListener("focusin", e => { const k = btnKey(e); if (k) say(k); });
+  bar.addEventListener("focusout", e => { if (!bar.contains(e.relatedTarget)) say(current()); });
+  bar.addEventListener("click", () => setTimeout(() => say(current()), 0));
+  document.addEventListener("sitelang", () => say(shown || current()));
+  say(current());
+})();
