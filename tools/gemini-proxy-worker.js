@@ -51,6 +51,8 @@ export default {
    เสียงน้องลูน่าในแชต: Gemini TTS เสียง Leda สไตล์เด็กผู้หญิงการ์ตูน (เสียงเดียวกับไฟล์แนะนำปุ่ม audio/luna/)
    โควตาฟรีได้ราว 10 ครั้ง/วันต่อโมเดล จึงไล่ใช้หลายโมเดลที่มีเสียง Leda เหมือนกัน หมดทุกตัวตอบ 429 */
 const TTS_MODELS = ['gemini-3.8-flash-tts', 'gemini-3.1-flash-tts-preview', 'gemini-3.8-flash-lite-tts', 'gemini-2.5-flash-preview-tts', 'gemini-2.5-pro-preview-tts'];
+// ภาษาไทย: รุ่น 3.8 มักพูดไม่เป็นภาษาไทย และอ่านคำสั่ง "Say quickly…" ออกเสียงด้วย จึงลองรุ่นที่พูดไทยถูกก่อน (3.8 ไว้ท้ายสุด)
+const TTS_MODELS_TH = ['gemini-3.1-flash-tts-preview', 'gemini-2.5-flash-preview-tts', 'gemini-2.5-pro-preview-tts', 'gemini-3.8-flash-tts', 'gemini-3.8-flash-lite-tts'];
 const TTS_STYLE = {
   th: 'Say quickly in Thai, at a brisk, lively pace, in a cute, cheerful little cartoon girl voice:',
   en: 'Say quickly, at a brisk, lively pace, in a cute, cheerful little cartoon girl voice:',
@@ -66,7 +68,9 @@ async function tts(body, env, cors, reply) {
     generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Leda' } } } },
   });
   let last = 0;
-  for (const model of TTS_MODELS) {
+  // body.model (ไม่บังคับ): เลือกรุ่นจากรายการด้านบนได้ ใช้ตอนสร้างไฟล์เสียงล่วงหน้า
+  const order = TTS_MODELS.includes(body.model) ? [body.model] : (lang === 'th' ? TTS_MODELS_TH : TTS_MODELS);
+  for (const model of order) {
     const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
       method: 'POST', headers: { 'content-type': 'application/json', 'x-goog-api-key': env.GEMINI_KEY }, body: payload,
     });

@@ -35,10 +35,12 @@
   const STEPS = [{ key: "intro" }, { key: "filters" }, { key: "cards" }, { key: "end" }];
 
   /* ---------- เสียงพูด (ไฟล์ล่วงหน้า เล่นเร็ว 1.2 เท่าแบบไม่รักษาระดับเสียง ให้ใสแบบเด็ก) ---------- */
+  const TH_VOICE = false;
   let voiceOn = ls.get(VOICE) !== "off", audio = null;
   function speak(key) {
     if (audio) { audio.pause(); audio = null; }
     if (!voiceOn || !key) return;
+    if (!en() && !TH_VOICE) return;                // ไฟล์เสียงไทยชุดแรกไม่เป็นภาษาไทย: ปิดไว้จนกว่าจะสร้างใหม่
     audio = new Audio(`audio/linou/${en() ? "en" : "th"}-${key}.mp3`);
     audio.playbackRate = en() ? 1.15 : 1.2;
     if ("preservesPitch" in audio) audio.preservesPitch = false;
