@@ -36,7 +36,7 @@
   const STEPS = [{ key: "intro" }, { key: "filters" }, { key: "cards" }, { key: "end" }];
 
   /* ---------- เสียงพูด (ไฟล์ล่วงหน้า เล่นเร็ว 1.2 เท่าแบบไม่รักษาระดับเสียง ให้ใสแบบเด็ก) ---------- */
-  const TH_VOICE = false;
+  const TH_VOICE = true;
   let voiceOn = ls.get(VOICE) !== "off", audio = null;
   function speak(key) {
     if (audio) { audio.pause(); audio = null; }
