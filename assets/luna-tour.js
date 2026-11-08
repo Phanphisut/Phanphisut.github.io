@@ -49,15 +49,11 @@
   /* ---------- เสียงพูด: ไฟล์เสียงผู้หญิงโทนเด็กการ์ตูนที่สร้างไว้ล่วงหน้าด้วย Gemini TTS (เสียง Leda)
      เล่นเร็วขึ้น (อังกฤษ 1.15 / ไทย 1.2 เท่า) โดยปล่อยให้เสียงสูงขึ้นตาม ให้ใสแบบการ์ตูน
      ไม่ใช้ Web Speech API เพราะหลายเครื่องมีแต่เสียงผู้ชาย (เช่นภาษาไทยใน Windows มีแค่ Pattara) */
-  // ไฟล์ที่สร้างใหม่: ใส่เลขเวอร์ชันให้เบราว์เซอร์ไม่เล่นไฟล์เก่าที่แคชไว้
-  // th-projects v2 = gemini-3.1-flash-tts-preview (รุ่น 3.8 อ่านไทยปนอังกฤษไม่ชัด) ข้อความที่ให้อ่าน สะกดคำอังกฤษเป็นไทย
-  const AUDIO_VER = { "th-projects": 2 };
   let voiceOn = ls.get(VOICE) !== "off", audio = null;
   function speak(key) {
     if (audio) { audio.pause(); audio = null; }
     if (!voiceOn || !key) return;
-    const file = `${en() ? "en" : "th"}-${key}`;
-    audio = new Audio(`audio/luna/${file}.mp3${AUDIO_VER[file] ? "?v=" + AUDIO_VER[file] : ""}`);
+    audio = new Audio(`audio/luna/${en() ? "en" : "th"}-${key}.mp3`);
     audio.playbackRate = en() ? 1.15 : 1.2;        // เสียงไทยต่ำกว่าเล็กน้อย เร่งมากขึ้นให้ใสพอๆ กัน
     if ("preservesPitch" in audio) audio.preservesPitch = false;
     else if ("webkitPreservesPitch" in audio) audio.webkitPreservesPitch = false;
