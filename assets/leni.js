@@ -125,3 +125,45 @@
   else start();
 })();
 
+
+/* น้องเลนี่นั่งบนไทม์ไลน์ เหนือปุ่มหมวด #filters พร้อมกล่องข้อความอธิบายแต่ละหมวด (แบบเดียวกับลินูในหน้าผลงาน)
+   ชี้/โฟกัสปุ่มไหน = อธิบายหมวดนั้น, ปล่อยเมาส์ = กลับไปอธิบายหมวดที่เลือกอยู่ (จำนวนนับจาก ACTIVITIES) */
+(function () {
+  "use strict";
+  const S = window.SITE, box = document.getElementById("leni-guide"), bar = document.getElementById("filters");
+  if (!S || !box || !bar) return;
+  const text = document.getElementById("lg-text"), name = document.getElementById("lg-name");
+  const INFO = {
+    all: ["กิจกรรมทั้งหมด {n} รายการค่ะ! กดปุ่มหมวดด้านล่างเพื่อเลือกดูได้เลย: ทำงาน, สอน / สตาฟ, อบรม และกิจกรรม",
+      "All {n} entries! Tap a category below to narrow it down: Work, Teaching / Staff, Training and Events."],
+    work: ["ทำงาน ({n} รายการ): งานประจำ ตอนนี้เป็น R&D Software / Hardware Engineer ที่ SoT และเคยเป็น IT Support ที่ Baan Klong Cake ค่ะ",
+      "Work ({n}): jobs, currently R&D Software / Hardware Engineer at SoT, and before that IT Support at Baan Klong Cake."],
+    teach: ["สอน / สตาฟ ({n} รายการ): เป็นวิทยากรและสตาฟ สอนโดรน Hula, STEM workshop และงาน Air School ค่ะ",
+      "Teaching / Staff ({n}): lecturer and staff roles, teaching Hula drones, STEM workshops and Air School."],
+    train: ["อบรม ({n} รายการ): คอร์สที่ไปเรียนเพิ่ม เช่น PLC, IoT, Generative AI, Cyber Security, Computer Vision และไฟเบอร์ออปติกค่ะ",
+      "Training ({n}): extra courses such as PLC, IoT, Generative AI, Cyber Security, Computer Vision and fiber optics."],
+    event: ["กิจกรรม ({n} รายการ): งานอีเวนต์ เช่น ต้อนรับนักศึกษา Chiba University, AI Solutions และ Youth Innovation Project ค่ะ",
+      "Events ({n}): events like hosting Chiba University students, AI Solutions and the Youth Innovation Project."],
+  };
+  const list = typeof ACTIVITIES !== "undefined" ? ACTIVITIES : [];
+  const count = k => k === "all" ? list.length : list.filter(a => a.type === k).length;
+  const current = () => { const b = bar.querySelector('[aria-pressed="true"]'); return b ? b.dataset.f : "all"; };
+  let shown = null;
+  function say(k) {
+    if (!INFO[k]) k = "all";
+    const s = INFO[k][S.lang() === "en" ? 1 : 0].replace("{n}", count(k));
+    name.textContent = S.lang() === "en" ? "Leni The Fatcat" : "น้องเลนี่ตัวอ้วน";
+    if (text.textContent === s) return;
+    text.textContent = s;
+    if (shown !== null) { box.classList.remove("lg-pop"); void box.offsetWidth; box.classList.add("lg-pop"); }
+    shown = k;
+  }
+  const btnKey = e => { const b = e.target.closest("[data-f]"); return b && b.dataset.f; };
+  bar.addEventListener("pointerover", e => { const k = btnKey(e); if (k) say(k); });
+  bar.addEventListener("pointerleave", () => say(current()));
+  bar.addEventListener("focusin", e => { const k = btnKey(e); if (k) say(k); });
+  bar.addEventListener("focusout", e => { if (!bar.contains(e.relatedTarget)) say(current()); });
+  bar.addEventListener("click", () => setTimeout(() => say(current()), 0));
+  document.addEventListener("sitelang", () => say(shown || current()));
+  say(current());
+})();
