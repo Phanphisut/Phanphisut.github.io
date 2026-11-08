@@ -41,7 +41,7 @@
     if (audio) { audio.pause(); audio = null; }
     if (!voiceOn || !key) return;
     if (!en() && !TH_VOICE) return;                // ไฟล์เสียงไทยชุดแรกไม่เป็นภาษาไทย: ปิดไว้จนกว่าจะสร้างใหม่
-    audio = new Audio(`audio/linou/${en() ? "en" : "th"}-${key}.mp3`);
+    audio = new Audio(`audio/linou/${en() ? "en" : "th"}-${key}.mp3${en() ? "" : "?v=3"}`);   // ?v=3: ไฟล์ไทยชุดใหม่ (gemini 3.1 / 2.5 TTS ตรวจถอดเสียงแล้ว) ไม่ให้เบราว์เซอร์เล่นไฟล์เก่าที่แคชไว้
     audio.playbackRate = en() ? 1.15 : 1.2;
     if ("preservesPitch" in audio) audio.preservesPitch = false;
     else if ("webkitPreservesPitch" in audio) audio.webkitPreservesPitch = false;
