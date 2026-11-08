@@ -638,3 +638,8 @@ dialog.item::backdrop { background: rgba(0, 0, 0, .75); }
 @keyframes lgPop { 0% { transform: scale(.97); opacity: .6; } 100% { transform: none; opacity: 1; } }
 @media (max-width: 560px) { .linou-guide img { width: 80px; height: 80px; } .lg-bubble { margin-bottom: 10px; padding: 8px 10px; } .lg-bubble p { font-size: 14px; } }
 @media (prefers-reduced-motion: reduce) { .linou-guide.lg-pop .lg-bubble { animation: none; } }
+/* สามตัวอ้วนหน้าใบประกาศ (assets/trio.js): ภาพแนวนอน */
+.tr-cat { width: min(460px, 88vw, 64dvh); aspect-ratio: auto; }
+.trio-guide img { width: 180px; height: auto; }
+@media (max-width: 560px) { .trio-guide img { width: 120px; height: auto; } }
+@media (max-height: 520px) { .tr-cat { width: min(260px, 48dvh); } }
