@@ -621,3 +621,7 @@ dialog.item::backdrop { background: rgba(0, 0, 0, .75); }
 }
 @media (max-height: 520px) { .lt-cat { width: min(150px, 30dvh); } .lt-text { min-height: 0; } }
 @media (prefers-reduced-motion: reduce) { .lt-cat, .lt-arrow { animation: none; } .lt, .lt.lt-out { transition: none; } }
+
+/* ---------- น้องลินูตัวอ้วนแนะนำหน้าผลงาน (assets/linou.js) ใช้กล่องเดียวกับลูน่า ---------- */
+.ln-cat { filter: drop-shadow(0 0 2px #e9fbff) drop-shadow(0 0 16px rgba(147,221,230,.55)); animation: none; }
+.ln-box { border-color: rgba(147, 221, 230, .55); }

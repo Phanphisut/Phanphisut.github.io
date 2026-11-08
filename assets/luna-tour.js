@@ -63,7 +63,7 @@
 
   /* ---------- UI ---------- */
   const ov = document.createElement("div");
-  ov.className = "lt"; ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-labelledby", "lt-name");
+  ov.className = "lt"; ov.id = "lt-ov"; ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-labelledby", "lt-name");
   ov.innerHTML = `
     <div class="lt-stage">
       <img class="lt-cat" id="lt-cat" src="${GIF}" alt="">
@@ -110,11 +110,11 @@
   // จบหรือข้าม: ลูน่าตัวใหญ่บินไปเป็นปุ่มมุมขวาบน
   function finish() {
     speak(null);
-    removeEventListener("keydown", onKey, true); removeEventListener("resize", onResize);
+    removeEventListener("keydown", onKey, true); removeEventListener("resize", onResize); document.removeEventListener("sitelang", onLang);
     slots.forEach(a => a.classList.remove("lt-on", "lt-dim"));
     hotbar.classList.remove("lt-up");
     const cat = $("lt-cat"), btn = document.getElementById("catbot-btn");
-    const end = () => { ov.remove(); if (btn) { btn.classList.add("cb-pop"); setTimeout(() => btn.classList.remove("cb-pop"), 600); btn.focus({ preventScroll: true }); } };
+    const end = () => { ov.remove(); document.dispatchEvent(new Event("lunadone")); if (btn) { btn.classList.add("cb-pop"); setTimeout(() => btn.classList.remove("cb-pop"), 600); btn.focus({ preventScroll: true }); } };
     ov.classList.add("lt-out");
     if (!btn || reduce || !cat.animate) return end();
     const a = cat.getBoundingClientRect(), b = btn.getBoundingClientRect();
@@ -138,7 +138,8 @@
   ov.addEventListener("click", e => { const b = e.target.closest("[data-lt-lang]"); if (b) { heard = true; S.setLang(b.dataset.ltLang); } });
   // เบราว์เซอร์ไม่ยอมให้พูดก่อนผู้ใช้แตะหน้าจอ: แตะครั้งแรกที่ไหนก็ได้ให้พูดขั้นที่แสดงอยู่
   ov.addEventListener("pointerdown", () => { if (!heard) { heard = true; setTimeout(() => { if (!playing()) render(true); }, 60); } }, true);
-  document.addEventListener("sitelang", () => render(true));
+  const onLang = () => render(true);
+  document.addEventListener("sitelang", onLang);
 
   hotbar.classList.add("lt-up");
   render(true);
