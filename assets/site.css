@@ -223,6 +223,7 @@ section { padding-block: 32px 12px; scroll-margin-top: 64px; }
 .type.event { background: #8e44ad; }
 .act h3 { margin: 0; font: 700 16px/1.3 var(--f-body); overflow-wrap: anywhere; }
 .act p { margin: 0; font-size: 14px; color: var(--ink-soft); }
+.act .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
 .pages { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 92px), 1fr)); gap: 10px; }
 .pages .shot { margin: 0; aspect-ratio: 1131 / 1600; }
 .pages .shot img { object-position: top; }

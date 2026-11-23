@@ -72,6 +72,14 @@ const PROJECTS = [
 
 // type: work = ทำงาน, teach = สอน/สตาฟ, train = อบรม, event = กิจกรรม  (เรียงจากใหม่ไปเก่า)
 const ACTIVITIES = [
+  { d: "2026-11-12", type: "teach", img: "a-airschool-tu", page: "activities/airschool-tu", title: ["Air School · โรงเรียนเตรียมอุดม สกลนคร", "Air School · Triam Udom School, Sakon Nakhon"],
+    drive: "https://drive.google.com/drive/folders/1Ku5AmlaJ7_LrA2PbL4r9XN13PhlH-ubI?usp=sharing",
+    desc: ["สตาฟกิจกรรม Air School ต้อนรับนักเรียนจากโรงเรียนเตรียมอุดม สกลนคร แนะนำการทำงานของโดรนและดูแลกิจกรรมภาคปฏิบัติ ดูภาพบรรยากาศทั้งหมดได้ใน Google Drive",
+           "Staff for an Air School session with students from Triam Udom School, Sakon Nakhon: introducing how drones work and running the hands-on activities. All photos are on Google Drive."] },
+  { d: "2026-11-10/11", type: "event", img: "a-ddm", page: "activities/ddm", title: "DDM",
+    drive: "https://drive.google.com/drive/folders/1WKY8G_512KxJckHUJvdD7mB_NMxKQ0g_?usp=sharing",
+    desc: ["กิจกรรมโดรนภาคสนาม 2 วัน ร่วมเตรียมอุปกรณ์และบินโดรนกับทีม ดูภาพบรรยากาศทั้งหมดได้ใน Google Drive",
+           "Two-day outdoor drone event: preparing equipment and flying drones with the team. All photos are on Google Drive."] },
   { d: "2026-09-22", type: "teach", img: "a-airschool", page: "activities/10", title: "Staff Air School",
     desc: ["วิทยากร STEM workshop ตามโรงเรียน สอนใช้ Arduino และ micro:bit จำลองวงจรออนไลน์ เขียนโปรแกรมเซนเซอร์แบบบล็อก และทำโปรเจกต์วัดความชื้นดิน ความชื้นอากาศ และอุณหภูมิ",
            "STEM workshop instructor at schools: Arduino and micro:bit, online circuit simulation, block-based sensor coding, and soil-moisture, humidity and temperature projects."] },
