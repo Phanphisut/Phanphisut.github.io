@@ -103,6 +103,8 @@
                  { p: "#c13584", o: "#f56040", w: "#ffffff" }),
     term: fromRows(["kkkkkkkkkkkk", "kssssssssssk", "kkkkkkkkkkkk", "kgkkkkkkkkkk", "kkgkkkkkkkkk", "kkkgkkkkkkkk", "kkgkkkkkkkkk", "kgkkkggggkkk", "kkkkkkkkkkkk", "kkkkkkkkkkkk", "kkkkkkkkkkkk", "kkkkkkkkkkkk"],
                    { k: "#1d1d1d", s: "#5a5a5a", g: "#3fd65a" }),
+    pad: fromRows(["............", "............", "..kkkkkkkk..", ".kddddddddk.", "kddwddddrddk", "kdwwwddrdbdk", "kddwddgdbddk", "kddddddgdddk", "kdddkkkkdddk", ".kddk..kddk.", "..kk....kk..", "............"],
+                  { k: "#0e1a2b", d: "#2a475e", w: "#c7d5e0", r: "#ff5a5a", b: "#66c0f4", g: "#5ad35a" }),
     grass: grassBlock(42),
     crystal: crystalBlockIcon(),
   };
