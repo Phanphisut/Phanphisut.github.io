@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Chakra+Petch:wght@400;500;600;700&family=Press+Start+2P&family=Kanit:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap">
-<link rel="stylesheet" href="assets/site.css?v=202611272215">
+<link rel="stylesheet" href="assets/site.css?v=202611272300">
 </head>
 <body data-page="home">
 <header id="hero"></header>
@@ -134,29 +134,26 @@
     </div>
   </section>
 
-  <section id="aquarium" aria-labelledby="aqua-h">
-    <div class="wrap">
+  <section id="world" class="world" aria-labelledby="world-h">
+    <canvas id="globe" class="world-bg"><p data-i18n="world.label"></p></canvas>
+    <div class="wrap world-fg">
       <div class="sec-label panel">
-        <img class="pix" data-sprite="fish" alt="">
-        <div><small>Side quest · ASCII</small><h2 id="aqua-h" data-i18n="aqua.title"></h2></div>
+        <img class="pix" data-sprite="globe" alt="">
+        <div><small>World · 0101</small><h2 id="world-h" data-i18n="world.title"></h2></div>
       </div>
-      <div class="term aqua">
-        <div class="term-bar"><i></i><i></i><i></i><span>~/aquarium $ ./clownfish --ascii</span></div>
-        <canvas id="aqua" class="aqua-tank"><p data-i18n="aqua.label"></p></canvas>
-        <p class="aqua-hint" data-i18n="aqua.hint"></p>
-      </div>
+      <p class="world-hint" data-i18n="world.hint"></p>
     </div>
   </section>
 </main>
 
-<script src="assets/data.js?v=202611272215"></script>
-<script src="assets/site.js?v=202611272215"></script>
+<script src="assets/data.js?v=202611272300"></script>
+<script src="assets/site.js?v=202611272300"></script>
 <script src="assets/fun.js"></script>
 <script src="assets/fx.js"></script>
 <script src="assets/catbot.js?v=202611081510"></script>
 <script src="assets/luna-tour.js?v=202611081510"></script>
 <script src="assets/term.js"></script>
 <script src="assets/character.js"></script>
-<script src="assets/aquarium.js?v=202611272215"></script>
+<script src="assets/globe.js?v=202611272300"></script>
 </body>
 </html>

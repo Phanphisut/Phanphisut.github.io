@@ -93,8 +93,6 @@
                   { p: "#e8d9a8", d: "#8a6d3b", r: "#d33b3b", g: "#4a8f3a", b: "#4b7bd3" }),
     bubble: fromRows(["............", ".wwwwwwwwww.", "wwwwwwwwwwww", "wwkkwkkwkkww", "wwkkwkkwkkww", "wwwwwwwwwwww", ".wwwwwwwwww.", "...www......", "..ww........", ".w..........", "............", "............"],
                      { w: "#f0f0f0", k: "#555" }),
-    fish: fromRows(["............", "....kkk.....", "...koook....", "kk.kwowokk..", "kokoowoowok.", "koowoowooeok", "kokoowoowook", "kk.kwowookk.", "...koook....", "....kkk.....", "............", "............"],
-                   { o: "#ff7b1c", w: "#f4f4f0", k: "#2a1a12", e: "#101010" }),
     globe: fromRows(["...bbbbbb...", "..bbggbbbb..", ".bbgggbbggb.", "bbbggbbbgggb", "bbbbbbbbggbb", "bggbbbbbbbbb", "bgggbbbggbbb", "bbggbbgggbbb", ".bbbbbgggbb.", "..bbbbbgbb..", "...bbbbbb...", "............"],
                     { b: "#3b7bd3", g: "#5aa53a" }),
     line: fromRows(["............", ".gggggggggg.", "gggggggggggg", "ggwwgwwgwwgg", "ggwwgwwgwwgg", "gggggggggggg", ".gggggggggg.", "...ggg......", "..gg........", ".g..........", "............", "............"],
