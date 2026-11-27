@@ -48,7 +48,7 @@
     CW = ctx.measureText("0").width || FS * 0.6;
     cols = Math.ceil(W / CW); rows = Math.ceil(H / CH);
     R = Math.min(W * (W < 560 ? 0.44 : 0.3), H * 0.36);
-    cx = W / 2; cy = H * 0.52;
+    cx = W / 2; cy = H * 0.5;
     stars = [];
     const n = Math.round(cols * rows * 0.035);
     for (let k = 0; k < n; k++) {

@@ -244,8 +244,6 @@ const I18N = {
   "unit.items": ["รายการ", "items"],
   "contact.title": ["ช่องทางติดต่อ", "Contact"],
   "contact.hint": ["แตะไอเทมเพื่อเปิดช่องทางติดต่อ", "Tap an item to get in touch"],
-  "world.title": ["โลกไบนารี", "Binary Earth"],
-  "world.hint": ["ลากซ้าย-ขวาเพื่อหมุนโลก จุดสีทองที่กระพริบคือประเทศไทย", "Drag left or right to spin the planet. The blinking gold dot is Thailand"],
   "world.label": ["ภาพเคลื่อนไหวโลกที่หมุนอยู่ วาดด้วยเลขฐานสอง 0 และ 1 จากแผนที่โลกจริง", "Animation of a spinning Earth drawn only with binary 0s and 1s from real Earth maps"],
   "copy": ["คัดลอก", "Copy"], "copied": ["คัดลอกแล้ว", "Copied"], "selected": ["เลือกแล้ว", "Selected"], "open": ["เปิด", "Open"],
   "projects.sub": ["โปรเจกต์โดรน AI และ IoT ที่ลงมือทำจริง", "Hands-on drone, AI and IoT builds"],
