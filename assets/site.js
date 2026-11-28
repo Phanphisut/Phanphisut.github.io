@@ -541,16 +541,59 @@
     document.getElementById("showcase").innerHTML = list.map(([p, i]) => card(p, i)).join("");
   }
 
+  // ไอคอนพิกเซลมุมขวาบนของการ์ดในไทม์ไลน์: # = สีหลักของหมวด, d = สีเข้ม, w = ขาว
+  const ACT_ICONS = {
+    work: ["....######....", "....#....#....", "##############", "##############", "######dd######", "dddddddddddddd", "######dd######", "##############", "##############"],
+    teach: ["##############", "#dddddddddddd#", "#dwwwwwddddddd#", "#dddddddwwwwd#", "#dwwwwwwwdddd#", "#dddddddddddd#", "##############", "...#......#...", "..##......##.."],
+    train: ["..##########..", ".#d#########..", ".#d##ddddd##..", ".#d#########..", ".#d##ddd####..", ".#d#########..", ".#d#########..", ".#dwwwwwwwwww.", "..dddddddddd.."],
+    event: ["......##......", ".....####.....", ".....####.....", "##############", ".############.", "..##########..", "...########...", "..##########..", ".####....####.", "###........###"],
+    game: ["...########...", "..##########..", ".###d####w###.", ".#ddd##w#w##.", ".###d####w###.", ".############.", ".####....####.", ".###......###.", "..#........#.."],
+  };
+  const ACT_COLORS = { work: "#3b6bd3", train: "#3c8527", teach: "#c26a12", event: "#8e44ad", game: "#d63a5c" };
+  const actIcon = k => {
+    const rows = ACT_ICONS[k] || [], w = Math.max(...rows.map(r => r.length)), fill = { "#": ACT_COLORS[k], d: "#10141c", w: "#fff" };
+    let rects = "";
+    rows.forEach((r, y) => [...r].forEach((c, x) => { if (fill[c]) rects += `<rect x="${x}" y="${y}" width="1" height="1" fill="${fill[c]}"/>`; }));
+    return `<span class="act-ico" title="${esc(T("f." + k))}"><svg viewBox="-1 -1 ${w + 2} ${rows.length + 2}" shape-rendering="crispEdges" aria-hidden="true">${rects}</svg></span>`;
+  };
+  const GAME_LIST = typeof GAMES !== "undefined" ? GAMES : [];
+  // รวมกิจกรรมกับเกมตามวันที่ (คงลำดับเดิมของ ACTIVITIES ไว้)
+  function timelineItems(f) {
+    const acts = f === "game" ? [] : ACTIVITIES.filter(a => f === "all" || a.type === f);
+    const games = (f === "all" || f === "game") ? GAME_LIST.map(g => ({ ...g, type: "game" })) : [];
+    const key = x => x.d.split("/")[0];
+    const out = []; let gi = 0;
+    acts.forEach(a => { while (gi < games.length && key(games[gi]) > key(a)) out.push(games[gi++]); out.push(a); });
+    return out.concat(games.slice(gi));
+  }
+
   let actFilter = "all";
   function renderActivities() {
     document.querySelectorAll("#filters [data-f]").forEach(b => b.setAttribute("aria-pressed", b.dataset.f === actFilter));
-    const list = ACTIVITIES.filter(a => actFilter === "all" || a.type === actFilter);
-    groups.act = list.map(a => ({ src: IMG(a.page), cap: `${L(a.title)} · ${fmtD(a.d)}` }));
+    const list = timelineItems(actFilter);
+    const gImg = g => `images/games/${g.app}.jpg`;
+    groups.act = list.map(a => a.type === "game" ? { src: gImg(a), cap: `${a.name} · ${fmtD(a.d)}` } : { src: IMG(a.page), cap: `${L(a.title)} · ${fmtD(a.d)}` });
     let last = "", html = "";
     list.forEach((a, i) => {
       const ym = ymOf(a.d);
       if (ym !== last) { html += `<div class="month">${fmtYm(ym)}</div>`; last = ym; }
+      if (a.type === "game") {
+        const stats = [T("game.perfect"), T("game.ach").replace("{n}", a.ach)];
+        if (a.hrs != null) stats.push(T("game.hrs").replace("{n}", a.hrs.toLocaleString()));
+        html += `<article class="act panel game">
+        ${actIcon("game")}
+        ${shotBtn(gImg(a), a.name, "act", i)}
+        <div class="act-body">
+          <div class="act-top"><span class="when">${esc(fmtD(a.d))}${a.t ? ` · ${esc(a.t)}` : ""}</span><span class="type game">${esc(T("f.game"))}</span></div>
+          <h3>${esc(a.name)}</h3>
+          <div class="game-stats">${stats.map(s => `<span>${esc(s)}</span>`).join("")}</div>
+          <div class="actions"><a class="btn" href="${esc(STEAM_PROFILE)}/stats/${a.app}/achievements/" target="_blank" rel="noopener">Steam ↗</a></div>
+        </div>
+      </article>`;
+        return;
+      }
       html += `<article class="act panel">
+        ${actIcon(a.type)}
         ${shotBtn(TH(a.img), L(a.title), "act", i)}
         <div class="act-body">
           <div class="act-top"><span class="when">${esc(fmtD(a.d))}</span><span class="type ${a.type}">${esc(T("f." + a.type))}</span></div>

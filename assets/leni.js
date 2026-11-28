@@ -134,8 +134,8 @@
   if (!S || !box || !bar) return;
   const text = document.getElementById("lg-text"), name = document.getElementById("lg-name");
   const INFO = {
-    all: ["กิจกรรมทั้งหมด {n} รายการค่ะ! กดปุ่มหมวดด้านล่างเพื่อเลือกดูได้เลย: ทำงาน, สอน / สตาฟ, อบรม และกิจกรรม",
-      "All {n} entries! Tap a category below to narrow it down: Work, Teaching / Staff, Training and Events."],
+    all: ["ทั้งหมด {n} รายการค่ะ! กดปุ่มหมวดด้านล่างเพื่อเลือกดูได้เลย: ทำงาน, สอน / สตาฟ, อบรม, กิจกรรม และความสำเร็จในเกม",
+      "All {n} entries! Tap a category below to narrow it down: Work, Teaching / Staff, Training, Events and Game Achievement."],
     work: ["ทำงาน ({n} รายการ): งานประจำ ตอนนี้เป็น R&D Software / Hardware Engineer ที่ SoT และเคยเป็น IT Support ที่ Baan Klong Cake ค่ะ",
       "Work ({n}): jobs, currently R&D Software / Hardware Engineer at SoT, and before that IT Support at Baan Klong Cake."],
     teach: ["สอน / สตาฟ ({n} รายการ): เป็นวิทยากรและสตาฟ สอนโดรน Hula, STEM workshop และงาน Air School ค่ะ",
@@ -144,9 +144,12 @@
       "Training ({n}): extra courses such as PLC, IoT, Generative AI, Cyber Security, Computer Vision and fiber optics."],
     event: ["กิจกรรม ({n} รายการ): งานอีเวนต์ เช่น ต้อนรับนักศึกษา Chiba University, AI Solutions และ Youth Innovation Project ค่ะ",
       "Events ({n}): events like hosting Chiba University students, AI Solutions and the Youth Innovation Project."],
+    game: ["ความสำเร็จในเกม ({n} เกม): เกมบน Steam ที่เก็บ achievement ครบ 100% แล้ว มีวันเวลาที่ปลดล็อกครบ จำนวน achievement และชั่วโมงที่เล่นค่ะ",
+      "Game Achievement ({n} games): Steam games with every achievement unlocked, showing when 100% was reached, the achievement count and hours played."],
   };
   const list = typeof ACTIVITIES !== "undefined" ? ACTIVITIES : [];
-  const count = k => k === "all" ? list.length : list.filter(a => a.type === k).length;
+  const games = typeof GAMES !== "undefined" ? GAMES : [];
+  const count = k => k === "all" ? list.length + games.length : k === "game" ? games.length : list.filter(a => a.type === k).length;
   const current = () => { const b = bar.querySelector('[aria-pressed="true"]'); return b ? b.dataset.f : "all"; };
   let shown = null;
   function say(k) {

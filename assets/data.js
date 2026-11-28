@@ -165,6 +165,25 @@ const ACTIVITIES = [
            "5-month co-op: hardware and software support for 24 branches nationwide, IT content, and online ad setup."] },
 ];
 
+// ===================== ความสำเร็จในเกม (Game Achievement) =====================
+// เกมบน Steam ที่ปลดล็อก achievement ครบ 100%  app = Steam App ID (รูปอยู่ที่ images/games/<app>.jpg)
+// d / t = วันเวลาที่ได้ achievement สุดท้ายครบ 100% (เวลาไทย)  ach = จำนวน achievement  hrs = ชั่วโมงที่เล่นทั้งหมด
+const STEAM_PROFILE = "https://steamcommunity.com/profiles/76561199500323364";
+const GAMES = [
+  { app: 1544020, name: "The Callisto Protocol", d: "2026-07-10", t: "00:07", ach: 46, hrs: null },
+  { app: 262060, name: "Darkest Dungeon", d: "2026-05-30", t: "01:34", ach: 120, hrs: null },
+  { app: 413150, name: "Stardew Valley", d: "2026-05-21", t: "01:34", ach: 49, hrs: null },
+  { app: 848450, name: "Subnautica: Below Zero", d: "2026-05-17", t: "05:46", ach: 13, hrs: null },
+  { app: 264710, name: "Subnautica", d: "2026-05-16", t: "06:56", ach: 17, hrs: null },
+  { app: 3590, name: "Plants vs. Zombies GOTY Edition", d: "2026-04-24", t: "21:13", ach: 21, hrs: null },
+  { app: 1367550, name: "Kingdom Rush Vengeance", d: "2026-04-08", t: "20:26", ach: 90, hrs: null },
+  { app: 274520, name: "Darkwood", d: "2026-03-23", t: "19:44", ach: 15, hrs: null },
+  { app: 815370, name: "Green Hell", d: "2026-03-03", t: "14:32", ach: 68, hrs: null },
+  { app: 251570, name: "7 Days to Die", d: "2026-02-25", t: "15:08", ach: 43, hrs: null },
+  { app: 105600, name: "Terraria", d: "2026-02-10", t: "07:26", ach: 137, hrs: null },
+  { app: 1693980, name: "Dead Space", d: "2026-01-21", t: "01:11", ach: 47, hrs: null },
+];
+
 const PORTFOLIO_PAGES = ["projects/14", "projects/15", "projects/portfolio", "projects/warrantyth", "projects/portfolio-website", "projects/microbit", "activities/11", "activities/10", "activities/9", "activities/8", "activities/7", "activities/6"];
 
 // เรียงจากใหม่ไปเก่า  img = ชื่อไฟล์ใน images/certificates/
@@ -264,10 +283,11 @@ const I18N = {
   "repos.live": ["ดึงจาก GitHub แบบสด", "Live from GitHub"],
   "repos.offline": ["ใช้ข้อมูลที่บันทึกไว้ (เชื่อมต่อ GitHub ไม่ได้)", "Showing saved data (GitHub unavailable)"],
   "repos.nodesc": ["ยังไม่มีคำอธิบาย", "No description yet"],
-  "activities.sub": ["บันทึกเควสต์: งาน อบรม การสอน และกิจกรรม", "Quest log: work, training, teaching and events"],
+  "activities.sub": ["บันทึกเควสต์: งาน อบรม การสอน กิจกรรม และความสำเร็จในเกม", "Quest log: work, training, teaching, events and game achievements"],
   "activities.log": ["ไทม์ไลน์", "Timeline"],
   "activities.pages": ["หน้าพอร์ตฉบับเต็ม", "Full portfolio pages"],
-  "f.all": ["ทั้งหมด", "All"], "f.work": ["ทำงาน", "Work"], "f.teach": ["สอน / สตาฟ", "Teaching / Staff"], "f.train": ["อบรม", "Training"], "f.event": ["กิจกรรม", "Events"],
+  "f.all": ["ทั้งหมด", "All"], "f.work": ["ทำงาน", "Work"], "f.teach": ["สอน / สตาฟ", "Teaching / Staff"], "f.train": ["อบรม", "Training"], "f.event": ["กิจกรรม", "Events"], "f.game": ["ความสำเร็จในเกม", "Game Achievement"],
+  "game.perfect": ["ปลดล็อกครบ 100%", "100% complete"], "game.ach": ["{n} achievements", "{n} achievements"], "game.hrs": ["เล่นทั้งหมด {n} ชม.", "{n} hrs played"],
   "certs.sub": ["ใบรับรองจากหลักสูตรและการอบรม", "Certificates from courses and training"],
   "certs.unlocked": ["ปลดล็อกความสำเร็จ!", "Achievement unlocked!"],
   "scores.title": ["Test score", "Test score"], "scores.kicker": ["ผลสอบ", "Test result"],
