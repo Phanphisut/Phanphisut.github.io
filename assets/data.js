@@ -32,6 +32,14 @@ const PROJECTS = [
     ],
     desc: ["แอปสอนและควบคุมฝูงโดรน Hula หลายลำพร้อมกันผ่าน Wi-Fi มีภารกิจ Grid Patrol, Square Formation, บังคับด้วยคีย์บอร์ด และเขียนโค้ดแยกแต่ละลำ ดูกล้องสด ถ่ายรูป อัดวิดีโอ และมีโหมดจำลองให้ลองก่อนบินจริง ดาวน์โหลดตัวติดตั้ง v9.0.0 ได้ทั้ง Windows และ macOS (Apple Silicon)",
            "Desktop app for teaching and flying a swarm of Hula drones over Wi-Fi: grid patrol, square formation, keyboard control and per-drone custom code, with live cameras, photo/video capture and a simulation mode. v9.0.0 installers for Windows and macOS (Apple Silicon)."] },
+  { img: "p-air-detection", title: "AIR Detection · AI Drone Lab for Kids", cats: ["drone", "dev"], tags: ["Python", "YOLO", "Hula SDK"],
+    github: "https://github.com/Phanphisut/AIR-Detection",
+    // ตัวติดตั้ง: ไฟล์อยู่ใน GitHub Releases (v1.1.0)
+    downloads: [
+      { os: "Windows", url: "https://github.com/Phanphisut/AIR-Detection/releases/download/v1.1.0/AIR.Detection.Setup.v1.1.0.exe" },
+    ],
+    desc: ["แอปสอน AI และบินโดรน Hula สำหรับเด็ก หน้า Train AI อัปโหลดคลิป วาดกรอบ แล้วเทรนโมเดล YOLO ได้ใน 4 ขั้น หน้า Fly & Detect ต่อโดรนจริง โหมดจำลอง หรือเว็บแคม แล้วบินพร้อม AI ตรวจจับแบบ real-time ธีมพิกเซล ดาวน์โหลดตัวติดตั้ง v1.1.0 สำหรับ Windows",
+           "A kid-friendly app for teaching AI and flying a Hula drone: Train AI takes you from uploading clips and drawing boxes to training a YOLO model in 4 steps, and Fly & Detect connects a real drone, simulator or webcam for live AI detection. Pixel-art UI. v1.1.0 Windows installer."] },
   { img: "p-dcats", page: "projects/dcats", title: "DCATS Drone Test Station", cats: ["degree", "embedded", "plc"], tags: ["ESP32", "OpenPLC", "Node-RED"],
     group: "degree", groupOrder: 1,
     github: "https://github.com/Phanphisut/DCATS-Dashboard",
@@ -272,11 +280,11 @@ const I18N = {
 // ===================== ช่องเก็บของทักษะ (Tech Stack) =====================
 // stars = ระดับ 1–5 (ปรับได้ตามจริง)  color = สีไอเทม  label = ตัวอักษรบนไอคอน  projects = ชื่อผลงานใน PROJECTS ที่ใช้ทักษะนี้
 const SKILLS = [
-  { id: "python", img: "images/skills/python.png", name: "Python", label: "Py", color: "#4b8bdf", stars: 4, projects: ["UAV Hand Gesture", "UAV Keyboard App", "UAV Bi-copter", "Swarm Lab · Hula Drone Swarm", "Turtle MQTT Race"],
+  { id: "python", img: "images/skills/python.png", name: "Python", label: "Py", color: "#4b8bdf", stars: 4, projects: ["UAV Hand Gesture", "UAV Keyboard App", "UAV Bi-copter", "Swarm Lab · Hula Drone Swarm", "AIR Detection · AI Drone Lab for Kids", "Turtle MQTT Race"],
     note: ["ใช้เขียนโปรแกรมควบคุมโดรน งาน AI และ Computer Vision", "Drone control, AI and computer vision code"] },
-  { id: "yolo", img: "images/skills/yolo.png", name: "YOLO / Computer Vision", label: "CV", color: "#f37726", stars: 4, projects: ["UAV Hand Gesture", "UAV Keyboard App", "UAV Bi-copter"],
+  { id: "yolo", img: "images/skills/yolo.png", name: "YOLO / Computer Vision", label: "CV", color: "#f37726", stars: 4, projects: ["UAV Hand Gesture", "UAV Keyboard App", "UAV Bi-copter", "AIR Detection · AI Drone Lab for Kids"],
     note: ["ตรวจจับคน วัตถุ และท่าทางมือ เทรนโมเดลด้วย Roboflow + Ultralytics", "Detecting people, objects and hand gestures; training with Roboflow + Ultralytics"] },
-  { id: "hula", img: "images/skills/hula.png", name: "Hula Drone SDK", label: "SDK", color: "#55e0c8", stars: 4, projects: ["UAV Hand Gesture", "UAV Keyboard App", "Swarm Lab · Hula Drone Swarm"],
+  { id: "hula", img: "images/skills/hula.png", name: "Hula Drone SDK", label: "SDK", color: "#55e0c8", stars: 4, projects: ["UAV Hand Gesture", "UAV Keyboard App", "Swarm Lab · Hula Drone Swarm", "AIR Detection · AI Drone Lab for Kids"],
     note: ["เขียนภารกิจบินอัตโนมัติ และสอนการใช้งานให้ผู้เรียน", "Autonomous mission scripting, also taught to learners"] },
   { id: "flight", img: "images/skills/flight.png", name: "Flight Controller / PID", label: "PID", color: "#c792ea", stars: 3, projects: ["UAV Quadcopter", "UAV Bi-copter"],
     note: ["ประกอบโดรน แฟลชเฟิร์มแวร์ คาลิเบรตเซนเซอร์ และจูน PID", "Drone assembly, firmware flashing, sensor calibration and PID tuning"] },
